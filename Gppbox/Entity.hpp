@@ -1,17 +1,36 @@
 #pragma once
 
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include "M.hpp"
 
 class Game;
+class Component;
 namespace sf {
 	class RenderWindow;
 }
 
-class Entity{
+class Entity {
+private:
+	// Loop Forward on components
+	#define LOOPF_C(action) \
+		LOOPF_PTR(components, Component* c) \
+		action; \
+		LOOP_END
+
+	// Loop Backward on components
+	#define LOOPB_C(action) \
+		LOOPB_PTR(components, Component* c) \
+		action; \
+		LOOP_END
+
 public:
+	std::vector<Component*>* components = nullptr;
 	sf::Shape* spr = nullptr; // Pointeur vers le sprite lié
 	float sheight = 0.0f; // Sprite height (center at bottom)
 	float swidth = 0.0f; // Sprite width (center at middle)
+	float lifepoints = 0.0f; // 0.0f = invulnerable
+	bool defaultDraw = true; // Use Default Draw
 
 	int	cx = 0; // Position "case" en x
 	int	cy = 0; // Position "case" en y
@@ -27,30 +46,38 @@ public:
 
 	float speed = 1.0f; // Move Speed (x axis)
 	float jumpforce = 10.0f; // Jump Force (y axis)
+	bool usePhysics = true; // Do use physics
 
 	bool isJumping = false; // Is Entity Jumping
 	bool isGrounded = false; // Is Entity Grounded
-	float coyoteeTime = 0.0f;
-	float jumpDelay = 0.0f;
+	int hcollision = 0; // Horizontal Collision : -1 = left, 0 = none, 1 = right
+	int dirx = -1; // -1 = left, 1 = right
 
 
-	Entity(sf::Shape* spr); // Entity Constructor
+	Entity(sf::Shape* spr); // Entity Constructor, no components
+	Entity(sf::Shape* spr, Component** components, int componentCount); // Entity Constructor
+	~Entity(); // Entity Destructor
+
+	void addComponent(Component* component); // Add one component
+	void addComponents(Component** components, int componentCount); // Add multiple components
 
 	void preupdate(double dt); // Pre Update Entity
 	void fixed(double fdt); // Fixed Update Entity
 	void update(double dt); // Update Entity
-	void draw(sf::RenderWindow& win); // Graphics Drawing
-	bool imgui(); // Imgui Drawing
+	void draw(sf::RenderTarget& win); // Graphics Drawing
+	void imgui(); // Imgui Drawing
 	
-	void processHorizontal(Game& g, float& _rx, const float& _ry);
-	void processVertical(Game& g, const float& _rx, float& _ry);
+	inline void processMovement(double fdt); // Process Entity Full Movement
+	void processHorizontal(Game& g, float& _rx, const float& _ry); // Internal Process Movement Horizontal
+	void processVertical(Game& g, const float& _rx, float& _ry); // Internal Process Movement Vertical
 
 	void setCooPixel(int px, int py); // Set Coordinate (Using Screen as referencial)
 	void setCooGrid(float coox, float cooy); // Set Coordinate (Using Grid as referencial)
+	void roundCoo(); // Round coordinates
 
 	void setGrounded(bool state); // Grounded callback
 	void setJumping(bool state); // Set Jumping state
-	inline bool canJump() const;
+	bool canJump() const; // Check if can Jump
 
 	void setDx(double dx); // Set dx (using clamp)
 	void setDy(double dy); // Set dy (using clamp)

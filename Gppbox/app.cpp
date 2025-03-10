@@ -15,6 +15,7 @@
 #include "Dice.hpp"
 #include "Lib.hpp"
 #include "Game.hpp"
+#include "InputHandler.hpp"
 #include "Interp.hpp"
 #include "HotReloadShader.hpp"
 #include "app.h"
@@ -60,11 +61,10 @@ int main()
 	}
 
 	ImGui::SFML::Init(window);
-
+	InputHandler::setWindow(&window);
     Game g(&window);
 
 	Vector2i winPos;
-
 	View v = window.getDefaultView();
 	Vector2f viewCenter = v.getCenter();
 
@@ -91,8 +91,9 @@ int main()
 	destFinal->create(window.getSize().x, window.getSize().y);
 	destFinal->clear(sf::Color(0, 0, 0, 0));	
 
-	float bloomWidth = 12;
-	sf::Glsl::Vec4 bloomMul(1,1,1,0.8f);
+	//float bloomWidth = 12;
+	float bloomWidth = 8;
+	sf::Glsl::Vec4 bloomMul(89 / 255.0f, 33 / 255.0f, 33 / 255.0f, 204 / 255.0f);
 
     while (window.isOpen())
     {
@@ -198,6 +199,7 @@ int main()
 		dts[curDts] = dt;
     }
 
+	InputHandler::setWindow(nullptr);
 	ImGui::SFML::Shutdown();
 
     return 0;

@@ -1,6 +1,18 @@
 #include <imgui.h>
 #include "Game.hpp"
+#include "Utils.hpp"
+#include "M.hpp"
 #include "C.hpp"
+
+#include "Entity.hpp"
+#include "Camera.hpp"
+#include "Environment.hpp"
+#include "World.hpp"
+#include "MapEditor.hpp"
+
+#include "InputHandler.hpp"
+
+
 
 Game* Game::singleton = nullptr;
 double Game::g_tickTimer = 0.0;
@@ -10,51 +22,23 @@ Game::Game(sf::RenderWindow* win)
 {
 	singleton = this;
 	this->win = win;
+
+	// Create Managers
+	environment = new Environment(win);
 	world = new World(win);
-	initMainChar();
+	mapEditor = new MapEditor(win, environment, world);
+	mapEditor->load();
+
+	// Create Camera
+	camera = new Camera(world, { C::C_CENTER_X, C::C_CENTER_Y }, { C::C_SIZE_X, C::C_SIZE_Y });
 }
 
 Game::~Game()
 {
+	singleton = nullptr;
+	delete environment;
 	delete world;
-	for (Entity* e : entities) delete e;
-	entities.clear();
-}
-
-Entity* Game::getPlayer()
-{
-	if (entities.size()) return entities[0];
-	return nullptr;
-}
-
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-
-
-void Game::initMainChar() {
-	// Create Player Sprite
-	sf::RectangleShape* spr = new sf::RectangleShape({ C::GRID_SIZE * C::S_SCALER_X, C::GRID_SIZE * 2 * C::S_SCALER_Y });
-	spr->setFillColor(sf::Color::Magenta);
-	spr->setOutlineColor(sf::Color::Red);
-	spr->setOutlineThickness(2);
-	spr->setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
-
-	// Create Player with "default" settings
-	Entity* e = new Entity(spr);
-	e->setCooGrid(3, int(C::RES_Y / C::GRID_SIZE) - 4);
-	e->ry = 0.99f;
-	e->syncPos();
-
-	// Inject Custom Player Settings
-	e->sheight = C::P_HEIGHT;
-	e->swidth = C::P_WIDTH;
-	e->speed = C::P_SPEED;
-	e->jumpforce = C::P_JUMP;
-
-	entities.push_back(e);
-	printf("player added\n");
+	delete mapEditor;
 }
 
 
@@ -66,21 +50,32 @@ void Game::initMainChar() {
 void Game::preupdate(double dt)
 {
 	g_time += dt;
-	for (Entity* e : entities) e->preupdate(dt);
-	processInputs(dt);
+	g_tickTimer = dt;
+
+	mapEditor->update(dt);
+	double adt = mapEditor->active ? 0.0 : dt;
+
+	world->preupdate(adt);
+	if (InputHandler::getDebug()) {
+		camera->addShake(0.5f, 1.0f);
+	}
 }
 
 void Game::fixed(double fdt)
 {
-	for (Entity* e : entities) e->fixed(fdt);
+	if (!mapEditor->active) {
+		world->fixed(fdt);
+	}
 }
 
 void Game::update(double dt)
 {
-	beforeParts.update(dt);
-	world->update(dt);
-	for (Entity* e : entities) e->update(dt);
-	afterParts.update(dt);
+	if (!mapEditor->active) {
+		environment->update(dt);
+		world->update(dt);
+		camera->update(dt);
+	}
+	world->processDelete();
 }
 
 
@@ -91,24 +86,62 @@ void Game::update(double dt)
 
 void Game::draw(sf::RenderWindow& win)
 {
-	// Draw Parts and Entities
-	beforeParts.draw(win);
-	world->draw(win);
-	for (Entity* e : entities) e->draw(win);
-	afterParts.draw(win);
-}
+	// Get Settings
+	sf::RenderTarget* target = &win;
+	sf::View defaultView = target->getView();
 
- void Game::imgui()
- {
-	using namespace ImGui;
-	
-	// Show Entities for debug
-	if (CollapsingHeader("Entities")) {
-		for (Entity* e : entities) e->imgui();
+	// Draw World Renderings
+	//environment->drawWorld(*target);
+
+	// Enable Camera Drawing
+	if (!mapEditor->active) {
+		camera->setActive(*target);
 	}
 
-	// World Imgui
+	// Draw Background
+	environment->drawWorld(*target);
+
+	// Draw Camera Renderings
+	environment->drawCamera(*target);
+	world->draw(*target);
+	mapEditor->draw(*target);
+
+	// Set Back target view
+	target->setView(defaultView);
+}
+
+void Game::imgui()
+{
+	// Show Game Controls
+	using namespace ImGui;
+	if (CollapsingHeader("Controls", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (TreeNodeEx("Clavier-Souris")) {
+			Indent(1.0f);
+			BulletText("Left : [Q] OU [Left arrow]");
+			BulletText("Right : [D] OU [Right arrow]");
+			BulletText("Up : [Z] OU [Space] OU [Up arrow]");
+			BulletText("Fire Weapon : [F] OU [Left click]");
+			BulletText("Switch Weapon : [E] OU [Right click]");
+			BulletText("Debug Key : [P] OU [Numpad *]");
+			TreePop();
+		}
+
+		if (TreeNodeEx("Manette")) {
+			Indent(1.0f);
+			BulletText("Left : [Left joystick] OU [Left Pad]");
+			BulletText("Right : [Left joystick] OU [Left Pad]");
+			BulletText("Up : [Bottom Button]");
+			BulletText("Fire Weapon : [Right Button] OU [Right Trigger]");
+			BulletText("Switch Weapon : [Left Button] OU [Left Trigger]");
+			BulletText("Debug Key : [Menu Left]");
+			TreePop();
+		}
+	}
+
+	// Propagate Imgui
+	environment->imgui();
 	world->imgui();
+	mapEditor->imgui();
 }
 
 
@@ -131,39 +164,9 @@ void Game::processEvents(sf::Event ev)
 
 		// Key [K] for walls reset debug
 		if (ev.key.code == Keyboard::K) {
-			world->debug();
+			environment->debug();
 			return;
 		}
-	}
-}
-
-void Game::processInputs(double dt)
-{
-	// Process Left Movement Input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-		Entity* mainChar = getPlayer();
-		if (mainChar) {
-			mainChar->setDx(mainChar->dx - mainChar->speed * dt);
-		}
-	}
-
-	// Process Right Movement Input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		Entity* mainChar = getPlayer();
-		if (mainChar) {
-			mainChar->setDx(mainChar->dx + mainChar->speed * dt);
-		}
-	}
-
-	// Process Jump Input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-		//if (!wasSpacePressed) {
-			Entity* mainChar = getPlayer();
-			if (mainChar) mainChar->setJumping(true);
-			wasSpacePressed = true;
-		//}
-	} else {
-		wasSpacePressed = false;
 	}
 }
 
@@ -174,41 +177,29 @@ void Game::processInputs(double dt)
 
 
 // Full check for Occupied Space
-bool Game::isOccupied(int gridx, int gridy)
+bool Game::isOccupied(Entity* entity) const
 {
-	return isPlayer(gridx, gridy) ||
-		isEnnemy(gridx, gridy) ||
-		isWall(gridx, gridy);
+	FULL_CHECK(entity, this->isOccupied(xpos, ypos));
+}
+
+// Full check for Occupied Space
+bool Game::isOccupied(int gridx, int gridy) const
+{
+	return this->isPlayer(gridx, gridy) ||
+		this->isEnnemy(gridx, gridy) ||
+		this->isWall(gridx, gridy);
 }
 
 // Check is player is at coordinates
-bool Game::isPlayer(int gridx, int gridy)
+bool Game::isPlayer(int gridx, int gridy) const
 {
-	// Get Player
-	Entity* player = getPlayer();
-	if (!player) return false;
-
-	// Prepare full check Variables
-	float xposMin(player->rx - player->swidth + player->cx);
-	float xposMax(player->rx + player->swidth + 1 + player->cx);
-	float cry(player->cy + player->ry);
-
-	// Process full body check
-	for (float ypos = cry, ytarget = cry - player->sheight; ypos > ytarget; --ypos) {
-		for (float xpos = xposMin; xpos < xposMax; ++xpos) {
-			if (int(xpos) == gridx && int(ypos) == gridy) return true;
-		}
-	}
-
-	// Player was not here
-	return false;
+	return Utils::isFullBody(this->world->getPlayer(), gridx, gridy);
 }
 
 // Check if there is an ennemy at coordinates
-bool Game::isEnnemy(int gridx, int gridy)
+bool Game::isEnnemy(int gridx, int gridy) const
 {
-	// TODO : Implement
-	return false;
+	return this->world->getEnnemy(gridx, gridy) != nullptr;
 }
 
 
@@ -218,23 +209,30 @@ bool Game::isEnnemy(int gridx, int gridy)
 
 
 // Full check for Collisions at given position
-bool Game::hasCollision(float gridx, float gridy, bool checkBorder)
+bool Game::hasCollision(float gridx, float gridy, bool checkBorder) const
 {
 	if (checkBorder && isBorderX(gridx)) return true;
 	return isWall(int(gridx), int(gridy));
 }
 
 // Check if outside Border (Collision) on X axis
-bool Game::isBorderX(float gridx)
+bool Game::isBorderX(float gridx) const
 {
 	int wallRightX = (C::RES_X / C::GRID_SIZE) - 1;
 	return gridx < 1.0f || gridx >= wallRightX;
 }
 
-// Check if there is a Wall (Collision) at this position
-bool Game::isWall(int cx, int cy)
+// Check if outside Border (Collision) on Y axis
+bool Game::isBorderY(float gridy) const
 {
-	for (Vector2i& w : world->walls) {
+	int wallRightY = (C::RES_Y / C::GRID_SIZE) - 1;
+	return gridy < 1.0f || gridy >= wallRightY;
+}
+
+// Check if there is a Wall (Collision) at this position
+bool Game::isWall(int cx, int cy) const
+{
+	for (Vector2i& w : this->environment->walls) {
 		if (w.x == cx && w.y == cy)
 			return true;
 	}

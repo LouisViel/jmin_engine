@@ -1,10 +1,40 @@
 #include <imgui.h>
 #include "Entity.hpp"
+#include "Component.hpp"
 #include "Game.hpp"
 #include "C.hpp"
 
-Entity::Entity(sf::Shape* _spr) : spr(_spr) {
+Entity::Entity(sf::Shape* spr) : Entity(spr, nullptr, 0) { }
 
+Entity::Entity(sf::Shape* _spr, Component** components, int componentCount) : spr(_spr)
+{
+	if (components == nullptr) this->components = new std::vector<Component*>();
+	else this->components = new std::vector<Component*>(components, components + componentCount);
+}
+
+Entity::~Entity()
+{
+	if (spr) delete spr;
+	LOOPF_C(delete c);
+	delete components;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+void Entity::addComponent(Component* component)
+{
+	if (component == nullptr) return;
+	this->components->push_back(component);
+}
+
+void Entity::addComponents(Component** components, int componentCount)
+{
+	if (components == nullptr || componentCount <= 0) return;
+	this->components->insert(this->components->end(), components, components + componentCount);
 }
 
 
@@ -15,38 +45,19 @@ Entity::Entity(sf::Shape* _spr) : spr(_spr) {
 
 void Entity::preupdate(double dt)
 {
-	// Update Coyotee Timer
-	if (!isGrounded && coyoteeTime > 0.0f) {
-		coyoteeTime -= dt;
-	}
-
-	// Update Jump Delay Timer
-	if (jumpDelay > 0.0f) {
-		jumpDelay -= dt;
-	}
+	hcollision = 0; // Reset Horizontal collision tag
+	LOOPF_C(c->preupdate(dt));
 }
 
 void Entity::fixed(double fdt)
 {
-	Game& g = *Game::singleton;
-	double rate = 1.0 / fdt; // How many times in 1 second (1 second / deltatime)
-	double dfr = C::F_REF / rate; // Normalize rate from framerate
-
-	float frxdfr = isGrounded ? dfr * C::E_FR_GROUND : dfr;
-	setDy(dy + C::G * gravy * fdt); // Apply Gravity
-	dx *= pow(frx, frxdfr); // Apply Friction x
-	dy *= pow(fry, dfr); // Apply Friction y
-
-	float _rx = rx + dx * fdt; // Calculate internal movement x
-	float _ry = ry + dy * fdt; // Calculate internal movement y
-	processHorizontal(g, _rx, _ry);
-	processVertical(g, _rx, _ry);
-	rx = _rx;
-	ry = _ry;
+	LOOPF_C(c->fixed(fdt));
+	processMovement(fdt);
 }
 
 void Entity::update(double dt)
 {
+	LOOPB_C(c->update(dt));
 	syncPos();
 }
 
@@ -56,19 +67,19 @@ void Entity::update(double dt)
 //////////////////////////////////////////////////////////////////
 
 
-void Entity::draw(sf::RenderWindow& win)
+void Entity::draw(sf::RenderTarget& win)
 {
-	if (spr) win.draw(*spr);
+	if (defaultDraw && spr) win.draw(*spr);
+	LOOPF_C(c->draw(win));
 }
 
-bool Entity::imgui()
+void Entity::imgui()
 {
 	using namespace ImGui;
 	bool chg = false, chgCoo = false;
 
 	Value("jumping", isJumping);
 	Value("grounded", isGrounded);
-	Value("coyotee", coyoteeTime);
 	Value("cx", cx);
 	Value("cy", cy);
 	Value("rx", rx);
@@ -101,7 +112,10 @@ bool Entity::imgui()
 		setJumping(false);
 	}
 
-	return chg || chgCoo;
+	// Draw components imgui
+	LOOPF_C(c->imgui());
+
+	//return chg || chgCoo;
 }
 
 
@@ -110,12 +124,43 @@ bool Entity::imgui()
 //////////////////////////////////////////////////////////////////
 
 
+inline void Entity::processMovement(double fdt)
+{
+	Game& g = *Game::singleton;
+	double rate = 1.0 / fdt; // How many times in 1 second (1 second / deltatime)
+	double dfr = C::F_REF / rate; // Normalize rate from framerate
+
+	float frxdfr = isGrounded ? dfr * C::E_FR_GROUND : dfr;
+	setDy(dy + C::G * gravy * fdt); // Apply Gravity
+	dx *= pow(frx, frxdfr); // Apply Friction x
+	dy *= pow(fry, dfr); // Apply Friction y
+
+	// Process raw movement
+	float _rx = rx + dx * fdt; // Calculate internal movement x
+	float _ry = ry + dy * fdt; // Calculate internal movement y
+
+	// Apply Physics & Collision check to results
+	if (usePhysics) {
+		processHorizontal(g, _rx, _ry);
+		processVertical(g, _rx, _ry);
+
+	// Update values without physics
+	} else {
+		float valx = std::fmod(_rx, 1.0f);
+		cx += _rx - valx; _rx = valx;
+		float valy = std::fmod(_ry, 1.0f);
+		cy += _ry - valy; _ry = valy;
+	}
+
+	// Apply final results
+	rx = _rx;
+	ry = _ry;
+}
+
 void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 {
 	// No Process Needed
 	if (dx == 0.0f) return;
-
-	float a = _rx;
 
 	// Pre-Process Variables
 	bool isCollision = false;
@@ -140,6 +185,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 		if (isCollision) {
 			dx = 0; // Cancel Move Speed
 			_rx = rx; // Reset internal position x
+			hcollision = 1;
 
 		// Process movement on Right
 		} else {
@@ -170,6 +216,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 		if (isCollision) {
 			dx = 0; // Cancel Move Speed
 			_rx = rx; // Reset internal position x
+			hcollision = -1;
 
 		// Process movement on Left
 		} else if (_rx < 0.0f) {
@@ -290,14 +337,32 @@ void Entity::setCooGrid(float coox, float cooy)
 	syncPos();
 }
 
+void Entity::roundCoo()
+{
+	rx = std::round(rx);
+	ry = std::round(ry);
+	if (rx != 0.0f) {
+		cx += rx;
+		rx = 0.0f;
+	}
+	if (ry != 0.0f) {
+		cy += ry;
+		ry = 0.0f;
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 void Entity::setGrounded(bool state)
 {
 	// Entity is Grounded
 	if (state) {
 		if (isGrounded) return;
 		isGrounded = true;
-		coyoteeTime = C::P_COYOTEE;
-		jumpDelay = C::P_JUMPD;
 		setJumping(false);
 
 	// Entity isnt Grounded
@@ -305,6 +370,9 @@ void Entity::setGrounded(bool state)
 		if (!isGrounded) return;
 		isGrounded = false;
 	}
+
+	// Call On Jumping Callbacks
+	LOOPF_C(c->onGrounded(isGrounded));
 }
 
 void Entity::setJumping(bool state)
@@ -313,38 +381,47 @@ void Entity::setJumping(bool state)
 	if (state) {
 		if (!canJump()) return;
 		isJumping = true;
-		coyoteeTime = 0.0f;
 		setDy(-jumpforce);
 
 	// Entity isnt Jumping
 	} else if (isJumping) {
 		isJumping = false;
-	}
+
+	// No more processing
+	} else return;
+
+	// Call On Jumping Callbacks
+	LOOPF_C(c->onJumping(isJumping));
 }
 
-inline bool Entity::canJump() const
+bool Entity::canJump() const
 {
-	// !isGrounded || isJumping
-	return jumpDelay <= 0.0f && coyoteeTime > 0.0f;
+	// Can Jump only if all components allow it
+	for (Component* c : *components) {
+		if (!c->canJump()) return false;
+	}
+	return true;
 }
+
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
+
 
 void Entity::setDx(double dx)
 {
-	this->dx = clamp(dx, -C::E_MAX_X, C::E_MAX_X);
+	this->dx = std::clamp(dx, -C::E_MAX_X, C::E_MAX_X);
 }
 
 void Entity::setDy(double dy)
 {
-	this->dy = clamp(dy, -C::E_MAX_Y, C::E_MAX_Y);
+	this->dy = std::clamp(dy, -C::E_MAX_Y, C::E_MAX_Y);
 }
 
 void Entity::syncPos()
 {
-	spr->setPosition(sf::Vector2f {
+	if (spr) spr->setPosition(sf::Vector2f {
 		(cx + rx) * C::GRID_SIZE - C::S_ADJUSTMENT_X,
 		(cy + ry) * C::GRID_SIZE - C::S_ADJUSTMENT_Y
 	});
@@ -352,5 +429,5 @@ void Entity::syncPos()
 
 sf::Vector2i Entity::getPosPixel()
 {
-	return sf::Vector2i((cx+rx) * C::GRID_SIZE, (cy+ry) * C::GRID_SIZE);
+	return sf::Vector2i((cx + rx) * C::GRID_SIZE, (cy + ry) * C::GRID_SIZE);
 }
