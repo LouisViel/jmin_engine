@@ -1,6 +1,3 @@
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 #include "Utils.hpp"
 #include "game/core/Entity.hpp"
 #include "app/M.hpp"

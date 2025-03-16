@@ -1,6 +1,6 @@
 #include "WeaponController.hpp"
+#include "engine/utils/InputHandler.hpp"
 #include "game/core/Entity.hpp"
-#include "game/gameplay/InputHandler.hpp"
 #include "game/weapons/Weapon.hpp"
 #include "app/M.hpp"
 

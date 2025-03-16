@@ -173,7 +173,7 @@ void MapEditor::drawEnnemy(sf::RenderTarget& win)
 
 void MapEditor::save()
 {
-	ofstream outfile(SAVE_FILE, ofstream::trunc);
+	ofstream outfile(C::SAVE_FILE, ofstream::trunc);
 	try {
 		saveWall(outfile);
 		saveEnnemy(outfile);
@@ -183,12 +183,12 @@ void MapEditor::save()
 
 void MapEditor::load()
 {
-	if (!std::filesystem::exists(SAVE_FILE)) {
+	if (!std::filesystem::exists(C::SAVE_FILE)) {
 		loadDefault();
 		return;
 	}
 
-	ifstream infile(SAVE_FILE);
+	ifstream infile(C::SAVE_FILE);
 	try { loadInternal(infile); }
 	catch (...) { loadDefault(); }
 	infile.close();
@@ -221,7 +221,7 @@ void MapEditor::saveWall(ofstream& outfile)
 {
 	for (sf::Vector2i w : environment->walls)
 		outfile << w.x << " " << w.y << "\n";
-	outfile << SAVE_SPLIT;
+	outfile << C::SAVE_SPLIT;
 }
 
 void MapEditor::loadWall(ifstream& infile)
@@ -284,7 +284,7 @@ void MapEditor::saveEnnemy(ofstream& outfile)
 		outfile << e->cx << " " << e->rx << " "
 			<< e->cy << " " << e->ry << "\n";
 	}
-	outfile << SAVE_SPLIT;
+	outfile << C::SAVE_SPLIT;
 }
 
 void MapEditor::loadEnnemy(ifstream& infile)
