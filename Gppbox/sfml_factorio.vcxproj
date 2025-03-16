@@ -89,7 +89,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>libs\eastl\test\packages\EABase\include\Common;libs\eastl\include;libs\imgui;libs\imgui-sfml;libs\SFML-2.5.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);libs\eastl\test\packages\EABase\include\Common;libs\eastl\include;libs\imgui;libs\imgui-sfml;libs\SFML-2.5.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>libs\SFML-2.5.1\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,81 +175,82 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bloom.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DeathRay.cpp" />
-    <ClCompile Include="EnnemyController.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="HotReloadShader.cpp" />
-    <ClCompile Include="InputHandler.cpp" />
-    <ClCompile Include="Lib.cpp" />
+    <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="engine\core\Bloom.cpp" />
+    <ClCompile Include="engine\core\HotReloadShader.cpp" />
+    <ClCompile Include="engine\core\Lib.cpp" />
+    <ClCompile Include="engine\core\Particle.cpp" />
+    <ClCompile Include="engine\Utils.cpp" />
+    <ClCompile Include="engine\utils\InputHandler.cpp" />
+    <ClCompile Include="engine\utils\TileMap.cpp" />
+    <ClCompile Include="game\components\Bullet.cpp" />
+    <ClCompile Include="game\components\EnnemyController.cpp" />
+    <ClCompile Include="game\components\Lifetime.cpp" />
+    <ClCompile Include="game\components\Missile.cpp" />
+    <ClCompile Include="game\components\PetDrone.cpp" />
+    <ClCompile Include="game\components\PlayerController.cpp" />
+    <ClCompile Include="game\components\SpawnOnDestroy.cpp" />
+    <ClCompile Include="game\components\SpriteOverride.cpp" />
+    <ClCompile Include="game\components\WeaponController.cpp" />
+    <ClCompile Include="game\core\Camera.cpp" />
+    <ClCompile Include="game\core\Entity.cpp" />
+    <ClCompile Include="game\core\Environment.cpp" />
+    <ClCompile Include="game\core\Game.cpp" />
+    <ClCompile Include="game\core\MapEditor.cpp" />
+    <ClCompile Include="game\core\World.cpp" />
+    <ClCompile Include="game\weapons\DeathRay.cpp" />
+    <ClCompile Include="game\weapons\MagicMissile.cpp" />
+    <ClCompile Include="game\weapons\Rifle.cpp" />
     <ClCompile Include="libs\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="app.cpp" />
-    <ClCompile Include="Lifetime.cpp" />
-    <ClCompile Include="MagicMissile.cpp" />
-    <ClCompile Include="MapEditor.cpp" />
-    <ClCompile Include="Missile.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="PetDrone.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="Rifle.cpp" />
-    <ClCompile Include="SpawnOnDestroy.cpp" />
-    <ClCompile Include="SpriteOverride.cpp" />
-    <ClCompile Include="sys.cpp" />
-    <ClCompile Include="Environment.cpp" />
-    <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="WeaponController.cpp" />
-    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app.h" />
-    <ClInclude Include="Bloom.hpp" />
-    <ClInclude Include="Bresenham.hpp" />
-    <ClInclude Include="Bullet.hpp" />
-    <ClInclude Include="C.hpp" />
-    <ClInclude Include="Camera.hpp" />
-    <ClInclude Include="Component.hpp" />
-    <ClInclude Include="DeathRay.hpp" />
-    <ClInclude Include="Dice.hpp" />
-    <ClInclude Include="EnnemyController.hpp" />
-    <ClInclude Include="Entity.hpp" />
-    <ClInclude Include="Game.hpp" />
-    <ClInclude Include="HotReloadShader.hpp" />
-    <ClInclude Include="InputHandler.hpp" />
-    <ClInclude Include="Interp.hpp" />
-    <ClInclude Include="Lib.hpp" />
+    <ClInclude Include="app\app.h" />
+    <ClInclude Include="app\boost.hpp" />
+    <ClInclude Include="app\C.hpp" />
+    <ClInclude Include="app\M.hpp" />
+    <ClInclude Include="app\sys.hpp" />
+    <ClInclude Include="engine\core\Bloom.hpp" />
+    <ClInclude Include="engine\core\HotReloadShader.hpp" />
+    <ClInclude Include="engine\core\Interp.hpp" />
+    <ClInclude Include="engine\core\Lib.hpp" />
+    <ClInclude Include="engine\core\Particle.hpp" />
+    <ClInclude Include="engine\core\ParticleMan.hpp" />
+    <ClInclude Include="engine\Utils.hpp" />
+    <ClInclude Include="engine\utils\Bresenham.hpp" />
+    <ClInclude Include="engine\utils\Dice.hpp" />
+    <ClInclude Include="engine\utils\InputHandler.hpp" />
+    <ClInclude Include="engine\utils\Throttle.hpp" />
+    <ClInclude Include="engine\utils\TileMap.hpp" />
+    <ClInclude Include="engine\utils\Tween.hpp" />
+    <ClInclude Include="game\components\Bullet.hpp" />
+    <ClInclude Include="game\components\Component.hpp" />
+    <ClInclude Include="game\components\EnnemyController.hpp" />
+    <ClInclude Include="game\components\Lifetime.hpp" />
+    <ClInclude Include="game\components\Missile.hpp" />
+    <ClInclude Include="game\components\PetDrone.hpp" />
+    <ClInclude Include="game\components\PlayerController.hpp" />
+    <ClInclude Include="game\components\SpawnOnDestroy.hpp" />
+    <ClInclude Include="game\components\SpriteOverride.hpp" />
+    <ClInclude Include="game\components\WeaponController.hpp" />
+    <ClInclude Include="game\core\Camera.hpp" />
+    <ClInclude Include="game\core\Entity.hpp" />
+    <ClInclude Include="game\core\Environment.hpp" />
+    <ClInclude Include="game\core\Game.hpp" />
+    <ClInclude Include="game\core\MapEditor.hpp" />
+    <ClInclude Include="game\core\World.hpp" />
+    <ClInclude Include="game\weapons\DeathRay.hpp" />
+    <ClInclude Include="game\weapons\MagicMissile.hpp" />
+    <ClInclude Include="game\weapons\Rifle.hpp" />
+    <ClInclude Include="game\weapons\Weapon.hpp" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML.h" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML_export.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
-    <ClInclude Include="Lifetime.hpp" />
-    <ClInclude Include="M.hpp" />
-    <ClInclude Include="MagicMissile.hpp" />
-    <ClInclude Include="MapEditor.hpp" />
-    <ClInclude Include="Missile.hpp" />
-    <ClInclude Include="Particle.hpp" />
-    <ClInclude Include="ParticleMan.hpp" />
-    <ClInclude Include="PetDrone.hpp" />
-    <ClInclude Include="PlayerController.hpp" />
-    <ClInclude Include="boost.hpp" />
-    <ClInclude Include="Rifle.hpp" />
-    <ClInclude Include="SpawnOnDestroy.hpp" />
-    <ClInclude Include="SpriteOverride.hpp" />
-    <ClInclude Include="sys.hpp" />
-    <ClInclude Include="Environment.hpp" />
-    <ClInclude Include="Throttle.hpp" />
-    <ClInclude Include="Tween.hpp" />
-    <ClInclude Include="Utils.hpp" />
-    <ClInclude Include="Weapon.hpp" />
-    <ClInclude Include="WeaponController.hpp" />
-    <ClInclude Include="World.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
+    <None Include="app\cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
