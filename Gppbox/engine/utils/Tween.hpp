@@ -57,8 +57,8 @@ private:
 	float m_elapsed = 0.0f;
 	float m_duration = 0.0f;
 	Ease m_ease = Ease::Linear;
-	T m_from;
-	T m_to;
+	T m_from = (T)0;
+	T m_to = (T)0;
 };
 
 template <typename T>
@@ -67,53 +67,53 @@ T Tween<T>::Update(float dt)
 	m_elapsed += dt;
 	if (m_elapsed >= m_duration) return m_to;
 
-	if (m_ease == Ease::Linear) return m_from + (m_to - m_from) * (m_elapsed / m_duration);
-	if (m_ease == Ease::InSine) return m_from + (m_to - m_from) * (1 - cos(m_elapsed / m_duration * (M_PI / 2)));
-	if (m_ease == Ease::OutSine) return m_from + (m_to - m_from) * sin(m_elapsed / m_duration * (M_PI / 2));
-	if (m_ease == Ease::InOutSine) return m_from + (m_to - m_from) * (1 - cos(m_elapsed / m_duration * M_PI)) / 2;
-	if (m_ease == Ease::InQuad) return m_from + (m_to - m_from) * (m_elapsed / m_duration) * (m_elapsed / m_duration);
+	if (m_ease == Ease::Linear) return T(m_from + (m_to - m_from) * (m_elapsed / m_duration));
+	if (m_ease == Ease::InSine) return T(m_from + (m_to - m_from) * (1 - cos(m_elapsed / m_duration * (M_PI / 2))));
+	if (m_ease == Ease::OutSine) return T(m_from + (m_to - m_from) * sin(m_elapsed / m_duration * (M_PI / 2)));
+	if (m_ease == Ease::InOutSine) return T(m_from + (m_to - m_from) * (1 - cos(m_elapsed / m_duration * M_PI)) / 2);
+	if (m_ease == Ease::InQuad) return T(m_from + (m_to - m_from) * (m_elapsed / m_duration) * (m_elapsed / m_duration));
 
 	if (m_ease == Ease::OutQuad) {
 		float t = m_elapsed / m_duration;
-		return m_from + (m_to - m_from) * t * (2 - t);
+		return T(m_from + (m_to - m_from) * t * (2 - t));
 	}
 
 	if (m_ease == Ease::InOutQuad) {
 		float t = m_elapsed / m_duration;
 		if (t < 0.5f) return m_from + (m_to - m_from) * 2 * t * t;
-		return m_from + (m_to - m_from) * (-1 + (4 - 2 * t) * t);
+		return T(m_from + (m_to - m_from) * (-1 + (4 - 2 * t) * t));
 	}
 
 	if (m_ease == Ease::InCubic) {
 		float t = m_elapsed / m_duration;
-		return m_from + (m_to - m_from) * t * t * t;
+		return T(m_from + (m_to - m_from) * t * t * t);
 	}
 
 	if (m_ease == Ease::OutCubic) {
 		float t = m_elapsed / m_duration;
-		return m_from + (m_to - m_from) * (t - 1) * (t - 1) * (t - 1) + 1;
+		return T(m_from + (m_to - m_from) * (t - 1) * (t - 1) * (t - 1) + 1);
 	}
 
 	if (m_ease == Ease::InOutCubic) {
 		float t = m_elapsed / m_duration;
 		if (t < 0.5f) return m_from + (m_to - m_from) * 4 * t * t * t;
-		return m_from + (m_to - m_from) * (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+		return T(m_from + (m_to - m_from) * (t - 1) * (2 * t - 2) * (2 * t - 2) + 1);
 	}
 
 	if (m_ease == Ease::InExpo) {
 		float t = m_elapsed / m_duration;
-		return m_from + (m_to - m_from) * pow(2, 10 * (t - 1));
+		return T(m_from + (m_to - m_from) * pow(2, 10 * (t - 1)));
 	}
 
 	if (m_ease == Ease::OutExpo) {
 		float t = m_elapsed / m_duration;
-		return m_from + (m_to - m_from) * (-pow(2, -10 * t) + 1);
+		return T(m_from + (m_to - m_from) * (-pow(2, -10 * t) + 1));
 	}
 
 	if (m_ease == Ease::InOutExpo) {
 		float t = m_elapsed / m_duration;
-		if (t < 0.5f) return m_from + (m_to - m_from) * pow(2, 10 * (2 * t - 1)) / 2;
-		return m_from + (m_to - m_from) * (-pow(2, -10 * (2 * t - 1)) + 2) / 2;
+		if (t < 0.5f) return T(m_from + (m_to - m_from) * pow(2, 10 * (2 * t - 1)) / 2);
+		return T(m_from + (m_to - m_from) * (-pow(2, -10 * (2 * t - 1)) + 2) / 2);
 	}
 
 	return m_to;

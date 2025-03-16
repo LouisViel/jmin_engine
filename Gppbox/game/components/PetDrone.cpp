@@ -19,14 +19,14 @@ PetDrone::~PetDrone() { }
 
 void PetDrone::preupdate(double dt)
 {
-	if (cooldown > 0.0f) cooldown -= dt;
+	if (cooldown > 0.0f) cooldown -= (float)dt;
 }
 
 void PetDrone::fixed(double fdt)
 {
 	// Get Values
 	sf::Vector2i ppos = player->getPosPixel();
-	ppos.y -= player->sheight * C::GRID_SIZE;
+	ppos.y -= int(player->sheight * C::GRID_SIZE);
 	sf::Vector2i diff = ppos - entity->getPosPixel();
 	float distance = Utils::toLength(diff);
 
@@ -56,7 +56,7 @@ void PetDrone::update(double dt)
 
 	// Adjust target pos
 	sf::Vector2i cpos = closest->getPosPixel();
-	cpos.y -= (closest->sheight * 0.75f) * C::GRID_SIZE;
+	cpos.y -= int((closest->sheight * 0.75f) * C::GRID_SIZE);
 
 	// Check target in range & Shoot
 	sf::Vector2i dir = cpos - pos;

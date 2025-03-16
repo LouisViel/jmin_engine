@@ -2,11 +2,11 @@
 #include <imgui.h>
 #include "MapEditor.hpp"
 
-#include "engine/utils/InputHandler.hpp";
+#include "engine/utils/InputHandler.hpp"
 #include "app/M.hpp"
 #include "app/C.hpp"
 
-#include "game/core/Environment.hpp";
+#include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 #include "game/core/Game.hpp"
 #include "game/core/Entity.hpp"
@@ -53,7 +53,7 @@ void MapEditor::update(double dt)
 
 	// Sync Ennemy processing position
 	if (tileType == TileType::Ennemy) {
-		eSpr->setCooPixel(pos.x + C::E_ADJUSTMENT_X + 0.25f * C::GRID_SIZE, pos.y + 0.8f * C::GRID_SIZE);
+		eSpr->setCooPixel(int(pos.x + C::E_ADJUSTMENT_X + 0.25f * C::GRID_SIZE), int(pos.y + 0.8f * C::GRID_SIZE));
 		eSpr->roundCoo();
 		eSpr->rx = 0.25f;
 		eSpr->ry = 0.99f;
@@ -301,7 +301,7 @@ void MapEditor::loadEnnemy(ifstream& infile)
 void MapEditor::clearEnnemy()
 {
 	std::vector<Entity*>* ennemies = world->ennemies;
-	for (int i = ennemies->size() - 1; i >= 0; --i) world->removeEnnemy(ennemies->operator[](i));
+	for (int i = (int)ennemies->size() - 1; i >= 0; --i) world->removeEnnemy(ennemies->operator[](i));
 	ennemies->clear();
 }
 

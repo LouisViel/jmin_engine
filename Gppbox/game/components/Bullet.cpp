@@ -13,7 +13,7 @@ void Bullet::fixed(double fdt)
 	World* w = g->world;
 
 	// Check if oustide world bounds
-	if (g->isBorderX(entity->cx) || g->isBorderY(entity->cy) || g->isWall(entity->cx, entity->cy)) {
+	if (g->isBorderX((float)entity->cx) || g->isBorderY((float)entity->cy) || g->isWall(entity->cx, entity->cy)) {
 		w->removeEntity(nullptr, entity);
 		return;
 	}

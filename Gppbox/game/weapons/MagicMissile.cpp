@@ -36,7 +36,7 @@ MagicMissile::~MagicMissile()
 
 void MagicMissile::update(double dt)
 {
-	if (cooldown > 0.0f) cooldown -= dt;
+	if (cooldown > 0.0f) cooldown -= (float)dt;
 	if (!controller->isShooting || cooldown > 0.0f) return;
 	shootBullets();
 	shootEffect();
@@ -46,11 +46,11 @@ void MagicMissile::update(double dt)
 void MagicMissile::draw(sf::RenderTarget& win)
 {
 	sf::Vector2i coo = entity->getPosPixel();
-	coo.y -= entity->sheight * C::GRID_SIZE * 0.8f;
-	coo.x += entity->swidth * 0.2f * -C::GRID_SIZE;
-	if (entity->dirx > 0) coo.x -= entity->swidth * C::GRID_SIZE * 2;
-	else coo.x += entity->swidth * C::GRID_SIZE * 1.5f;
-	weaponHandle->setPosition(coo.x, coo.y);
+	coo.y -= int(entity->sheight * C::GRID_SIZE * 0.8f);
+	coo.x += int(entity->swidth * 0.2f * -C::GRID_SIZE);
+	if (entity->dirx > 0) coo.x -= int(entity->swidth * C::GRID_SIZE * 2);
+	else coo.x += int(entity->swidth * C::GRID_SIZE * 1.5f);
+	weaponHandle->setPosition((float)coo.x, (float)coo.y);
 
 	sf::Vector2f scale = weaponHandle->getScale();
 	if (Utils::sign<float>(scale.x) != Utils::sign<int>(entity->dirx)) {
@@ -87,7 +87,7 @@ void MagicMissile::shootEffect()
 void MagicMissile::shootBullets()
 {
 	sf::Vector2i coo = entity->getPosPixel();
-	coo.y -= entity->sheight * C::GRID_SIZE;
+	coo.y -= int(entity->sheight * C::GRID_SIZE);
 	shootBullet(sf::Vector2i{ int(coo.x - (entity->swidth * 4 + entity->dirx) * C::GRID_SIZE), coo.y }, sf::Vector2f{ -1, 0 });
 	shootBullet(sf::Vector2i{ int(coo.x + (entity->swidth * 3 - entity->dirx) * C::GRID_SIZE), coo.y }, sf::Vector2f{ 0, -1 });
 	shootBullet(sf::Vector2i{ int(coo.x + (entity->swidth * 4 - entity->dirx) * C::GRID_SIZE), int(coo.y + entity->sheight * C::GRID_SIZE) }, sf::Vector2f{ 1, 0 });

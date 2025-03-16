@@ -6,7 +6,7 @@ Lifetime::Lifetime(Entity* entity, float _lifetime) : Component(entity), lifetim
 
 void Lifetime::preupdate(double dt)
 {
-	lifetime -= dt;
+	lifetime -= (float)dt;
 	if (lifetime <= 0.0f) {
 		Game::singleton->world->removeEntity(nullptr, entity);
 	}

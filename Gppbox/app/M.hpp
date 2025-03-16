@@ -12,8 +12,8 @@ namespace M
 		if (!entity) return false; \
 		\
 		/* Prepare full check Variables */ \
-		int xposMin(entity->rx - entity->swidth - C::E_ADJUSTMENT_X + entity->cx); \
-		int xposMax(entity->rx + entity->swidth + entity->cx); \
+		int xposMin(int(entity->rx - entity->swidth - C::E_ADJUSTMENT_X + entity->cx)); \
+		int xposMax(int(entity->rx + entity->swidth + entity->cx)); \
 		float cry(entity->cy + entity->ry); \
 		\
 		/* Process full body check */ \
@@ -29,7 +29,7 @@ namespace M
 
 	// REMOVE_ITEM(Entity*, entities, target)
 	#define REMOVE_ITEM(objType, vector, obj) \
-		for (int i = 0; i < vector->size(); ++i) { \
+		for (int i = 0; i < (int)vector->size(); ++i) { \
 			objType iobj = vector->operator[](i); \
 			if (iobj == obj) vector->erase(vector->begin() + i); \
 		}
@@ -42,7 +42,7 @@ namespace M
 		std::vector<float> results = std::vector<float>(); \
 		\
 		/* Get & Format all valid values */ \
-		for (int i = 0; i < vals.size(); ++i) { \
+		for (int i = 0; i < (int)vals.size(); ++i) { \
 			if (vals[i] operation) { \
 				results.push_back(std::abs(vals[i])); \
 			} \
@@ -57,25 +57,25 @@ namespace M
 	// Loop Forward on vector
 	// LOOPF_PTR(entities, Entity*)
 	#define LOOPF(vector, obj) \
-		for (int i = 0; i < vector.size(); ++i) { \
+		for (int i = 0; i < (int)vector.size(); ++i) { \
 			obj = vector[i];
 
 	// Loop Backward on vector
 	// LOOPF_PTR(entities, Entity*)
 	#define LOOPB(vector, obj) \
-		for (int i = vector.size() - 1; i >= 0; --i) { \
+		for (int i = (int)vector.size() - 1; i >= 0; --i) { \
 			obj = vector[i];
 
 	// Loop Forward on pointer vector
 	// LOOPF_PTR(entities, Entity*)
 	#define LOOPF_PTR(vector, obj) \
-		for (int i = 0; i < vector->size(); ++i) { \
+		for (int i = 0; i < (int)vector->size(); ++i) { \
 			obj = vector->operator[](i);
 
 	// Loop Backward on pointer vector
 	// LOOPF_PTR(entities, Entity*)
 	#define LOOPB_PTR(vector, obj) \
-		for (int i = vector->size() - 1; i >= 0; --i) { \
+		for (int i = (int)vector->size() - 1; i >= 0; --i) { \
 			obj = vector->operator[](i);
 
 	// LOOP_END;

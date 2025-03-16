@@ -179,7 +179,7 @@ void Game::processEvents(sf::Event ev)
 // Full check for Occupied Space
 bool Game::isOccupied(Entity* entity) const
 {
-	FULL_CHECK(entity, this->isOccupied(xpos, ypos));
+	FULL_CHECK(entity, this->isOccupied(xpos, (int)ypos));
 }
 
 // Full check for Occupied Space

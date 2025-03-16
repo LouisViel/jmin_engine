@@ -30,7 +30,7 @@ void Rifle::update(double dt)
 {
 	// Update muzzle
 	if (muzzleDelay > 0.0f) {
-		muzzleDelay -= dt;
+		muzzleDelay -= (float)dt;
 	}
 
 	// Reset timer if no shooting
@@ -41,7 +41,7 @@ void Rifle::update(double dt)
 
 	// Check for timer
 	if (cooldown > 0.0f) {
-		cooldown -= dt;
+		cooldown -= (float)dt;
 		return;
 	}
 
@@ -56,9 +56,9 @@ void Rifle::draw(sf::RenderTarget& win)
 	// Draw Rifle Muzzle (flash)
 	if (muzzleDelay > 0.0f) {
 		sf::Vector2i coo = entity->getPosPixel();
-		coo.y -= (entity->sheight * 0.3f) * C::GRID_SIZE;
-		if (entity->dirx > 0) coo.x -= entity->swidth * C::GRID_SIZE * 2;
-		muzzle->setPosition(coo.x, coo.y);
+		coo.y -= int((entity->sheight * 0.3f) * C::GRID_SIZE);
+		if (entity->dirx > 0) coo.x -= int(entity->swidth * C::GRID_SIZE * 2);
+		muzzle->setPosition((float)coo.x, (float)coo.y);
 		win.draw(*muzzle);
 	}
 }
@@ -73,7 +73,7 @@ void Rifle::shootBullet()
 {
 	World* world = Game::singleton->world;
 	sf::Vector2i coo = entity->getPosPixel();
-	coo.y -= (entity->sheight * 0.3f) * C::GRID_SIZE;
+	coo.y -= int((entity->sheight * 0.3f) * C::GRID_SIZE);
 
 	// Create Bullet Sprite
 	sf::RectangleShape* spr = new sf::RectangleShape({ C::GRID_SIZE * 0.25f, C::GRID_SIZE * 0.25f });

@@ -62,8 +62,8 @@ void Missile::fixed(double fdt)
 
 	// Apply rotation
 	sf::Vector2i dir = target->getPosPixel() - entity->getPosPixel();
-	float rot = transf->getRotation(), maxRot = C::F_FIXED * 10.0f, angle = Utils::toAngle(dir);
-	float res = Tween<float>::From(rot).To(angle).For(maxRot).SetEase(Ease::Linear).Update(fdt);
+	float rot = transf->getRotation(), maxRot = (float)C::F_FIXED * 10.0f, angle = Utils::toAngle(dir);
+	float res = Tween<float>::From(rot).To(angle).For(maxRot).SetEase(Ease::Linear).Update((float)fdt);
 	transf->setRotation(res);
 
 	// Apply movement
@@ -75,7 +75,7 @@ void Missile::fixed(double fdt)
 void Missile::update(double dt)
 {
 	target_invalid();
-	notDelay -= dt;
+	notDelay -= (float)dt;
 	if (notDelay <= 0.0f) {
 		World* world = Game::singleton->world;
 		world->removeEntity(nullptr, entity);

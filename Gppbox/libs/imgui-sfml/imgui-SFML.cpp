@@ -398,7 +398,7 @@ void Update(const sf::Vector2i& mousePos, const sf::Vector2f& displaySize,
                                   static_cast<int>(io.MousePos.y));
             sf::Mouse::setPosition(mousePos);
         } else {
-            io.MousePos = ImVec2(mousePos.x, mousePos.y);
+            io.MousePos = ImVec2((float)mousePos.x, (float)mousePos.y);
         }
         for (unsigned int i = 0; i < 3; i++) {
             io.MouseDown[i] = s_touchDown[i] || sf::Touch::isDown(i) ||

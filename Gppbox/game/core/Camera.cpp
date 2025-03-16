@@ -1,7 +1,7 @@
 #include "Camera.hpp"
 #include "engine/utils/Dice.hpp"
 #include "game/core/Entity.hpp"
-#include "game/core/World.hpp";
+#include "game/core/World.hpp"
 #include "app/C.hpp"
 
 Camera::Camera(World* world, sf::Vector2f center, sf::Vector2f size) : m_throttle(0.016f)
@@ -42,7 +42,7 @@ sf::Vector2f Camera::processShake(double dt)
 {
 	float radius = 0.0f;
 	for (auto it = m_shakes.begin(); it != m_shakes.end();) {
-		it->duration -= dt;
+		it->duration -= (float)dt;
 		if (it->duration > 0.0f) {
 			radius += it->intensity;
 			++it;

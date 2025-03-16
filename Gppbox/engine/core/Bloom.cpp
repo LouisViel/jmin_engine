@@ -69,7 +69,7 @@ void Bloom::blur(float dx, sf::Texture* source, sf::Shader* _blurShader, sf::Ren
 
 		getKernelOffsets(dx, kernelX, offsets);
 
-		int nbSamples = kernelX.size();
+		int nbSamples = (int)kernelX.size();
 		_blurShader->setUniform("samples", nbSamples);
 		for (int i = 0; i < nbSamples; i++)
 			offsets[i].x *= 1.0f / source->getSize().x;
@@ -85,7 +85,7 @@ void Bloom::blur(float dx, sf::Texture* source, sf::Shader* _blurShader, sf::Ren
 
 	{
 		getKernelOffsets(dx, kernelY, offsets, 1.0, false);
-		int nbSamples = kernelY.size();
+		int nbSamples = (int)kernelY.size();
 		_blurShader->setUniform("samples", nbSamples);
 		for (int i = 0; i < nbSamples; i++)
 			offsets[i].y *= 1.0f / source->getSize().y;

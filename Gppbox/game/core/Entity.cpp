@@ -130,14 +130,14 @@ inline void Entity::processMovement(double fdt)
 	double rate = 1.0 / fdt; // How many times in 1 second (1 second / deltatime)
 	double dfr = C::F_REF / rate; // Normalize rate from framerate
 
-	float frxdfr = isGrounded ? dfr * C::E_FR_GROUND : dfr;
+	float frxdfr = float(isGrounded ? dfr * C::E_FR_GROUND : dfr);
 	setDy(dy + C::G * gravy * fdt); // Apply Gravity
 	dx *= pow(frx, frxdfr); // Apply Friction x
-	dy *= pow(fry, dfr); // Apply Friction y
+	dy *= pow(fry, (float)dfr); // Apply Friction y
 
 	// Process raw movement
-	float _rx = rx + dx * fdt; // Calculate internal movement x
-	float _ry = ry + dy * fdt; // Calculate internal movement y
+	float _rx = rx + dx * (float)fdt; // Calculate internal movement x
+	float _ry = ry + dy * (float)fdt; // Calculate internal movement y
 
 	// Apply Physics & Collision check to results
 	if (usePhysics) {
@@ -147,9 +147,9 @@ inline void Entity::processMovement(double fdt)
 	// Update values without physics
 	} else {
 		float valx = std::fmod(_rx, 1.0f);
-		cx += _rx - valx; _rx = valx;
+		cx += int(_rx - valx); _rx = valx;
 		float valy = std::fmod(_ry, 1.0f);
-		cy += _ry - valy; _ry = valy;
+		cy += int(_ry - valy); _ry = valy;
 	}
 
 	// Apply final results
@@ -164,7 +164,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 
 	// Pre-Process Variables
 	bool isCollision = false;
-	int yposMax(ry - sheight);
+	int yposMax(int(ry - sheight));
 	float xposMax(_rx + swidth), rxMax(rx + swidth);
 	float xposMin(_rx - swidth), rxMin(rx - swidth);
 
@@ -175,7 +175,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 		if (int(xposMax) > int(rxMax)) {
 			// Check for right collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 			for (float xpos = _rx + cx, xtarget = xposMax + 1 + cx; xpos < xtarget && !isCollision; ++xpos) {
-				for (float ypos = ry + cy, ytarget = yposMax + cy; ypos > ytarget && !isCollision; --ypos)
+				for (float ypos = ry + cy, ytarget = float(yposMax + cy); ypos > ytarget && !isCollision; --ypos)
 					isCollision = g.hasCollision(xpos, ypos);
 			}
 		}
@@ -206,7 +206,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 		//if (int(xposMin) < int(rxMin)) {
 			// Check for left collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 			for (float xpos = _rx + cx, xtarget = xposMin - 1 + cx; xpos > xtarget && !isCollision; --xpos) {
-				for (float ypos = ry + cy, ytarget = yposMax + cy; ypos > ytarget && !isCollision; --ypos) {
+				for (float ypos = ry + cy, ytarget = float(yposMax + cy); ypos > ytarget && !isCollision; --ypos) {
 					isCollision = g.hasCollision(xpos, ypos);
 				}
 			}
@@ -221,7 +221,7 @@ void Entity::processHorizontal(Game& g, float& _rx, const float& _ry)
 		// Process movement on Left
 		} else if (_rx < 0.0f) {
 			// Update internal & full position x
-			int rxi(_rx);
+			int rxi((int)_rx);
 			if (_rx - rxi != 0.0f) rxi -= 1;
 			cx += rxi;
 			_rx -= rxi;
@@ -240,14 +240,14 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 	// Pre-Process Variables
 	bool isCollision = false;
 	float xposMin(_rx - swidth);
-	int xposMax(_rx + swidth + 1);
+	int xposMax(int(_rx + swidth + 1));
 	float cry(cy + _ry);
 
 	// Check & Need to process Down
 	if (dy > 0.0f && _ry > 1.0f) {
 
 		// Check for down collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
-		for (float xpos = xposMin + cx, target = xposMax + cx;
+		for (float xpos = xposMin + cx, target = float(xposMax + cx);
 			xpos < target && !isCollision; ++xpos
 		) isCollision = g.hasCollision(xpos, cry, false);
 
@@ -259,7 +259,7 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 		// Process Gravity/Falling
 		} else {
 			// Update internal & full position y
-			int ryi(_ry);
+			int ryi((int)_ry);
 			cy += ryi;
 			_ry -= ryi;
 		}
@@ -267,7 +267,7 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 		// Furtherprocess is Grounded (allowing bit of tolerance)
 		bool _isGrounded = isCollision;
 		for (float ypos = cry + 1.0f, ytarget = ypos + C::P_JUMP_TOL; !_isGrounded && ypos < ytarget; ++ypos) {
-			for (float xpos = xposMin + cx, target = xposMax + cx; xpos < target && !_isGrounded; ++xpos) 
+			for (float xpos = xposMin + cx, target = float(xposMax + cx); xpos < target && !_isGrounded; ++xpos)
 				_isGrounded = g.hasCollision(xpos, ypos, false);
 		}
 		setGrounded(_isGrounded);
@@ -285,7 +285,7 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 		// Check if need to process collisions
 		if (int(_ry - sheight) != int(ry - sheight)) {
 			// Check for up collisions (+ Allow single platform bypass) // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
-			for (float xpos = xposMin + cx, xtarget = xposMax + cx, collisionCount = 0; xpos < xtarget && !isCollision; ++xpos) {
+			for (float xpos = xposMin + cx, xtarget = float(xposMax + cx), collisionCount = 0; xpos < xtarget && !isCollision; ++xpos) {
 				for (float ypos = cry, ytarget = cry - sheight - 1; ypos > ytarget && !isCollision; --ypos) {
 					if (g.hasCollision(xpos, ypos, false)) {
 						if (++collisionCount > 1) isCollision = true;
@@ -302,7 +302,7 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 		// Process Jumping/Flying
 		} else if (_ry < 0.0f) {
 			// Update internal & full position y
-			int ryi(_ry);
+			int ryi((int)_ry);
 			if (_ry - ryi != 0.0f) --ryi;
 			cy += ryi;
 			_ry -= ryi;
@@ -342,11 +342,11 @@ void Entity::roundCoo()
 	rx = std::round(rx);
 	ry = std::round(ry);
 	if (rx != 0.0f) {
-		cx += rx;
+		cx += (int)rx;
 		rx = 0.0f;
 	}
 	if (ry != 0.0f) {
-		cy += ry;
+		cy += (int)ry;
 		ry = 0.0f;
 	}
 }
@@ -411,12 +411,12 @@ bool Entity::canJump() const
 
 void Entity::setDx(double dx)
 {
-	this->dx = std::clamp(dx, -C::E_MAX_X, C::E_MAX_X);
+	this->dx = (float)std::clamp(dx, -C::E_MAX_X, C::E_MAX_X);
 }
 
 void Entity::setDy(double dy)
 {
-	this->dy = std::clamp(dy, -C::E_MAX_Y, C::E_MAX_Y);
+	this->dy = (float)std::clamp(dy, -C::E_MAX_Y, C::E_MAX_Y);
 }
 
 void Entity::syncPos()
@@ -429,5 +429,8 @@ void Entity::syncPos()
 
 sf::Vector2i Entity::getPosPixel()
 {
-	return sf::Vector2i((cx + rx) * C::GRID_SIZE, (cy + ry) * C::GRID_SIZE);
+	return sf::Vector2i(
+		int((cx + rx) * C::GRID_SIZE),
+		int((cy + ry) * C::GRID_SIZE)
+	);
 }

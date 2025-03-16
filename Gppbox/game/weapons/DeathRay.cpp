@@ -36,18 +36,18 @@ DeathRay::~DeathRay()
 
 void DeathRay::update(double dt)
 {
-	if (drawDelay > 0.0f) drawDelay -= dt;
-	else if (cooldown > 0.0f) cooldown -= dt;
+	if (drawDelay > 0.0f) drawDelay -= (float)dt;
+	else if (cooldown > 0.0f) cooldown -= (float)dt;
 }
 
 void DeathRay::draw(sf::RenderTarget& win)
 {
 	sf::Vector2i coo = entity->getPosPixel();
-	coo.y -= entity->sheight * C::GRID_SIZE * 0.8f;
-	coo.x += entity->swidth * 0.2f *- C::GRID_SIZE;
-	if (entity->dirx > 0) coo.x -= entity->swidth * C::GRID_SIZE * 2;
-	else coo.x += entity->swidth * C::GRID_SIZE;
-	weaponHandle->setPosition(coo.x, coo.y);
+	coo.y -= int(entity->sheight * C::GRID_SIZE * 0.8f);
+	coo.x += int(entity->swidth * 0.2f *- C::GRID_SIZE);
+	if (entity->dirx > 0) coo.x -= int(entity->swidth * C::GRID_SIZE * 2);
+	else coo.x += int(entity->swidth * C::GRID_SIZE);
+	weaponHandle->setPosition((float)coo.x, (float)coo.y);
 
 	sf::Vector2f scale = weaponHandle->getScale();
 	if (Utils::sign<float>(scale.x) != Utils::sign<int>(entity->dirx)) {
@@ -130,7 +130,7 @@ std::vector<sf::Vector2i> DeathRay::bresenham()
 	if (orientation.x != 0.0f && orientation.y != 0.0f) {
 		reach = Utils::normalize(orientation);
 		reach.x *= entity->dirx;
-	} else reach.x = entity->dirx;
+	} else reach.x = (float)entity->dirx;
 
 	// Calculate size multiplier x
 	float multx = 0.0f;

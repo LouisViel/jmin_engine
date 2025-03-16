@@ -74,7 +74,7 @@ void HotReloadShader::tick() {
 void HotReloadShader::update(double dt) {
 	if (!enableHotReloading)
 		return;
-	time += dt;
+	time += (float)dt;
 	if (time > 0.2) {
 		tick();
 	}

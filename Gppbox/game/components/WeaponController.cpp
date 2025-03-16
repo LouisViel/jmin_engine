@@ -59,7 +59,7 @@ void WeaponController::preupdate(double dt)
 	NO_UPDATE(dt);
 
 	// Get Wp size & Update Weapon
-	int wpSize = weapons->size();
+	int wpSize = (int)weapons->size();
 	if (currentWeapon < wpSize) {
 		cweapon->update(dt);
 	}
@@ -138,7 +138,7 @@ void WeaponController::addRecoil(sf::Vector2f dir, float force)
 
 void WeaponController::secureWeapon()
 {
-	int wsize = weapons->size();
+	int wsize = (int)weapons->size();
 	if (currentWeapon >= wsize && wsize > 0) {
 		currentWeapon %= wsize;
 	}

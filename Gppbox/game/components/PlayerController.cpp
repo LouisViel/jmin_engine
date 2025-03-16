@@ -20,12 +20,12 @@ void PlayerController::preupdate(double dt)
 
 	// Update Coyotee Timer
 	if (!entity->isGrounded && coyoteeTime > 0.0f) {
-		coyoteeTime -= dt;
+		coyoteeTime -= (float)dt;
 	}
 
 	// Update Jump Delay Timer
 	if (jumpDelay > 0.0f) {
-		jumpDelay -= dt;
+		jumpDelay -= (float)dt;
 	}
 }
 
