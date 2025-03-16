@@ -1,0 +1,26 @@
+#pragma once
+#include "Weapon.hpp"
+#include "engine/utils/Throttle.hpp"
+
+namespace sf {
+	class RectangleShape;
+}
+
+class Rifle : public Weapon
+{
+private:
+	sf::RectangleShape* muzzle = nullptr;
+	float cooldown = 0.0f;
+	float muzzleDelay = 0.0f;
+
+public:
+	Rifle(Entity* entity, WeaponController* controller);
+	~Rifle();
+
+	void update(double dt) override;
+	void draw(sf::RenderTarget& win) override;
+
+private:
+	void shootBullet();
+	void shootEffect();
+};
