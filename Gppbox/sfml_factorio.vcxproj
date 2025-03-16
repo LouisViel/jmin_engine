@@ -1,14 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <DnxInvisibleFolder Include="./libs" />
-    <DnxInvisibleFolder Include="./res" />
-    <DnxInvisibleContent Include="dt.rdc" />
-    <DnxInvisibleContent Include="enjmin_rdoc.cap" />
-    <DnxInvisibleContent Include="gamemap.save" />
-    <DnxInvisibleContent Include="imgui.ini" />
-    <DnxInvisibleContent Include="openal32.dll" />
-  </ItemGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
