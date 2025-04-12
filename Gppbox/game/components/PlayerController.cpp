@@ -72,8 +72,8 @@ void PlayerController::processInputs(double dt)
 void PlayerController::onGrounded(bool state)
 {
 	if (state) {
-		coyoteeTime = C::P_COYOTEE;
-		jumpDelay = C::P_JUMPD;
+		//coyoteeTime = C::P_COYOTEE;
+		//jumpDelay = C::P_JUMPD;
 	}
 }
 

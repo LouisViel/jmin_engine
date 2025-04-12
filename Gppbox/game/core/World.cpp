@@ -3,14 +3,7 @@
 #include "game/core/Entity.hpp"
 
 #include "game/components/SpriteOverride.hpp"
-#include "game/components/EnnemyController.hpp"
 #include "game/components/PlayerController.hpp"
-#include "game/components/WeaponController.hpp"
-#include "game/components/PetDrone.hpp"
-
-#include "game/weapons/Rifle.hpp"
-#include "game/weapons/DeathRay.hpp"
-#include "game/weapons/MagicMissile.hpp"
 
 #include "engine/Utils.hpp"
 #include "app/C.hpp"
@@ -124,19 +117,12 @@ void World::initMainChar() {
 	e->swidth = C::P_WIDTH;
 	e->lifepoints = C::P_LIFEPOINTS;
 	e->speed = C::P_SPEED;
-	e->jumpforce = C::P_JUMP;
+	//e->jumpforce = C::P_JUMP;
 	e->dirx = 1;
 
 	// Add components
 	e->addComponent(new PlayerController(e));
 	e->addComponent(new SpriteOverride(e, "res/player.png"));
-
-	// Add weapons to player
-	WeaponController* wc = new WeaponController(e);
-	wc->addWeapon(new Rifle(e, wc));
-	wc->addWeapon(new DeathRay(e, wc));
-	wc->addWeapon(new MagicMissile(e, wc));
-	e->addComponent(wc);
 
 	// Register Player
 	entities->push_back(e);
@@ -162,13 +148,12 @@ void World::initPetDrone()
 	// Inject Drone Settings
 	e->sheight = sizeX;
 	e->swidth = sizeY;
-	e->speed = C::P_DRONE;
-	e->jumpforce = C::P_DRONE;
+	//e->speed = C::P_DRONE;
+	//e->jumpforce = C::P_DRONE;
 	e->fry = e->frx;
 	e->gravy = 0.0f;
 
 	// Add components
-	e->addComponent(new PetDrone(e, getPlayer()));
 	e->addComponent(new SpriteOverride(e, "res/drone.png"));
 	e->spr->setFillColor(sf::Color::Cyan);
 
@@ -180,7 +165,7 @@ void World::initPetDrone()
 Entity* World::initEnnemy(float x, float y)
 {
 	Entity* e = initEnnemyCore(x, y);
-	e->addComponent(new EnnemyController(e));
+	//e->addComponent(new EnnemyController(e));
 	entities->push_back(e);
 	ennemies->push_back(e);
 	return e;
@@ -205,7 +190,7 @@ Entity* World::initEnnemyCore(float x, float y)
 	e->swidth = C::P_WIDTH;
 	e->lifepoints = C::E_LIFEPOINTS;
 	e->speed = C::P_SPEED;
-	e->jumpforce = C::P_JUMP;
+	//e->jumpforce = C::P_JUMP;
 
 	// Add Override Sprite
 	e->addComponent(new SpriteOverride(e, "res/ennemy.png"));

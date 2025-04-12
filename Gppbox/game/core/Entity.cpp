@@ -266,7 +266,7 @@ void Entity::processVertical(Game& g, const float& _rx, float& _ry)
 
 		// Furtherprocess is Grounded (allowing bit of tolerance)
 		bool _isGrounded = isCollision;
-		for (float ypos = cry + 1.0f, ytarget = ypos + C::P_JUMP_TOL; !_isGrounded && ypos < ytarget; ++ypos) {
+		for (float ypos = cry + 1.0f, ytarget = ypos + /*C::P_JUMP_TOL*/ 0.0f; !_isGrounded && ypos < ytarget; ++ypos) {
 			for (float xpos = xposMin + cx, target = float(xposMax + cx); xpos < target && !_isGrounded; ++xpos)
 				_isGrounded = g.hasCollision(xpos, ypos, false);
 		}
