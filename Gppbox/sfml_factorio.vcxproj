@@ -228,6 +228,7 @@
     <ClInclude Include="game\core\object\Object.hpp" />
     <ClInclude Include="game\components\Renderer.hpp" />
     <ClInclude Include="game\core\object\Rigidbody.hpp" />
+    <ClInclude Include="game\core\NodeType.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

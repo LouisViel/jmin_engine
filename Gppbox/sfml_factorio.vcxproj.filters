@@ -200,6 +200,9 @@
     <ClInclude Include="game\core\object\Collider.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="game\core\NodeType.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

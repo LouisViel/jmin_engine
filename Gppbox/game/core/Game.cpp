@@ -224,10 +224,10 @@ bool Game::isBorderY(float gridy) const
 // Check if there is a Wall (Collision) at this position
 bool Game::isWall(int cx, int cy) const
 {
-	for (Vector2i& w : this->environment->collisions) {
+	/*for (Vector2i& w : this->environment->collisions) {
 		if (w.x == cx && w.y == cy)
 			return true;
-	}
+	}*/
 	return false;
 }
 

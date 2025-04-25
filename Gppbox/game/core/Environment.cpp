@@ -57,7 +57,8 @@ void Environment::initTmxEnvironment()
 			NodeType nodeType = getNodeType(x, y);
 #pragma warning( push )
 #pragma warning( disable : 26813)
-			if (nodeType == NodeType::Wood) nodeWood.push_back(sf::Vector2i(x, y));
+			if (nodeType == NodeType::Wall) walls.push_back(sf::Vector2i(x, y));
+			else if (nodeType == NodeType::Wood) nodeWood.push_back(sf::Vector2i(x, y));
 			else if (nodeType == NodeType::Stone) nodeStone.push_back(sf::Vector2i(x, y));
 			else if (nodeType == NodeType::Coal) nodeCoal.push_back(sf::Vector2i(x, y));
 			else if (nodeType == NodeType::Iron) nodeIron.push_back(sf::Vector2i(x, y));
@@ -87,6 +88,7 @@ NodeType Environment::getNodeType(int x, int y)
 
 NodeType Environment::getNodeType(std::string tileType)
 {
+	if (tileType == "Node-Wall") return NodeType::Wall;
 	if (tileType == "Node-Wood") return NodeType::Wood;
 	if (tileType == "Node-Stone") return NodeType::Stone;
 	if (tileType == "Node-Coal") return NodeType::Coal;
@@ -102,6 +104,7 @@ NodeType Environment::getNodeType(std::string tileType)
 
 bool Environment::isNode(NodeType nodeType, int x, int y)
 {
+	if ((nodeType & NodeType::Wall) != NodeType::None && isNode(walls, x, y)) return true;
 	if ((nodeType & NodeType::Wood) != NodeType::None && isNode(nodeWood, x, y)) return true;
 	if ((nodeType & NodeType::Stone) != NodeType::None && isNode(nodeStone, x, y)) return true;
 	if ((nodeType & NodeType::Coal) != NodeType::None && isNode(nodeCoal, x, y)) return true;

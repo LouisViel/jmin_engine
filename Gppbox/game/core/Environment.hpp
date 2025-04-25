@@ -24,6 +24,7 @@ private:
 	MapLayer* tmxZero = nullptr;
 
 public:
+	std::vector<sf::Vector2i> walls;
 	std::vector<sf::Vector2i> nodeWood;
 	std::vector<sf::Vector2i> nodeStone;
 	std::vector<sf::Vector2i> nodeCoal;
