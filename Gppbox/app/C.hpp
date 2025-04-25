@@ -8,6 +8,7 @@ namespace C
 	static constexpr float F_TARGET = 60.0f; // 60.0f // App Target Framerate
 	static constexpr const char* SAVE_FILE = "gamemap.save";
 	static constexpr const char* SAVE_SPLIT = "--\n";
+	static constexpr const char* TMX_FILE = "assets/tiled/map.tmx";
 
 	// Game Constants
 	static constexpr int GRID_SIZE = 16;

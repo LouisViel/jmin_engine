@@ -89,7 +89,7 @@ void Game::draw(sf::RenderWindow& win)
 
 	// Enable Camera Drawing
 	//if (!mapEditor->active) {
-		camera->setActive(*target);
+		//camera->setActive(*target);
 	//}
 
 	// Draw Background

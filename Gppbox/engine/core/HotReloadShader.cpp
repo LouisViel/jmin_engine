@@ -3,8 +3,8 @@
 #include <iostream>
 #include "Lib.hpp"
 
-string HotReloadShader::getFileContent(const std::string & path) {
-	string res;
+std::string HotReloadShader::getFileContent(const std::string & path) {
+	std::string res;
 
 	FILE * f = fopen(path.c_str(), "r");
 	if (!f) return "";

@@ -33,7 +33,7 @@ extern "C" {
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
-using namespace std;
+//using namespace std;
 using namespace sf;
 
 static HotReloadShader* bloomShader = nullptr;
@@ -52,13 +52,13 @@ int main()
 	Font font;
 
     if (!font.loadFromFile("res/MAIAN.TTF")) {
-        cout << "ERROR NO FONT" << endl;
+		std::cout << "ERROR NO FONT" << std::endl;
         return 1;
     }
 
 	if (!sf::Shader::isAvailable())
 	{
-		cout << "ERROR NO SHADER SYSTEM" << endl;
+		std::cout << "ERROR NO SHADER SYSTEM" << std::endl;
 		return 1;
 	}
 

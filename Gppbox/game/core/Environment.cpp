@@ -6,14 +6,18 @@
 Environment::Environment(sf::RenderWindow* win)
 {
 	this->win = win;
-	initEnvironment();
+	if (useTmx) initTmxEnvironment();
+	else initEnvironment();
 	initBackground();
 }
 
 Environment::~Environment()
 {
 	delete bgShader;
-	delete environment;
+	if (useTmx) {
+		delete tmxZero;
+		delete tmxMap;
+	} else delete environment;
 }
 
 
@@ -21,12 +25,6 @@ Environment::~Environment()
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
-
-void Environment::initEnvironment()
-{
-	environment = new TileMap();
-	//environment->load();
-}
 
 void Environment::initBackground()
 {
@@ -38,6 +36,86 @@ void Environment::initBackground()
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 }
 
+void Environment::initEnvironment()
+{
+	throw std::exception(); // Will not be implemented cause using tmx instead
+	environment = new TileMap();
+	//environment->load();
+}
+
+void Environment::initTmxEnvironment()
+{
+	// Init Tmx Tilemap
+	tmxMap = new tmx::Map();
+	tmxMap->load(C::TMX_FILE);
+	tmxZero = new MapLayer(*tmxMap, 0);
+	
+	// Register Node Locations
+	tmx::Vector2u tileCount = tmxMap->getTileCount();
+	for (int x = 0; x < (int)tileCount.x; ++x) {
+		for (int y = 0; y < (int)tileCount.y; ++y) {
+			NodeType nodeType = getNodeType(x, y);
+#pragma warning( push )
+#pragma warning( disable : 26813)
+			if (nodeType == NodeType::Wood) nodeWood.push_back(sf::Vector2i(x, y));
+			else if (nodeType == NodeType::Stone) nodeStone.push_back(sf::Vector2i(x, y));
+			else if (nodeType == NodeType::Coal) nodeCoal.push_back(sf::Vector2i(x, y));
+			else if (nodeType == NodeType::Iron) nodeIron.push_back(sf::Vector2i(x, y));
+#pragma warning( pop )
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+NodeType Environment::getNodeType(int x, int y)
+{
+	uint32_t id = tmxZero->getTile(x, y).ID;
+	for (tmx::Tileset tileset : tmxMap->getTilesets()) {
+		if (tileset.hasTile(id)) {
+			std::string tileType = tileset.getTile(id)->className;
+			NodeType nodeType = getNodeType(tileType);
+			if (nodeType != NodeType::None) return nodeType;
+		}
+	}
+	return NodeType::None;
+}
+
+NodeType Environment::getNodeType(std::string tileType)
+{
+	if (tileType == "Node-Wood") return NodeType::Wood;
+	if (tileType == "Node-Stone") return NodeType::Stone;
+	if (tileType == "Node-Coal") return NodeType::Coal;
+	if (tileType == "Node-Iron") return NodeType::Iron;
+	return NodeType::None;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+bool Environment::isNode(NodeType nodeType, int x, int y)
+{
+	if ((nodeType & NodeType::Wood) != NodeType::None && isNode(nodeWood, x, y)) return true;
+	if ((nodeType & NodeType::Stone) != NodeType::None && isNode(nodeStone, x, y)) return true;
+	if ((nodeType & NodeType::Coal) != NodeType::None && isNode(nodeCoal, x, y)) return true;
+	if ((nodeType & NodeType::Iron) != NodeType::None && isNode(nodeIron, x, y)) return true;
+	return false;
+}
+
+bool Environment::isNode(std::vector<sf::Vector2i>& nodes, int x, int y)
+{
+	for (sf::Vector2i& node : nodes)
+		if (node.x == x && node.y == y) return true;
+	return false;
+}
+
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -47,6 +125,7 @@ void Environment::initBackground()
 void Environment::update(double dt)
 {
 	if (bgShader) bgShader->update(dt);
+	tmxZero->update(sf::seconds((float)dt));
 }
 
 
@@ -69,7 +148,8 @@ void Environment::drawWorld(sf::RenderTarget& win)
 
 void Environment::drawCamera(sf::RenderTarget& win)
 {
-	win.draw(*environment, sf::RenderStates::Default);
+	if (useTmx) win.draw(*tmxZero, sf::RenderStates::Default);
+	else win.draw(*environment, sf::RenderStates::Default);
 	//for (sf::RectangleShape& r : wallSprites) win.draw(r);
 }
 
@@ -79,13 +159,13 @@ void Environment::imgui()
 	if (CollapsingHeader("World", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		// Draw Debug Walls
-		if (TreeNodeEx("Collisions")) {
+		/*if (TreeNodeEx("Collisions")) {
 			for (sf::Vector2i& w : collisions) {
 				Value("x", w.x);
 				Value("y", w.y);
 			}
 			TreePop();
-		}
+		}*/
 	}
 }
 

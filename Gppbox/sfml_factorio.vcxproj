@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);libs\eastl\test\packages\EABase\include\Common;libs\eastl\include;libs\imgui;libs\imgui-sfml;libs\SFML-2.5.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>libs\SFML-2.5.1\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <IncludePath>libs\tmxlite-1.4.4\include;$(ProjectDir);libs\eastl\test\packages\EABase\include\Common;libs\eastl\include;libs\imgui;libs\imgui-sfml;libs\SFML-2.5.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>libs\tmxlite-1.4.4\lib;libs\SFML-2.5.1\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -138,7 +138,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;openal32.lib;ogg.lib;freetype.lib;flac.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;openal32.lib;ogg.lib;freetype.lib;flac.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;libtmxlite-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
