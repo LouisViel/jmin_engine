@@ -1,11 +1,11 @@
 #include "Utils.hpp"
-#include "game/core/Entity.hpp"
+#include "game/core/object/Object.hpp"
+#include "game/core/object/Collider.hpp"
 #include "app/M.hpp"
-#include "app/C.hpp"
 
-bool Utils::isFullBody(Entity* entity, int gridx, int gridy)
+bool Utils::isFullBody(Object* object, int gridx, int gridy)
 {
-    FULL_CHECK(entity, (xpos == gridx && int(ypos) == gridy));
+    FULL_CHECK(object, (xpos == gridx && int(ypos) == gridy));
 }
 
 

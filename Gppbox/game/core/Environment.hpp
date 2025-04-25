@@ -2,30 +2,27 @@
 
 #include <vector>
 #include "engine/core/HotReloadShader.hpp"
-#include "MapEditor.hpp"
+#include "engine/utils/TileMap.hpp"
 
 class Environment
 {
 public:
 	sf::RenderWindow* win;
 
-	sf::RectangleShape bgHandle;
 	HotReloadShader* bgShader = nullptr;
 	sf::Texture	bgTexture;
-	sf::Texture wallTexture;
+	sf::RectangleShape bgHandle;
 
-	std::vector<sf::Vector2i> walls;
-	std::vector<sf::RectangleShape> wallSprites;
+	TileMap* environment = nullptr;
+	std::vector<sf::Vector2i> collisions;
 
 	~Environment();
 	Environment(sf::RenderWindow* win);
 	void initBackground();
+	void initEnvironment();
 
 	void update(double dt);
 	void drawWorld(sf::RenderTarget& win);
 	void drawCamera(sf::RenderTarget& win);
 	void imgui();
-
-	void cacheWalls();
-	void debug();
 };

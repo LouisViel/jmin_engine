@@ -7,6 +7,6 @@ private:
 	float lifetime = 0.0f;
 
 public:
-	Lifetime(Entity* entity, float lifetime);
+	Lifetime(Object* object, float lifetime);
 	void preupdate(double dt) override;
 };

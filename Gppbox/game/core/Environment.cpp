@@ -6,12 +6,14 @@
 Environment::Environment(sf::RenderWindow* win)
 {
 	this->win = win;
+	initEnvironment();
 	initBackground();
 }
 
 Environment::~Environment()
 {
 	delete bgShader;
+	delete environment;
 }
 
 
@@ -20,16 +22,22 @@ Environment::~Environment()
 //////////////////////////////////////////////////////////////////
 
 
+void Environment::initEnvironment()
+{
+	environment = new TileMap();
+	//environment->load();
+}
+
 void Environment::initBackground()
 {
-	bool isOk = wallTexture.loadFromFile("res/wall.png");
-	isOk &= bgTexture.loadFromFile("res/bg_city.jpg");
+	bool isOk = bgTexture.loadFromFile("res/bg_city.jpg");
 	if (!isOk) printf("ERR : LOAD FAILED\n");
 	bgHandle = sf::RectangleShape(sf::Vector2f((float)win->getSize().x, (float)win->getSize().y));
 	bgHandle.setTexture(&bgTexture);
 	bgHandle.setSize(sf::Vector2f(C::RES_X, C::RES_Y));
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 }
+
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -61,8 +69,8 @@ void Environment::drawWorld(sf::RenderTarget& win)
 
 void Environment::drawCamera(sf::RenderTarget& win)
 {
-	// Draw Walls
-	for (sf::RectangleShape& r : wallSprites) win.draw(r);
+	win.draw(*environment, sf::RenderStates::Default);
+	//for (sf::RectangleShape& r : wallSprites) win.draw(r);
 }
 
 void Environment::imgui()
@@ -71,8 +79,8 @@ void Environment::imgui()
 	if (CollapsingHeader("World", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		// Draw Debug Walls
-		if (TreeNodeEx("Walls")) {
-			for (sf::Vector2i& w : walls) {
+		if (TreeNodeEx("Collisions")) {
+			for (sf::Vector2i& w : collisions) {
 				Value("x", w.x);
 				Value("y", w.y);
 			}
@@ -88,20 +96,14 @@ void Environment::imgui()
 
 
 // Cache Walls to Graphics
-void Environment::cacheWalls()
-{
-	wallSprites.clear();
-	for (sf::Vector2i& w : walls) {
-		sf::RectangleShape rect(sf::Vector2f(C::GRID_SIZE, C::GRID_SIZE));
-		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
-		//rect.setFillColor(sf::Color(0x07ff07ff));
-		rect.setTexture(&wallTexture);
-		wallSprites.push_back(rect);
-	}
-}
-
-void Environment::debug()
-{
-	walls.clear();
-	cacheWalls();
-}
+//void Environment::cacheWalls()
+//{
+//	wallSprites.clear();
+//	for (sf::Vector2i& w : walls) {
+//		sf::RectangleShape rect(sf::Vector2f(C::GRID_SIZE, C::GRID_SIZE));
+//		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
+//		//rect.setFillColor(sf::Color(0x07ff07ff));
+//		rect.setTexture(&wallTexture);
+//		wallSprites.push_back(rect);
+//	}
+//}

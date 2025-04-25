@@ -1,11 +1,12 @@
 #include "Bullet.hpp"
 #include "game/core/Game.hpp"
 #include "game/core/World.hpp"
-#include "game/core/Entity.hpp"
+#include "game/core/object/Object.hpp"
+#include "game/core/object/Collider.hpp"
 
-Bullet::Bullet(Entity* entity) : Component(entity) { }
+Bullet::Bullet(Object* object) : Component(object) { }
 
-Bullet::Bullet(Entity* entity, float _damages) : Component(entity), damages(_damages) { }
+Bullet::Bullet(Object* object, float _damages) : Component(object), damages(_damages) { }
 
 void Bullet::fixed(double fdt)
 {
@@ -13,17 +14,18 @@ void Bullet::fixed(double fdt)
 	World* w = g->world;
 
 	// Check if oustide world bounds
-	if (g->isBorderX((float)entity->cx) || g->isBorderY((float)entity->cy) || g->isWall(entity->cx, entity->cy)) {
-		w->removeEntity(nullptr, entity);
+	Collider* col = gameobject->collider;
+	if (g->isBorderX((float)col->cx) || g->isBorderY((float)col->cy) || g->isWall(col->cx, col->cy)) {
+		w->removeObject(nullptr, gameobject);
 		return;
 	}
 
 	// Check if hit an ennemy
-	Entity* ennemy = w->getEnnemy(entity->cx, entity->cy);
+	/*Object* ennemy = w->getEnnemy(col->cx, col->cy);
 	if (ennemy != nullptr && ennemy->lifepoints > 0.0f) {
 		ennemy->lifepoints -= damages;
 		if (ennemy->lifepoints <= 0.0f) w->removeEnnemy(ennemy);
-		w->removeEntity(nullptr, entity);
+		w->removeObject(nullptr, gameobject);
 		return;
-	}
+	}*/
 }

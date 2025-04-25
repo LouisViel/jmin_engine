@@ -6,11 +6,11 @@
 #include "app/M.hpp"
 #include "app/C.hpp"
 
-#include "game/core/Entity.hpp"
+#include "game/core/object/Object.hpp"
+#include "game/core/object/Collider.hpp"
 #include "game/core/Camera.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
-#include "game/core/MapEditor.hpp"
 
 
 
@@ -26,8 +26,6 @@ Game::Game(sf::RenderWindow* win)
 	// Create Managers
 	environment = new Environment(win);
 	world = new World(win);
-	mapEditor = new MapEditor(win, environment, world);
-	mapEditor->load();
 
 	// Create Camera
 	camera = new Camera(world, { C::C_CENTER_X, C::C_CENTER_Y }, { C::C_SIZE_X, C::C_SIZE_Y });
@@ -38,7 +36,7 @@ Game::~Game()
 	singleton = nullptr;
 	delete environment;
 	delete world;
-	delete mapEditor;
+	delete camera;
 }
 
 
@@ -52,10 +50,10 @@ void Game::preupdate(double dt)
 	g_time += dt;
 	g_tickTimer = dt;
 
-	mapEditor->update(dt);
-	double adt = mapEditor->active ? 0.0 : dt;
+	//mapEditor->update(dt);
+	//double adt = mapEditor->active ? 0.0 : dt;
 
-	world->preupdate(adt);
+	world->preupdate(dt);
 	if (InputHandler::getDebug()) {
 		camera->addShake(0.5f, 1.0f);
 	}
@@ -63,18 +61,14 @@ void Game::preupdate(double dt)
 
 void Game::fixed(double fdt)
 {
-	if (!mapEditor->active) {
-		world->fixed(fdt);
-	}
+	world->fixed(fdt);
 }
 
 void Game::update(double dt)
 {
-	if (!mapEditor->active) {
-		environment->update(dt);
-		world->update(dt);
-		camera->update(dt);
-	}
+	environment->update(dt);
+	world->update(dt);
+	camera->update(dt);
 	world->processDelete();
 }
 
@@ -94,9 +88,9 @@ void Game::draw(sf::RenderWindow& win)
 	//environment->drawWorld(*target);
 
 	// Enable Camera Drawing
-	if (!mapEditor->active) {
+	//if (!mapEditor->active) {
 		camera->setActive(*target);
-	}
+	//}
 
 	// Draw Background
 	environment->drawWorld(*target);
@@ -104,7 +98,6 @@ void Game::draw(sf::RenderWindow& win)
 	// Draw Camera Renderings
 	environment->drawCamera(*target);
 	world->draw(*target);
-	mapEditor->draw(*target);
 
 	// Set Back target view
 	target->setView(defaultView);
@@ -141,7 +134,6 @@ void Game::imgui()
 	// Propagate Imgui
 	environment->imgui();
 	world->imgui();
-	mapEditor->imgui();
 }
 
 
@@ -164,7 +156,7 @@ void Game::processEvents(sf::Event ev)
 
 		// Key [K] for walls reset debug
 		if (ev.key.code == Keyboard::K) {
-			environment->debug();
+			//environment->debug();
 			return;
 		}
 	}
@@ -177,9 +169,9 @@ void Game::processEvents(sf::Event ev)
 
 
 // Full check for Occupied Space
-bool Game::isOccupied(Entity* entity) const
+bool Game::isOccupied(Object* object) const
 {
-	FULL_CHECK(entity, this->isOccupied(xpos, (int)ypos));
+	FULL_CHECK(object, this->isOccupied(xpos, (int)ypos));
 }
 
 // Full check for Occupied Space
@@ -232,7 +224,7 @@ bool Game::isBorderY(float gridy) const
 // Check if there is a Wall (Collision) at this position
 bool Game::isWall(int cx, int cy) const
 {
-	for (Vector2i& w : this->environment->walls) {
+	for (Vector2i& w : this->environment->collisions) {
 		if (w.x == cx && w.y == cy)
 			return true;
 	}

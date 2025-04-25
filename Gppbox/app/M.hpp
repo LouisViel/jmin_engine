@@ -1,4 +1,5 @@
 #pragma once
+#include "C.hpp"
 
 namespace M
 {
@@ -6,18 +7,19 @@ namespace M
 	#define NO_UPDATE(dt) if (dt <= 0.0) { return; }
 
 
-	// FULL_CHECK(entity, (xpos == targetX && int(ypos) == targetY))
-	#define FULL_CHECK(entity, condition) \
-		/* Verify entity */ \
-		if (!entity) return false; \
+	// FULL_CHECK(object, (xpos == targetX && int(ypos) == targetY))
+	#define FULL_CHECK(object, condition) \
+		/* Verify object */ \
+		if (!object || !object->collider) return false; \
 		\
 		/* Prepare full check Variables */ \
-		int xposMin(int(entity->rx - entity->swidth - C::E_ADJUSTMENT_X + entity->cx)); \
-		int xposMax(int(entity->rx + entity->swidth + entity->cx)); \
-		float cry(entity->cy + entity->ry); \
+		Collider* collider = object->collider; \
+		int xposMin(int(collider->rx - collider->width - C::E_ADJUSTMENT_X + collider->cx)); \
+		int xposMax(int(collider->rx + collider->width + collider->cx)); \
+		float cry(collider->cy + collider->ry); \
 		\
 		/* Process full body check */ \
-		for (float ypos = cry, ytarget = cry - entity->sheight; ypos > ytarget; --ypos) { \
+		for (float ypos = cry, ytarget = cry - collider->height; ypos > ytarget; --ypos) { \
 			for (int xpos = xposMin; xpos <= xposMax; ++xpos) { \
 				if (condition) return true;\
 			} \
@@ -27,7 +29,7 @@ namespace M
 		return false;
 
 
-	// REMOVE_ITEM(Entity*, entities, target)
+	// REMOVE_ITEM(Object*, gameobjects, target)
 	#define REMOVE_ITEM(objType, vector, obj) \
 		for (int i = 0; i < (int)vector->size(); ++i) { \
 			objType iobj = vector->operator[](i); \
@@ -55,25 +57,25 @@ namespace M
 
 
 	// Loop Forward on vector
-	// LOOPF_PTR(entities, Entity*)
+	// LOOPF_PTR(gameobjects, Object*)
 	#define LOOPF(vector, obj) \
 		for (int i = 0; i < (int)vector.size(); ++i) { \
 			obj = vector[i];
 
 	// Loop Backward on vector
-	// LOOPF_PTR(entities, Entity*)
+	// LOOPF_PTR(gameobjects, Object*)
 	#define LOOPB(vector, obj) \
 		for (int i = (int)vector.size() - 1; i >= 0; --i) { \
 			obj = vector[i];
 
 	// Loop Forward on pointer vector
-	// LOOPF_PTR(entities, Entity*)
+	// LOOPF_PTR(gameobjects, Object*)
 	#define LOOPF_PTR(vector, obj) \
 		for (int i = 0; i < (int)vector->size(); ++i) { \
 			obj = vector->operator[](i);
 
 	// Loop Backward on pointer vector
-	// LOOPF_PTR(entities, Entity*)
+	// LOOPF_PTR(gameobjects, Object*)
 	#define LOOPB_PTR(vector, obj) \
 		for (int i = (int)vector->size() - 1; i >= 0; --i) { \
 			obj = vector->operator[](i);

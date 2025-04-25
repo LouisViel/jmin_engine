@@ -5,7 +5,7 @@
 #include "SFML/System.hpp"
 #include "SFML/Window.hpp"
 
-class Entity;
+class Object;
 class Environment;
 class World;
 class MapEditor;
@@ -22,7 +22,6 @@ public:
 	
 	Environment* environment = nullptr;
 	World* world = nullptr;
-	MapEditor* mapEditor = nullptr;
 	Camera* camera = nullptr;
 
 	
@@ -37,7 +36,7 @@ public:
 
 	void processEvents(sf::Event ev);
 
-	bool isOccupied(Entity* entity) const;
+	bool isOccupied(Object* object) const;
 	bool isOccupied(int gridx, int gridy) const;
 	bool isPlayer(int gridx, int gridy) const;
 	bool isEnnemy(int gridx, int gridy) const;

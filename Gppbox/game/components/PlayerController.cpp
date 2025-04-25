@@ -1,10 +1,10 @@
 #include "PlayerController.hpp"
 #include "engine/utils/InputHandler.hpp"
-#include "game/core/Entity.hpp"
+#include "game/core/object/Object.hpp"
+#include "game/core/object/Rigidbody.hpp"
 #include "app/M.hpp"
-#include "app/C.hpp"
 
-PlayerController::PlayerController(Entity* entity) : Component(entity) { }
+PlayerController::PlayerController(Object* object) : Component(object) { }
 
 
 //////////////////////////////////////////////////////////////////
@@ -17,11 +17,6 @@ void PlayerController::preupdate(double dt)
 	// No logistic Update
 	NO_UPDATE(dt);
 	processInputs(dt);
-
-	// Update Coyotee Timer
-	if (!entity->isGrounded && coyoteeTime > 0.0f) {
-		coyoteeTime -= (float)dt;
-	}
 
 	// Update Jump Delay Timer
 	if (jumpDelay > 0.0f) {
@@ -49,42 +44,12 @@ void PlayerController::processInputs(double dt)
 
 	// Get & Apply Horizontal Movement
 	sf::Vector2f hor = InputHandler::getHorizontal();
-	if (hor.x > 0.5f) {
-		entity->setDx(entity->dx - entity->speed * dt * hor.x);
-		entity->dirx = -1;
-	} else if (hor.y > 0.5f) {
-		entity->setDx(entity->dx + entity->speed * dt * hor.y);
-		entity->dirx = 1;
-	}
+	Rigidbody* const rb = gameobject->rigidbody;
+	if (hor.x > 0.5f) rb->setDx(rb->dx - rb->speed * dt * hor.x);
+	else if (hor.y > 0.5f) rb->setDx(rb->dx + rb->speed * dt * hor.y);
 
 	// Get & Apply Jump
-	if (InputHandler::getJump()) {
-		entity->setJumping(true);
-	}
-}
-
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-
-
-void PlayerController::onGrounded(bool state)
-{
-	if (state) {
-		//coyoteeTime = C::P_COYOTEE;
-		//jumpDelay = C::P_JUMPD;
-	}
-}
-
-void PlayerController::onJumping(bool state)
-{
-	if (state) {
-		coyoteeTime = 0.0f;
-	}
-}
-
-bool PlayerController::canJump()
-{
-	return jumpDelay <= 0.0f && coyoteeTime > 0.0f;
+	/*if (InputHandler::getJump()) {
+		object->setJumping(true);
+	}*/
 }

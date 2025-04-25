@@ -3,7 +3,7 @@
 #include <math.h>
 #include "SFML/System/Vector2.hpp"
 
-class Entity;
+class Object;
 
 class Utils
 {
@@ -12,7 +12,7 @@ private:
 	#define DegToRad (M_PI / 180.0f)
 
 public:
-	static bool isFullBody(Entity* entity, int gridx, int gridy);
+	static bool isFullBody(Object* object, int gridx, int gridy);
 	template <typename T> static int sign(T value);
 
 	static float toLength(const sf::Vector2i& source);

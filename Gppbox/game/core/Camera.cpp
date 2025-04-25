@@ -1,6 +1,6 @@
 #include "Camera.hpp"
 #include "engine/utils/Dice.hpp"
-#include "game/core/Entity.hpp"
+#include "game/core/object/Object.hpp"
 #include "game/core/World.hpp"
 #include "app/C.hpp"
 
@@ -18,13 +18,14 @@ Camera::Camera(World* world, sf::Vector2f center, sf::Vector2f size) : m_throttl
 
 void Camera::update(double dt)
 {
-	Entity* player = world->getPlayer();
+	Object* player = world->getPlayer();
 	if (!player) return;
 
 	sf::Vector2f shake = processShake(dt);
-	float x = (player->cx + player->rx) * C::GRID_SIZE + shake.x;
-	float y = (player->cy + player->ry - 2.5f) * C::GRID_SIZE + shake.y;
-	m_view.setCenter(x, y);
+	sf::Vector2f pos = player->getPosition();
+	//float x = (player->cx + player->rx) * C::GRID_SIZE + shake.x;
+	//float y = (player->cy + player->ry - 2.5f) * C::GRID_SIZE + shake.y;
+	m_view.setCenter(pos.x + shake.x, pos.y + shake.y);
 }
 
 void Camera::imgui()

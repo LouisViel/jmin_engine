@@ -1,18 +1,17 @@
 #pragma once
 
-class Entity;
-namespace sf {
-	class RenderTarget;
-}
+#include <SFML/Graphics.hpp>
 
-class Component
+class Object;
+
+class Component : public sf::Drawable
 {
 protected:
-	Entity* entity;
+	Object* gameobject;
 
 public:
 	Component() = delete;
-	Component(Entity* _entity) : entity(_entity) { }
+	Component(Object* _object) : gameobject(_object) { }
 	virtual ~Component() { }
 
 	virtual void preupdate(double dt) { } // Pre Update (called even in "edit mode")
@@ -21,7 +20,6 @@ public:
 	virtual void draw(sf::RenderTarget& win) { } // Graphics Drawing
 	virtual void imgui() { } // Imgui Drawing
 
-	virtual void onGrounded(bool state) { }
-	virtual void onJumping(bool state) { }
-	virtual bool canJump() { return true; }
+private:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override { }
 };

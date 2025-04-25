@@ -167,6 +167,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\object\Building.cpp" />
+    <ClCompile Include="game\object\Convoyer.cpp" />
     <ClCompile Include="engine\core\Bloom.cpp" />
     <ClCompile Include="engine\core\HotReloadShader.cpp" />
     <ClCompile Include="engine\core\Lib.cpp" />
@@ -178,17 +180,17 @@
     <ClCompile Include="game\components\Lifetime.cpp" />
     <ClCompile Include="game\components\PlayerController.cpp" />
     <ClCompile Include="game\components\SpawnOnDestroy.cpp" />
-    <ClCompile Include="game\components\SpriteOverride.cpp" />
     <ClCompile Include="game\core\Camera.cpp" />
-    <ClCompile Include="game\core\Entity.cpp" />
     <ClCompile Include="game\core\Environment.cpp" />
     <ClCompile Include="game\core\Game.cpp" />
-    <ClCompile Include="game\core\MapEditor.cpp" />
     <ClCompile Include="game\core\World.cpp" />
     <ClCompile Include="libs\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="game\core\object\Object.cpp" />
+    <ClCompile Include="game\components\Renderer.cpp" />
+    <ClCompile Include="game\core\object\Rigidbody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app.h" />
@@ -196,6 +198,9 @@
     <ClInclude Include="app\C.hpp" />
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
+    <ClInclude Include="game\core\object\Collider.hpp" />
+    <ClInclude Include="game\object\Building.hpp" />
+    <ClInclude Include="game\object\Convoyer.hpp" />
     <ClInclude Include="engine\core\Bloom.hpp" />
     <ClInclude Include="engine\core\HotReloadShader.hpp" />
     <ClInclude Include="engine\core\Interp.hpp" />
@@ -213,16 +218,16 @@
     <ClInclude Include="game\components\Lifetime.hpp" />
     <ClInclude Include="game\components\PlayerController.hpp" />
     <ClInclude Include="game\components\SpawnOnDestroy.hpp" />
-    <ClInclude Include="game\components\SpriteOverride.hpp" />
     <ClInclude Include="game\core\Camera.hpp" />
-    <ClInclude Include="game\core\Entity.hpp" />
     <ClInclude Include="game\core\Environment.hpp" />
     <ClInclude Include="game\core\Game.hpp" />
-    <ClInclude Include="game\core\MapEditor.hpp" />
     <ClInclude Include="game\core\World.hpp" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML.h" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML_export.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
+    <ClInclude Include="game\core\object\Object.hpp" />
+    <ClInclude Include="game\components\Renderer.hpp" />
+    <ClInclude Include="game\core\object\Rigidbody.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

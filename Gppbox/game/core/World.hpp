@@ -6,42 +6,54 @@
 #include "engine/core/ParticleMan.hpp"
 #include "app/M.hpp"
 
-class Entity;
+#include "game/object/Building.hpp"
+#include "game/object/Convoyer.hpp"
+
+class Object;
 namespace sf {
 	class RenderWindow;
+	class RenderTarget;
 }
 
 class World
 {
 private:
-	// Loop Forward on entities
+	// Loop Forward on gameobjects
 	#define LOOPF_E(action) \
-		LOOPF_PTR(entities, Entity* e) \
+		LOOPF_PTR(gameobjects, Object* e) \
 		action; \
 		LOOP_END
 
-	// Loop Backward on entities
+	// Loop Backward on gameobjects
 	#define LOOPB_E(action) \
-		LOOPB_PTR(entities, Entity* e) \
+		LOOPB_PTR(gameobjects, Object* e) \
 		action; \
 		LOOP_END
 
-	// Entity delete set (for nice cleaning)
-	std::unordered_set<Entity*> toDelete;
+	// Object delete set (for nice cleaning)
+	std::unordered_set<Object*> toDelete;
 
 public:
-	std::vector<Entity*>* entities = nullptr;
-	std::vector<Entity*>* ennemies = nullptr;
-	ParticleMan beforeParts;
-	ParticleMan afterParts;
+	std::vector<Building*>* buildings = nullptr;
+	std::vector<Convoyer*>* convoyers = nullptr;
+	// Here insert Player draw
+	std::vector<Object*>* details = nullptr;
+	// Here insert "Bonus" draws (style particles)
+
+	// Render UI Gameplay
+	// Render UI Utils (ex : pause, quitter jeu, ect..)
+	// Render UI Help (tooltips)
+
+	std::vector<Object*>* gameobjects = nullptr;
+	
 
 	World(sf::RenderWindow* win);
 	~World();
 
 	void initMainChar();
 	void initPetDrone();
-	Entity* initEnnemy(float x, float y);
-	Entity* initEnnemyCore(float x, float y);
+	Object* initEnnemy(float x, float y);
+	Object* initEnnemyCore(float x, float y);
 
 	void preupdate(double dt);
 	void fixed(double fdt);
@@ -50,12 +62,12 @@ public:
 	void draw(sf::RenderTarget& win);
 	void imgui();
 
-	void removeEnnemy(Entity* ennemy);
-	void removeEntity(std::vector<Entity*>* quick, Entity* e);
+	void removeEnnemy(Object* ennemy);
+	void removeObject(std::vector<Object*>* quick, Object* e);
 
-	Entity* getPlayer();
-	Entity* getEnnemy(int gridx, int gridy);
-	std::set<Entity*> getEnnemies(int gridx, int gridy);
-	Entity* getClosest(std::vector<Entity*>* vector, sf::Vector2i posPix);
-	bool isValid(std::vector<Entity*>* vector, Entity* entity);
+	Object* getPlayer();
+	Object* getEnnemy(int gridx, int gridy);
+	std::set<Object*> getEnnemies(int gridx, int gridy);
+	Object* getClosest(std::vector<Object*>* vector, sf::Vector2i posPix);
+	bool isValid(std::vector<Object*>* vector, Object* object);
 };

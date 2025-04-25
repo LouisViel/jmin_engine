@@ -19,6 +19,6 @@ public:
 	bool usePhysics = true;
 	float gravy = 1.0f;
 
-	SpawnOnDestroy(Entity* entity);
+	SpawnOnDestroy(Object* object);
 	~SpawnOnDestroy();
 };
