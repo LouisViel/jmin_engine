@@ -41,7 +41,7 @@ bool InOutPayload<t>::invalid() const
 template <typename t>
 bool InOutPayload<t>::canPush() const
 {
-	return !lock && payload->size() < maxSize;
+	return !locked && payload->size() < maxSize;
 }
 
 
