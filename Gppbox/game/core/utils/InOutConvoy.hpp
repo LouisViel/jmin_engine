@@ -4,8 +4,19 @@
 #include "game/core/utils/NodeType.hpp"
 #include "game/core/utils/ResourceType.hpp"
 #include "game/core/utils/Direction.hpp"
+#include "game/core/utils/InOutPayload.hpp"
 
-struct InOutConvoy
+// Declare Advanced Handle existence
+template <typename t>
+class InOutConvoyHandle;
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+class InOutConvoy
 {
 public:
 	enum Mode {
@@ -35,6 +46,8 @@ public:
 		this->dir = dir;
 	}
 
+	virtual ~InOutConvoy() { return; }
+
 
 	bool connect(InOutConvoy other) const
 	{
@@ -63,20 +76,65 @@ public:
 	}
 
 
+	template <typename t>
+	InOutConvoyHandle<t>* handle() const
+	{
+		return (InOutConvoyHandle<t>*)this;
+	}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 private:
 	class ModeHelper
 	{
 	public:
-		static Mode inverse(Mode mode)
-		{
+		static Mode inverse(Mode mode) {
 			if (mode == Mode::In) return Mode::Out;
 			if (mode == Mode::Out) return Mode::In;
 			return Mode::None;
 		}
 
-		static bool connect(Mode a, Mode b)
-		{
+		static bool connect(Mode a, Mode b) {
 			return inverse(a) == b && b != Mode::None;
 		}
 	};
+};
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+template <typename t>
+class InOutConvoyHandle : public InOutConvoy
+{
+public:
+	bool managePayload = false;
+	InOutPayload<t>* payload = nullptr;
+
+
+	InOutConvoyHandle() = delete;
+
+	InOutConvoyHandle(InOutConvoy::Mode mode, ResourceType type, Direction dir)
+		: InOutConvoy(mode, type, dir) { }
+
+	InOutConvoyHandle(InOutConvoy::Mode mode, ResourceType type, Direction dir, sf::Vector2i anchor)
+		: InOutConvoy(mode, type, dir, anchor) { }
+
+	virtual ~InOutConvoyHandle()
+	{
+		if (managePayload) {
+			delete payload;
+		}
+	}
+
+
+	InOutConvoy* boxed() const
+	{
+		return (InOutConvoy*)this;
+	}
 };

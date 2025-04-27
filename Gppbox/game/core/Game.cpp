@@ -12,8 +12,6 @@
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 
-
-
 Game* Game::singleton = nullptr;
 double Game::g_tickTimer = 0.0;
 double Game::g_time = 0.0;

@@ -2,6 +2,12 @@
 
 namespace C
 {
+	// InOutPayload settings
+	static constexpr size_t DRILL_PAYLOAD = 256;
+
+	// ----------------------------
+
+
 	// App Constants
 	static constexpr float F_REF = 60.0f; // Framerate Processing Reference
 	static constexpr double F_FIXED = 1.0f / 50.0f; // Framerate for Fixed Update

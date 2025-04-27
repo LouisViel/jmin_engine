@@ -167,6 +167,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\object\drills\Drill.hpp" />
+    <ClCompile Include="game\object\drills\DrillWood.cpp" />
     <ClCompile Include="engine\utils\ScaleHelper.cpp" />
     <ClCompile Include="game\object\Building.cpp" />
     <ClCompile Include="game\object\Convoyer.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="game\core\Environment.cpp" />
     <ClCompile Include="game\core\Game.cpp" />
     <ClCompile Include="game\core\World.cpp" />
+    <ClCompile Include="game\core\utils\InOutPayload.hpp" />
     <ClCompile Include="libs\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="libs\imgui\imgui.cpp" />
     <ClCompile Include="libs\imgui\imgui_draw.cpp" />
@@ -200,6 +203,8 @@
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
     <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="game\object\drills\DrillWood.hpp" />
+    <ClInclude Include="game\object\drills\Drill.t.hpp" />
     <ClInclude Include="game\core\utils\Direction.hpp" />
     <ClInclude Include="game\core\object\Collider.hpp" />
     <ClInclude Include="game\object\Building.hpp" />
@@ -227,6 +232,7 @@
     <ClInclude Include="game\core\World.hpp" />
     <ClInclude Include="game\core\utils\InOutConvoy.hpp" />
     <ClInclude Include="game\core\utils\ResourceType.hpp" />
+    <ClInclude Include="game\core\utils\InOutPayload.t.hpp" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML.h" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML_export.h" />
     <ClInclude Include="libs\imgui\imgui.h" />

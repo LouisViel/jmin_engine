@@ -7,7 +7,7 @@
 
 Object::Object()
 {
-
+	components = new std::vector<Component*>();
 }
 
 Object::~Object()
