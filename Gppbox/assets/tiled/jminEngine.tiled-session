@@ -26,7 +26,7 @@
             }
         },
         "environment.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 5.5,
             "scaleInEditor": 1
         },
         "map.tmx": {
@@ -48,12 +48,13 @@
     "map.width": 100,
     "openFiles": [
         "map.tmx",
-        "environment.tsx"
+        "environment.tsx",
+        "map.tmx"
     ],
     "project": "jminEngine.tiled-project",
     "recentFiles": [
-        "environment.tsx",
-        "map.tmx"
+        "map.tmx",
+        "environment.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

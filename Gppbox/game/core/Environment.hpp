@@ -23,6 +23,8 @@ private:
 	tmx::Map* tmxMap = nullptr;
 	MapLayer* tmxZero = nullptr;
 
+	std::map<uint32_t, NodeType> nodeCache;
+
 public:
 	std::vector<sf::Vector2i> walls;
 	std::vector<sf::Vector2i> nodeWood;

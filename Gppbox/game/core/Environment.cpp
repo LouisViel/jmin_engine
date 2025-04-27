@@ -75,14 +75,26 @@ void Environment::initTmxEnvironment()
 
 NodeType Environment::getNodeType(int x, int y)
 {
+	// Fetch cache for better performances
 	uint32_t id = tmxZero->getTile(x, y).ID;
+	if (nodeCache.find(id) != nodeCache.end()) {
+		return nodeCache.at(id);
+	}
+	
+	// If no cache, process to a search and resolution
 	for (tmx::Tileset tileset : tmxMap->getTilesets()) {
 		if (tileset.hasTile(id)) {
 			std::string tileType = tileset.getTile(id)->className;
 			NodeType nodeType = getNodeType(tileType);
-			if (nodeType != NodeType::None) return nodeType;
+			if (nodeType != NodeType::None) {
+				nodeCache.insert({ id, nodeType });
+				return nodeType;
+			}
 		}
 	}
+
+	// Return None if no resolution possible
+	nodeCache.insert({ id, NodeType::None });
 	return NodeType::None;
 }
 
