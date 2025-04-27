@@ -11,5 +11,5 @@ protected:
 public:
 	Drill();
 	Drill(size_t maxPayload);
-	virtual ~Drill() { return }
+	virtual ~Drill() { return; }
 };

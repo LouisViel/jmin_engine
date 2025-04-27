@@ -23,6 +23,7 @@
 #include "engine/utils/ScaleHelper.hpp"
 #include "engine/utils/InputHandler.hpp"
 #include "engine/utils/Dice.hpp"
+#include "game/core/payload/PayloadPool.hpp"
 
 
 
@@ -67,6 +68,7 @@ int main()
 	ImGui::SFML::Init(window);
 	InputHandler::setWindow(&window);
 	ScaleHelper sh = ScaleHelper();
+	PayloadPool::init();
     Game g(&window);
 
 	Vector2i winPos;
@@ -204,6 +206,7 @@ int main()
 		dts[curDts] = dt;
     }
 
+	PayloadPool::release();
 	InputHandler::setWindow(nullptr);
 	ImGui::SFML::Shutdown();
 

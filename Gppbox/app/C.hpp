@@ -5,6 +5,9 @@ namespace C
 	// InOutPayload settings
 	static constexpr size_t DRILL_PAYLOAD = 256;
 
+	// Payload Settings
+	static constexpr unsigned int PAYLOAD_POOL_SIZE = 4096;
+
 	// ----------------------------
 
 

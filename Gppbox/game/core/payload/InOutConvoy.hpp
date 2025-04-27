@@ -4,7 +4,7 @@
 #include "game/core/utils/NodeType.hpp"
 #include "game/core/utils/ResourceType.hpp"
 #include "game/core/utils/Direction.hpp"
-#include "game/core/utils/InOutPayload.hpp"
+#include "InOutPayload.hpp"
 
 // Declare Advanced Handle existence
 template <typename t>

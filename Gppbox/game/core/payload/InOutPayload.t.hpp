@@ -9,6 +9,9 @@ private:
 	size_t maxSize;
 
 public:
+	bool locked = false;
+
+public:
 	InOutPayload();
 	InOutPayload(size_t maxSize);
 	~InOutPayload();
