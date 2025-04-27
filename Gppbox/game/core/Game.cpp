@@ -12,8 +12,6 @@
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 
-#include "game/object/drills/DrillWood.hpp"
-
 Game* Game::singleton = nullptr;
 double Game::g_tickTimer = 0.0;
 double Game::g_time = 0.0;
@@ -22,8 +20,6 @@ Game::Game(sf::RenderWindow* win)
 {
 	singleton = this;
 	this->win = win;
-
-	DrillWood d();
 
 	// Create Managers
 	environment = new Environment(win);
