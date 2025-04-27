@@ -32,7 +32,7 @@ public:
 
 public:
 	Object();
-	~Object();
+	virtual ~Object();
 
 	void addComponent(Component* component); // Add one component
 	void addComponents(Component** components, int componentCount); // Add multiple components

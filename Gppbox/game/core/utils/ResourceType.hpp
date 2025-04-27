@@ -1,25 +1,25 @@
 #pragma once
 
-enum ResourceType
+enum class ResourceType : int
 {
 	// Specials
 	Unknown = 0,
 
 	// Wood
-	Wood = 2,
-	Planks = 4,
+	Wood = 1 << 1,
+	Planks = 1 << 2,
 
 	// Stone
-	Stone = 64,
-	Brick = 128,
+	Stone = 1 << 6,
+	Brick = 1 << 7,
 
 	// Coal
-	Coal = 2048,
+	Coal = 1 << 11,
 
 	// Iron
-	IronOre = 65'536,
-	IronIngot = 131'072,
-	Nails = 262'144
+	IronOre = 1 << 16,
+	IronIngot = 1 << 17,
+	Nails = 1 << 18
 };
 
 constexpr inline ResourceType operator|(ResourceType a, ResourceType b)
@@ -32,14 +32,24 @@ constexpr inline ResourceType operator&(ResourceType a, ResourceType b)
 	return static_cast<ResourceType>(static_cast<int>(a) & static_cast<int>(b));
 }
 
-constexpr inline ResourceType operator==(ResourceType a, ResourceType b)
+constexpr inline ResourceType operator+(ResourceType a, ResourceType b)
 {
-	return static_cast<ResourceType>(static_cast<int>(a) == static_cast<int>(b));
+	return static_cast<ResourceType>(static_cast<int>(a) | static_cast<int>(b));
 }
 
-constexpr inline ResourceType operator!=(ResourceType a, ResourceType b)
+constexpr inline ResourceType operator-(ResourceType a, ResourceType b)
 {
-	return static_cast<ResourceType>(static_cast<int>(a) != static_cast<int>(b));
+	return static_cast<ResourceType>(static_cast<int>(a) & ~static_cast<int>(b));
+}
+
+constexpr inline bool operator==(ResourceType a, ResourceType b)
+{
+	return static_cast<int>(a) == static_cast<int>(b);
+}
+
+constexpr inline bool operator!=(ResourceType a, ResourceType b)
+{
+	return static_cast<int>(a) != static_cast<int>(b);
 }
 
 class ResourceTypeHelper

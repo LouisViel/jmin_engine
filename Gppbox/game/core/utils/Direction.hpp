@@ -1,12 +1,12 @@
 #pragma once
 
-enum Direction
+enum class Direction : int
 {
 	Unknown = 0,
-	North = 1,
-	East = 2,
-	South = 4,
-	Weast = 8
+	North = 1 << 1,
+	East = 1 << 2,
+	South = 1 << 3,
+	Weast = 1 << 4
 };
 
 constexpr inline Direction operator|(Direction a, Direction b)
@@ -19,14 +19,24 @@ constexpr inline Direction operator&(Direction a, Direction b)
 	return static_cast<Direction>(static_cast<int>(a) & static_cast<int>(b));
 }
 
-constexpr inline Direction operator==(Direction a, Direction b)
+constexpr inline Direction operator+(Direction a, Direction b)
 {
-	return static_cast<Direction>(static_cast<int>(a) == static_cast<int>(b));
+	return static_cast<Direction>(static_cast<int>(a) | static_cast<int>(b));
 }
 
-constexpr inline Direction operator!=(Direction a, Direction b)
+constexpr inline Direction operator-(Direction a, Direction b)
 {
-	return static_cast<Direction>(static_cast<int>(a) != static_cast<int>(b));
+	return static_cast<Direction>(static_cast<int>(a) & ~static_cast<int>(b));
+}
+
+constexpr inline bool operator==(Direction a, Direction b)
+{
+	return static_cast<int>(a) == static_cast<int>(b);
+}
+
+constexpr inline bool operator!=(Direction a, Direction b)
+{
+	return static_cast<int>(a) != static_cast<int>(b);
 }
 
 class DirectionHelper
