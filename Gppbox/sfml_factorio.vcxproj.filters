@@ -66,7 +66,7 @@
     <ClCompile Include="game\components\SpawnOnDestroy.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="game\core\Camera.cpp">
+    <ClCompile Include="game\core\utils\Camera.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="game\core\Environment.cpp">
@@ -91,6 +91,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="game\core\object\Rigidbody.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\utils\ScaleHelper.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,7 +173,7 @@
     <ClInclude Include="game\components\SpawnOnDestroy.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="game\core\Camera.hpp">
+    <ClInclude Include="game\core\utils\Camera.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="game\core\Environment.hpp">
@@ -200,7 +203,22 @@
     <ClInclude Include="game\core\object\Collider.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="game\core\NodeType.hpp">
+    <ClInclude Include="game\core\utils\NodeType.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\utils\ScaleHelper.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="game\core\utils\InOutConvoy.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="game\core\utils\Direction.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="game\core\utils\ResourceType.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="app\tmx-OrthogonalLayer.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

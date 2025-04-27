@@ -54,8 +54,6 @@ Renderer::Renderer(Object* obj, sf::Shape* shape, sf::Texture* text, std::string
 void Renderer::init(std::string vert, std::string frag)
 {
 	if (!isValid) return;
-	constexpr float gridInverse = float(1.0f / C::GRID_SIZE);
-	if (manageShape) shape->setScale(gridInverse, gridInverse);
 	shape->setTexture(texture);
 	shader = new HotReloadShader(vert, frag);
 }

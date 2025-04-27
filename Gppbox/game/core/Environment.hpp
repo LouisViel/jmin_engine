@@ -6,7 +6,7 @@
 
 #include <tmxlite/Map.hpp>
 #include "app/tmx-OrthogonalLayer.hpp"
-#include "NodeType.hpp"
+#include "game/core/utils/NodeType.hpp"
 
 
 class Environment

@@ -20,8 +20,10 @@
 #include "engine/core/HotReloadShader.hpp"
 #include "engine/core/Bloom.hpp"
 
+#include "engine/utils/ScaleHelper.hpp"
 #include "engine/utils/InputHandler.hpp"
 #include "engine/utils/Dice.hpp"
+
 
 
 #define WIN32_LEAN_AND_MEAN
@@ -64,6 +66,7 @@ int main()
 
 	ImGui::SFML::Init(window);
 	InputHandler::setWindow(&window);
+	ScaleHelper sh = ScaleHelper();
     Game g(&window);
 
 	Vector2i winPos;

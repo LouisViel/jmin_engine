@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include "Environment.hpp"
+#include "engine/utils/ScaleHelper.hpp"
 #include "app/C.hpp"
 
 
@@ -151,6 +152,13 @@ void Environment::update(double dt)
 
 void Environment::drawWorld(sf::RenderTarget& win)
 {
+	sf::RenderStates states = sf::RenderStates::Default;
+	states.transform *= ScaleHelper::apply();
+	return;
+}
+
+void Environment::drawCamera(sf::RenderTarget& win)
+{
 	// Draw Background
 	sf::RenderStates states = sf::RenderStates::Default;
 	sf::Shader* sh = &bgShader->sh;
@@ -159,29 +167,26 @@ void Environment::drawWorld(sf::RenderTarget& win)
 	states.texture = &bgTexture;
 	sh->setUniform("texture", bgTexture);
 	win.draw(bgHandle, states);
-}
 
-void Environment::drawCamera(sf::RenderTarget& win)
-{
+	// Draw Environment, using Tmx or Custom Tilemap
 	if (useTmx) win.draw(*tmxZero, sf::RenderStates::Default);
 	else win.draw(*environment, sf::RenderStates::Default);
-	//for (sf::RectangleShape& r : wallSprites) win.draw(r);
 }
 
 void Environment::imgui()
 {
 	using namespace ImGui;
-	if (CollapsingHeader("World", ImGuiTreeNodeFlags_DefaultOpen)) {
+	//if (CollapsingHeader("World", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-		// Draw Debug Walls
-		/*if (TreeNodeEx("Collisions")) {
-			for (sf::Vector2i& w : collisions) {
-				Value("x", w.x);
-				Value("y", w.y);
-			}
-			TreePop();
-		}*/
-	}
+	//	// Draw Debug Walls
+	//	/*if (TreeNodeEx("Collisions")) {
+	//		for (sf::Vector2i& w : collisions) {
+	//			Value("x", w.x);
+	//			Value("y", w.y);
+	//		}
+	//		TreePop();
+	//	}*/
+	//}
 }
 
 

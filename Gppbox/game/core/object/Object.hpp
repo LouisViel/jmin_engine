@@ -37,11 +37,10 @@ public:
 	void addComponent(Component* component); // Add one component
 	void addComponents(Component** components, int componentCount); // Add multiple components
 
-	void preupdate(double dt); // Pre Update Object
-	void fixed(double fdt); // Fixed Update Object
-	void update(double dt); // Update Object
-	void draw(sf::RenderTarget& win); // Graphics Drawing
-	void imgui(); // Imgui Drawing
+	virtual void preupdate(double dt); // Pre Update Object
+	virtual void fixed(double fdt); // Fixed Update Object
+	virtual void update(double dt); // Update Object
+	virtual void imgui(); // Imgui Drawing
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

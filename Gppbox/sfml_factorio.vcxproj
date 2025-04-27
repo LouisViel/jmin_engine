@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="engine\utils\ScaleHelper.cpp" />
     <ClCompile Include="game\object\Building.cpp" />
     <ClCompile Include="game\object\Convoyer.cpp" />
     <ClCompile Include="engine\core\Bloom.cpp" />
@@ -180,7 +181,7 @@
     <ClCompile Include="game\components\Lifetime.cpp" />
     <ClCompile Include="game\components\PlayerController.cpp" />
     <ClCompile Include="game\components\SpawnOnDestroy.cpp" />
-    <ClCompile Include="game\core\Camera.cpp" />
+    <ClCompile Include="game\core\utils\Camera.cpp" />
     <ClCompile Include="game\core\Environment.cpp" />
     <ClCompile Include="game\core\Game.cpp" />
     <ClCompile Include="game\core\World.cpp" />
@@ -198,6 +199,8 @@
     <ClInclude Include="app\C.hpp" />
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
+    <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="game\core\utils\Direction.hpp" />
     <ClInclude Include="game\core\object\Collider.hpp" />
     <ClInclude Include="game\object\Building.hpp" />
     <ClInclude Include="game\object\Convoyer.hpp" />
@@ -218,17 +221,20 @@
     <ClInclude Include="game\components\Lifetime.hpp" />
     <ClInclude Include="game\components\PlayerController.hpp" />
     <ClInclude Include="game\components\SpawnOnDestroy.hpp" />
-    <ClInclude Include="game\core\Camera.hpp" />
+    <ClInclude Include="game\core\utils\Camera.hpp" />
     <ClInclude Include="game\core\Environment.hpp" />
     <ClInclude Include="game\core\Game.hpp" />
     <ClInclude Include="game\core\World.hpp" />
+    <ClInclude Include="game\core\utils\InOutConvoy.hpp" />
+    <ClInclude Include="game\core\utils\ResourceType.hpp" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML.h" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML_export.h" />
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="game\core\object\Object.hpp" />
     <ClInclude Include="game\components\Renderer.hpp" />
     <ClInclude Include="game\core\object\Rigidbody.hpp" />
-    <ClInclude Include="game\core\NodeType.hpp" />
+    <ClInclude Include="game\core\utils\NodeType.hpp" />
+    <ClInclude Include="engine\utils\ScaleHelper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

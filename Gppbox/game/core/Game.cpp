@@ -8,7 +8,7 @@
 
 #include "game/core/object/Object.hpp"
 #include "game/core/object/Collider.hpp"
-#include "game/core/Camera.hpp"
+#include "game/core/utils/Camera.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 
@@ -85,15 +85,12 @@ void Game::draw(sf::RenderWindow& win)
 	sf::View defaultView = target->getView();
 
 	// Draw World Renderings
-	//environment->drawWorld(*target);
+	environment->drawWorld(*target);
 
 	// Enable Camera Drawing
 	//if (!mapEditor->active) {
 		//camera->setActive(*target);
 	//}
-
-	// Draw Background
-	environment->drawWorld(*target);
 
 	// Draw Camera Renderings
 	environment->drawCamera(*target);

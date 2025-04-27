@@ -2,6 +2,7 @@
 #include "Object.hpp"
 #include "Collider.hpp"
 #include "Rigidbody.hpp"
+#include "engine/utils/ScaleHelper.hpp"
 #include "game/components/Component.hpp"
 
 Object::Object()
@@ -66,9 +67,8 @@ void Object::update(double dt)
 
 void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	/*sf::RenderStates st = sf::RenderStates::Default;
-	st.transform = st.transform.scale(C::GRID_SIZE);*/
 	states.transform *= getTransform();
+	states.transform *= ScaleHelper::invert();
 	LOOPF_C(target.draw(*c, states));
 }
 

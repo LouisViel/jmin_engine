@@ -4,6 +4,7 @@
 #include "game/core/object/Object.hpp"
 #include "game/components/PlayerController.hpp"
 
+#include "engine/utils/ScaleHelper.hpp"
 #include "engine/Utils.hpp"
 #include "app/C.hpp"
 
@@ -84,13 +85,14 @@ void World::processDelete()
 void World::draw(sf::RenderTarget& win)
 {
 	sf::RenderStates states = sf::RenderStates::Default;
-	states.transform.scale(float(C::GRID_SIZE), float(C::GRID_SIZE));
+	states.transform *= ScaleHelper::apply();
 	LOOPF_E(win.draw(*e, states));
 }
 
 void World::imgui()
 {
 	using namespace ImGui;
+	
 	if (TreeNodeEx("Gameobjects", 0)) {
 		Indent(5.0f);
 		LOOPF_PTR(gameobjects, Object* e);
@@ -100,6 +102,34 @@ void World::imgui()
 			TreePop();
 		}
 		LOOP_END;
+		TreePop();
+	}
+
+	if (TreeNodeEx("Buildings", 0)) {
+		Indent(5.0f);
+
+		// TODO : Mettre les bouttons pour les différents Buildings
+
+		if (TreeNodeEx("Wood", 0)) {
+
+			TreePop();
+		}
+
+		if (TreeNodeEx("Stone", 0)) {
+
+			TreePop();
+		}
+
+		/*if (TreeNodeEx("Coal", 0)) {
+
+			TreePop();
+		}*/
+
+		if (TreeNodeEx("Iron", 0)) {
+
+			TreePop();
+		}
+
 		TreePop();
 	}
 }
