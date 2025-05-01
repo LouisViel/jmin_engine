@@ -167,12 +167,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\core\payload\InOutPayloadBase.cpp" />
+    <ClCompile Include="game\core\payload\InOutPayloadBase.hpp" />
     <ClCompile Include="game\core\payload\PayloadPool.hpp" />
+    <ClCompile Include="game\object\convoyer\ConvoyerItem.hpp" />
+    <ClCompile Include="game\object\convoyer\ConvoyerTile.hpp" />
     <ClCompile Include="game\object\drills\Drill.hpp" />
     <ClCompile Include="game\object\drills\DrillWood.cpp" />
     <ClCompile Include="engine\utils\ScaleHelper.cpp" />
     <ClCompile Include="game\object\Building.cpp" />
-    <ClCompile Include="game\object\Convoyer.cpp" />
+    <ClCompile Include="game\object\convoyer\Convoyer.cpp" />
     <ClCompile Include="engine\core\Bloom.cpp" />
     <ClCompile Include="engine\core\HotReloadShader.cpp" />
     <ClCompile Include="engine\core\Lib.cpp" />
@@ -204,12 +208,13 @@
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
     <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="engine\utils\TransformHelper.hpp" />
     <ClInclude Include="game\object\drills\DrillWood.hpp" />
     <ClInclude Include="game\object\drills\Drill.t.hpp" />
     <ClInclude Include="game\core\utils\Direction.hpp" />
     <ClInclude Include="game\core\object\Collider.hpp" />
     <ClInclude Include="game\object\Building.hpp" />
-    <ClInclude Include="game\object\Convoyer.hpp" />
+    <ClInclude Include="game\object\convoyer\Convoyer.hpp" />
     <ClInclude Include="engine\core\Bloom.hpp" />
     <ClInclude Include="engine\core\HotReloadShader.hpp" />
     <ClInclude Include="engine\core\Interp.hpp" />

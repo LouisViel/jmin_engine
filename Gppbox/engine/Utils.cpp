@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Utils.hpp"
 #include "game/core/object/Object.hpp"
 #include "game/core/object/Collider.hpp"
@@ -73,4 +74,28 @@ sf::Vector2f Utils::rotate(const sf::Vector2f& source, float angle)
     float length = toLength(source);
     float target = fmod(toAngle(source) + angle, 360.0f);
     return fromAngle(target) * length;
+}
+
+
+
+
+
+float Utils::lerp(float a, float b, float f)
+{
+    return a * (1.0f - f) + (b * f);
+}
+
+float Utils::lerp(int a, int b, float f)
+{
+    return Utils::lerp((float)a, (float)b, f);
+}
+
+sf::Vector2f Utils::lerp(const sf::Vector2f& a, const sf::Vector2f& b, float f)
+{
+    return sf::Vector2f(Utils::lerp(a.x, b.x, f), Utils::lerp(a.y, b.y, f));
+}
+
+sf::Vector2f Utils::lerp(const sf::Vector2i& a, const sf::Vector2i& b, float f)
+{
+    return sf::Vector2f(Utils::lerp(a.x, b.x, f), Utils::lerp(a.y, b.y, f));
 }

@@ -25,6 +25,11 @@ public:
 	static sf::Vector2f normalize(const sf::Vector2f& source);
 	static sf::Vector2i rotate(const sf::Vector2i& source, float angle);
 	static sf::Vector2f rotate(const sf::Vector2f& source, float angle);
+
+	static float lerp(float a, float b, float f);
+	static float lerp(int a, int b, float f);
+	static sf::Vector2f lerp(const sf::Vector2f& source, const sf::Vector2f& target, float t);
+	static sf::Vector2f lerp(const sf::Vector2i& source, const sf::Vector2i& target, float t);
 };
 
 template <typename T>

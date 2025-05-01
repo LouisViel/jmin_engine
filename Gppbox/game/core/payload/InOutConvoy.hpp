@@ -1,5 +1,4 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include "game/core/utils/NodeType.hpp"
 #include "game/core/utils/ResourceType.hpp"
@@ -138,3 +137,5 @@ public:
 		return (InOutConvoy*)this;
 	}
 };
+
+typedef InOutConvoyHandle<PayloadBase> InOutConvoyDefault;

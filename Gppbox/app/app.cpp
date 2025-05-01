@@ -23,7 +23,9 @@
 #include "engine/utils/ScaleHelper.hpp"
 #include "engine/utils/InputHandler.hpp"
 #include "engine/utils/Dice.hpp"
+
 #include "game/core/payload/PayloadPool.hpp"
+#include "game/object/convoyer/ConvoyerItem.hpp"
 
 
 
@@ -69,6 +71,7 @@ int main()
 	InputHandler::setWindow(&window);
 	ScaleHelper sh = ScaleHelper();
 	PayloadPool::init();
+	ConvoyerItemPool::init();
     Game g(&window);
 
 	Vector2i winPos;
@@ -207,6 +210,7 @@ int main()
     }
 
 	PayloadPool::release();
+	ConvoyerItemPool::release();
 	InputHandler::setWindow(nullptr);
 	ImGui::SFML::Shutdown();
 

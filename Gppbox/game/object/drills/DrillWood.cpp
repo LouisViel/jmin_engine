@@ -9,5 +9,5 @@ DrillWood::DrillWood() : Drill(C::DRILL_PAYLOAD)
 
 DrillWood::~DrillWood()
 {
-	
+	return;
 }

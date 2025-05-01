@@ -64,11 +64,20 @@ void Object::update(double dt)
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
-
-void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Object::applyTransform(sf::RenderStates& states) const
 {
 	states.transform *= getTransform();
 	states.transform *= ScaleHelper::invert();
+}
+
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	drawInternal(target, states);
+}
+
+void Object::drawInternal(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	applyTransform(states);
 	LOOPF_C(target.draw(*c, states));
 }
 

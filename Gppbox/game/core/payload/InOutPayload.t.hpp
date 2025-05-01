@@ -1,28 +1,14 @@
 #pragma once
-#include <queue>
+#include "InOutPayloadBase.hpp"
 
 template <typename t>
-class InOutPayload
+class InOutPayload : public InOutPayloadBase
 {
-private:
-	std::queue<t*>* payload = nullptr;
-	size_t maxSize;
-
 public:
-	bool locked = false;
-
-public:
-	InOutPayload();
-	InOutPayload(size_t maxSize);
-	~InOutPayload();
-
-	bool valid() const;
-	bool invalid() const;
-	bool canPush() const;
-
-	t* pop();
+	using InOutPayloadBase::InOutPayloadBase;
 	bool push(t* elem);
-
-	void empty();
+	t* pop();
 	std::vector<t*>* toVector(bool flush = true);
 };
+
+typedef InOutPayload<PayloadBase> InOutPayloadDefault;

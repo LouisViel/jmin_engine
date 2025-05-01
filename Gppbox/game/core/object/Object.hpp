@@ -10,7 +10,7 @@ class Rigidbody;
 
 class Object : public sf::Drawable, public sf::Transformable
 {
-private:
+protected:
 	// Loop Forward on components
 	#define LOOPF_C(action) \
 		LOOPF_PTR(components, Component* c) \
@@ -23,7 +23,7 @@ private:
 		action; \
 		LOOP_END
 
-private:
+protected:
 	std::vector<Component*>* components = nullptr;
 
 public:
@@ -44,4 +44,8 @@ public:
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+protected:
+	virtual void drawInternal(sf::RenderTarget& target, sf::RenderStates states) const;
+	void applyTransform(sf::RenderStates& states) const;
 };

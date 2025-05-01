@@ -1,8 +1,9 @@
 #pragma once
-#include <map>
 #include <queue>
+#include <SFML/Graphics.hpp>
 #include "Payload.hpp"
 #include "app/C.hpp"
+
 
 class PayloadPool
 {
@@ -35,18 +36,40 @@ public:
 	// For Setup only !!
 	static void release() { delete singleton; singleton = nullptr; }
 
+
+
 public:
-	static PayloadBase* get(int quantity) { return singleton->getInternal(quantity); }
-	static void free(PayloadBase* payload) { return singleton->freeInternal(payload); }
+	static void free(PayloadBase* payload)
+	{
+		if (singleton == nullptr) delete payload;
+		else singleton->freeInternal(payload);
+	}
+
+	static PayloadBase* get(int quantity) { return PayloadPool::get(quantity, nullptr); }
+	static PayloadBase* get(int quantity, sf::Drawable* render)
+	{
+		// Get / Create Payload
+		PayloadBase* payload;
+		if (singleton == nullptr) payload = new PayloadBase();
+		else payload = singleton->getInternal();
+
+		// Set Settings
+		payload->quantity = quantity;
+		payload->render = render;
+
+		// Return results
+		return payload;
+	}
+
+
 
 private:
-	PayloadBase* getInternal(int quantity)
+	PayloadBase* getInternal()
 	{
 		// Get a pool payload if possible, otherwise allocate it
-		if (available->empty()) return new PayloadBase(quantity);
+		if (available->empty()) return new PayloadBase();
 		PayloadBase* payload = available->front();
 		available->pop();
-		payload->quantity = quantity;
 		return payload;
 	}
 

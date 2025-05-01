@@ -7,6 +7,11 @@ namespace C
 
 	// Payload Settings
 	static constexpr unsigned int PAYLOAD_POOL_SIZE = 4096;
+	static constexpr unsigned int CONVOYER_ITEM_POOL_SIZE = 4096;
+
+	// Convoyer Graphics
+	static constexpr const char* CONVOYER_TILESET = "assets/convoyer.png";
+	//static constexpr unsigned int CONVOYER_TILE_SIZE = 10 * 9;
 
 	// ----------------------------
 
