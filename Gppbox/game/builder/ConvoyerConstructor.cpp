@@ -1,0 +1,24 @@
+#include "ConvoyerConstructor.hpp"
+
+
+ConvoyerConstructor::ConvoyerConstructor()
+{
+	this->buildType = BuildType::Convoyer;
+	// TODO : implement
+}
+
+ConvoyerConstructor::~ConvoyerConstructor()
+{
+	// TODO : implement
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+Object* ConvoyerConstructor::build()
+{
+	// TODO : implement
+}
