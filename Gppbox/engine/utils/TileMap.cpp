@@ -6,6 +6,12 @@ bool TileMap::load(const std::string& tileset)
     return m_tileset.loadFromFile(tileset);
 }
 
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 void TileMap::init(sf::Vector2u tileSize, unsigned int width, unsigned int height)
 {
     // Save settings
@@ -17,7 +23,7 @@ void TileMap::init(sf::Vector2u tileSize, unsigned int width, unsigned int heigh
     // resize the vertex array to fit the level size
     m_vertices.clear();
     m_vertices.setPrimitiveType(sf::Quads);
-    m_vertices.resize(static_cast<size_t>(width * height * 4));
+    this->resize(width, height, false);
 }
 
 void TileMap::init(sf::Vector2u tileSize, unsigned int width, unsigned int height, const int* tiles)
@@ -51,6 +57,54 @@ void TileMap::init(sf::Vector2u tileSize, unsigned int linearSize, const int* ti
 //////////////////////////////////////////////////////////////////
 
 
+void TileMap::resize(unsigned int resizeWidth, unsigned int resizeHeight, bool keepLayout)
+{
+    // Resize container
+    unsigned int resSize = resizeWidth * resizeHeight;
+    if (resSize > 0) {
+        m_vertices.resize(static_cast<size_t>(resizeWidth * resizeHeight * 4));
+        sizeValid = true;
+    } else {
+        keepLayout = false;
+        m_vertices.clear();
+        sizeValid = false;
+    }
+
+    // Change tiles indexes to keep them in place
+    if (keepLayout) {
+        unsigned int targetWidth = std::min(width, resizeWidth);
+        unsigned int targetHeight = std::min(height, resizeHeight);
+        for (unsigned int i = targetWidth; i > 0; --i) {
+            for (unsigned int j = targetHeight; j > 0; --j) {
+                unsigned int ui = i - 1, uj = j - 1;
+                size_t srcIndex = static_cast<size_t>((ui + uj * width) * 4);
+                size_t targIndex = static_cast<size_t>((ui + uj * resizeWidth) * 4);
+                m_vertices[targIndex] = m_vertices[srcIndex];
+            }
+        }
+    }
+
+    // Save settings
+    this->width = resizeWidth;
+    this->height = resizeHeight;
+}
+
+void TileMap::resize(unsigned int resizeWidth, unsigned int resizeHeight)
+{
+    this->resize(resizeWidth, resizeHeight, true);
+}
+
+void TileMap::resize(unsigned int resizeLinearSize)
+{
+    this->resize(resizeLinearSize, 1u, false);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 void TileMap::setPos(unsigned int idx, unsigned int idy, int posx, int posy)
 {
     this->setPos(static_cast<size_t>((idx + idy * width) * 4), posx, posy);
@@ -58,6 +112,9 @@ void TileMap::setPos(unsigned int idx, unsigned int idy, int posx, int posy)
 
 void TileMap::setPos(size_t index, int x, int y)
 {
+    // Ensure operation valid
+    if (!sizeValid || index < 0) return;
+
     // define 4 corners positions
     sf::Vertex* quad = &m_vertices[index];
     quad[0].position = sf::Vector2f((float)x * tileSize.x, (float)y * tileSize.y);
@@ -79,6 +136,9 @@ void TileMap::setTile(unsigned int x, unsigned int y, int tileNumber)
 
 void TileMap::setTile(size_t index, int tileNumber)
 {
+    // Ensure operation valid
+    if (!sizeValid || index < 0) return;
+
     // find position in the tileset texture
     int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
     int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
@@ -97,17 +157,9 @@ void TileMap::setTile(size_t index, int tileNumber)
 //////////////////////////////////////////////////////////////////
 
 
-
-
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-
-
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    if (!isInit) return;
+    if (!(isInit && sizeValid)) return;
     states.transform *= getTransform();
     states.texture = &m_tileset;
     target.draw(m_vertices, states);

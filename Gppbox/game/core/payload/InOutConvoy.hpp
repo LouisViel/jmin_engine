@@ -76,9 +76,9 @@ public:
 
 
 	template <typename t>
-	InOutConvoyHandle<t>* handle() const
+	InOutConvoyHandle<t>* handle()
 	{
-		return (InOutConvoyHandle<t>*)this;
+		return static_cast<InOutConvoyHandle<t>*>(this);
 	}
 
 
@@ -132,9 +132,9 @@ public:
 	}
 
 
-	InOutConvoy* boxed() const
+	InOutConvoy* boxed()
 	{
-		return (InOutConvoy*)this;
+		return static_cast<InOutConvoy*>(this);
 	}
 };
 

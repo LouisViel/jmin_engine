@@ -7,7 +7,7 @@
 #include "app/M.hpp"
 
 #include "game/object/Building.hpp"
-#include "game/object/Convoyer.hpp"
+#include "game/object/convoyer/Convoyer.hpp"
 
 class Object;
 namespace sf {
