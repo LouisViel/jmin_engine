@@ -24,10 +24,14 @@ public:
 		Out = 2,
 	};
 
+	bool connected = false;
 	sf::Vector2i anchor = sf::Vector2i(0, 0);
 	InOutConvoy::Mode mode = Mode::None;
 	ResourceType type = ResourceType::Unknown;
 	Direction dir = Direction::Unknown;
+
+	// Workaround utils
+	sf::Vector2i worldPos = sf::Vector2i(0, 0);
 
 
 	InOutConvoy(InOutConvoy::Mode mode, ResourceType type, Direction dir)
@@ -50,6 +54,7 @@ public:
 
 	bool connect(InOutConvoy other) const
 	{
+		if (connected || other.connected) return false;
 		if (!ModeHelper::connect(this->mode, other.mode)) return false;
 		Direction _dir = DirectionHelper::inverse(other.dir);
 		return this->match(other.type, _dir);
@@ -57,6 +62,7 @@ public:
 
 	bool connect(Mode mode, ResourceType type, Direction dir) const
 	{
+		if (connected) return false;
 		if (!ModeHelper::connect(this->mode, mode)) return false;
 		Direction _dir = DirectionHelper::inverse(dir);
 		return this->match(type, _dir);

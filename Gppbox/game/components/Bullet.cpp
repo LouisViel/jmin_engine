@@ -15,10 +15,10 @@ void Bullet::fixed(double fdt)
 
 	// Check if oustide world bounds
 	Collider* col = gameobject->collider;
-	if (g->isBorderX((float)col->cx) || g->isBorderY((float)col->cy) || g->isWall(col->cx, col->cy)) {
+	/*if (g->isBorderX((float)col->cx) || g->isBorderY((float)col->cy) || g->isWall(col->cx, col->cy)) {
 		w->removeObject(nullptr, gameobject);
 		return;
-	}
+	}*/
 
 	// Check if hit an ennemy
 	/*Object* ennemy = w->getEnnemy(col->cx, col->cy);

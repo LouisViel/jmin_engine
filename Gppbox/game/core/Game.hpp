@@ -10,6 +10,7 @@ class Environment;
 class World;
 class MapEditor;
 class Camera;
+enum class NodeType;
 
 class Game {
 public:
@@ -38,11 +39,9 @@ public:
 
 	bool isOccupied(Object* object) const;
 	bool isOccupied(int gridx, int gridy) const;
-	bool isPlayer(int gridx, int gridy) const;
-	bool isEnnemy(int gridx, int gridy) const;
 
-	bool hasCollision(float gridx, float gridy, bool checkBorder = true) const;
-	bool isBorderX(float gridx) const;
-	bool isBorderY(float gridy) const;
-	bool isWall(int cx, int cy) const;
+	bool isBuildable(Object* object) const;
+	bool isBuildable(int gridx, int gridy) const;
+	bool isBuildable(NodeType nodeType, Object* object) const;
+	bool isBuildable(NodeType nodeType, int gridx, int gridy) const;
 };

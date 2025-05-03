@@ -22,6 +22,7 @@ public:
 
 public:
 	Convoyer();
+	Convoyer(float speed);
 	virtual ~Convoyer();
 	size_t size();
 
@@ -29,14 +30,14 @@ public:
 	void update(double dt) override;
 
 	// Positions are in relative space to convoyer (getPosition()) (first part should be (0, 0))
-	void build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i> tiles);
-	void expand(sf::Vector2i endPos, std::vector<sf::Vector2i> tiles);
+	void build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles);
+	void expand(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles);
 	void remove(size_t partsCount);
 	void remove(sf::Vector2i cutPos);
 
 	// Callers for internal convertion from world to local space
-	void buildWorld(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i> tiles);
-	void expandWorld(sf::Vector2i endPos, std::vector<sf::Vector2i> tiles);
+	void buildWorld(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles, bool convertTiles = true);
+	void expandWorld(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles, bool convertTiles = true);
 	void removeWorld(sf::Vector2i cutPos);
 
 	bool connectInput(InOutConvoy* const input);

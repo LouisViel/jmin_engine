@@ -40,7 +40,7 @@ void Environment::initBackground()
 void Environment::initEnvironment()
 {
 	throw std::exception(); // Will not be implemented cause using tmx instead
-	environment = new TileMap();
+	//environment = new TileMap();
 	//environment->load();
 }
 

@@ -39,7 +39,5 @@ public:
 	void imgui();
 
 private:
-	void isOccupied(Game* g);
-
 	inline void switchConstructor(BuildConstructor* constructor);
 };

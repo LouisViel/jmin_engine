@@ -12,7 +12,8 @@ private:
 	#define DegToRad (M_PI / 180.0f)
 
 public:
-	static bool isFullBody(Object* object, int gridx, int gridy);
+	static bool isFullBody(const Object* object, int gridx, int gridy);
+	static bool isAdjacent(const sf::Vector2i& a, const sf::Vector2i& b);
 	template <typename T> static int sign(T value);
 
 	static float toLength(const sf::Vector2i& source);

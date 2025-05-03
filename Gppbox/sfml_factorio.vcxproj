@@ -167,6 +167,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\builder\ConvoyerConstructor.cpp" />
+    <ClCompile Include="game\core\builder\BuildConstructor.cpp" />
+    <ClCompile Include="engine\utils\Bresenham.hpp" />
+    <ClCompile Include="game\core\builder\Builder.cpp" />
     <ClCompile Include="game\core\payload\InOutPayloadBase.cpp" />
     <ClCompile Include="game\core\payload\InOutPayloadBase.hpp" />
     <ClCompile Include="game\core\payload\PayloadPool.hpp" />
@@ -208,6 +212,9 @@
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
     <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="game\builder\ConvoyerConstructor.hpp" />
+    <ClInclude Include="game\core\builder\BuildConstructor.hpp" />
+    <ClInclude Include="game\core\builder\Builder.hpp" />
     <ClInclude Include="engine\utils\TransformHelper.hpp" />
     <ClInclude Include="game\object\drills\DrillWood.hpp" />
     <ClInclude Include="game\object\drills\Drill.t.hpp" />

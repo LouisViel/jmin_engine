@@ -3,7 +3,9 @@
 #include "engine/utils/TransformHelper.hpp"
 
 
-Convoyer::Convoyer()
+Convoyer::Convoyer() : Convoyer(speed) {}
+
+Convoyer::Convoyer(float speed) : speed(speed)
 {
     // Setup Input Handle (with default settings) (Need to be updated later)
     inputHandle = new InOutConvoyDefault(InOutConvoy::Mode::In, ResourceTypeHelper::All, DirectionHelper::All);
@@ -59,6 +61,7 @@ bool Convoyer::connectInput(InOutConvoy* const input)
     InOutConvoyDefault* inputBase = input->handle<PayloadBase>();
     if (inputBase->payload == nullptr) return false;
     inputHandle->payload = inputBase->payload;
+    inputHandle->connected = true;
     return true;
 }
 
@@ -69,6 +72,7 @@ bool Convoyer::connectOutput(InOutConvoy* const output)
     InOutConvoyDefault* outputBase = output->handle<PayloadBase>();
     if (outputBase->payload == nullptr) return false;
     outputHandle->payload = outputBase->payload;
+    outputHandle->connected = true;
     return true;
 }
 
@@ -76,12 +80,14 @@ void Convoyer::removeInput()
 {
     if (inputHandle->payload == nullptr) return;
     inputHandle->payload = nullptr;
+    inputHandle->connected = false;
 }
 
 void Convoyer::removeOutput()
 {
     if (outputHandle->payload == nullptr) return;
     outputHandle->payload = nullptr;
+    outputHandle->connected = false;
 }
 
 
@@ -90,59 +96,47 @@ void Convoyer::removeOutput()
 //////////////////////////////////////////////////////////////////
 
 
-// (warning with float scales & with rotations !!)
-void Convoyer::buildWorld(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i> tiles)
+void Convoyer::buildWorld(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles, bool convertTiles)
 {
     // Get converter (transform)
-    const sf::Transform& convert = getTransform();
+    const sf::Vector2f& pos = getPosition();
+    const sf::Vector2i convoyerPos = sf::Vector2i((int)pos.x, (int)pos.y);
 
-    // Convert start & end
-    sf::Vector2f startConvert = convert.transformPoint((float)startPos.x, (float)startPos.y);
-    sf::Vector2i startWorld = sf::Vector2i((int)startConvert.x, (int)startConvert.y);
-    sf::Vector2f endConvert = convert.transformPoint((float)endPos.x, (float)endPos.y);
-    sf::Vector2i endWorld = sf::Vector2i((int)endConvert.x, (int)endConvert.y);
-
-    // Convert Tiles
+    // Convert positions to local coordinates
+    sf::Vector2i startWorld = startPos - convoyerPos;
+    sf::Vector2i endWorld = endPos - convoyerPos;
     std::vector<sf::Vector2i> tilesWorld = std::vector<sf::Vector2i>();
-    for (sf::Vector2i tile : tiles) {
-        sf::Vector2f tileWorld = convert.transformPoint((float)tile.x, (float)tile.y);
-        tilesWorld.emplace_back((int)tile.x, (int)tile.y);
-    }
+    if (convertTiles) for (sf::Vector2i tile : tiles) tilesWorld.push_back(tile - convoyerPos);
+    else tilesWorld.insert(tilesWorld.begin(), tiles.begin(), tiles.end());
 
     // Call local coordinates build
     this->build(startWorld, endWorld, tilesWorld);
 }
 
-// (warning with float scales & with rotations !!)
-void Convoyer::expandWorld(sf::Vector2i endPos, std::vector<sf::Vector2i> tiles)
+void Convoyer::expandWorld(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles, bool convertTiles)
 {
     // Get converter (transform)
-    const sf::Transform& convert = getTransform();
+    const sf::Vector2f& pos = getPosition();
+    const sf::Vector2i convoyerPos = sf::Vector2i((int)pos.x, (int)pos.y);
 
-    // Convert end
-    sf::Vector2f endConvert = convert.transformPoint((float)endPos.x, (float)endPos.y);
-    sf::Vector2i endWorld = sf::Vector2i((int)endConvert.x, (int)endConvert.y);
-
-    // Convert Tiles
+    // Convert positions to local coordinates
+    sf::Vector2i endWorld = endPos - convoyerPos;
     std::vector<sf::Vector2i> tilesWorld = std::vector<sf::Vector2i>();
-    for (sf::Vector2i tile : tiles) {
-        sf::Vector2f tileWorld = convert.transformPoint((float)tile.x, (float)tile.y);
-        tilesWorld.emplace_back((int)tile.x, (int)tile.y);
-    }
+    if (convertTiles) for (sf::Vector2i tile : tiles) tilesWorld.push_back(tile - convoyerPos);
+    else tilesWorld.insert(tilesWorld.begin(), tiles.begin(), tiles.end());
 
     // Call local coordinates expand
     this->expand(endWorld, tilesWorld);
 }
 
-// (warning with float scales & with rotations !!)
 void Convoyer::removeWorld(sf::Vector2i cutPos)
 {
     // Get converter (transform)
-    const sf::Transform& convert = getTransform();
+    const sf::Vector2f& pos = getPosition();
+    const sf::Vector2i convoyerPos = sf::Vector2i((int)pos.x, (int)pos.y);
 
-    // Convert end
-    sf::Vector2f cutConvert = convert.transformPoint((float)cutPos.x, (float)cutPos.y);
-    sf::Vector2i cutWorld = sf::Vector2i((int)cutConvert.x, (int)cutConvert.y);
+    // Convert positions to local coordinates
+    sf::Vector2i cutWorld = cutPos - convoyerPos;
 
     // Call local coordinates expand
     this->remove(cutWorld);
@@ -154,7 +148,7 @@ void Convoyer::removeWorld(sf::Vector2i cutPos)
 //////////////////////////////////////////////////////////////////
 
 
-void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i> tiles)
+void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles)
 {
     // Prevent weird invocation of build method
     if (tiles.size() <= 0) throw std::exception("Cannot build a convoyer without tiles");
@@ -203,7 +197,7 @@ void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf:
 //////////////////////////////////////////////////////////////////
 
 
-void Convoyer::expand(sf::Vector2i endPos, std::vector<sf::Vector2i> tiles)
+void Convoyer::expand(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles)
 {
     // Prevent weird invocations of build method
     if (parts->size() <= 0) throw std::exception("Cannot expand a non constructed convoyer");

@@ -28,6 +28,24 @@ namespace M
 		/* No collision */ \
 		return false;
 
+	// FULL_COLLISION(object, vector.emplace_back(xpos, ypos))
+	#define FULL_COLLISION(object, output, action) \
+		/* Verify object */ \
+		if (!object || !object->collider) output; \
+		\
+		/* Prepare full check Variables */ \
+		Collider* collider = object->collider; \
+		int xposMin(int(collider->rx - collider->width - C::E_ADJUSTMENT_X + collider->cx)); \
+		int xposMax(int(collider->rx + collider->width + collider->cx)); \
+		float cry(collider->cy + collider->ry); \
+		\
+		/* Process full body check */ \
+		for (float ypos = cry, ytarget = cry - collider->height; ypos > ytarget; --ypos) { \
+			for (int xpos = xposMin; xpos <= xposMax; ++xpos) { \
+				action; \
+			} \
+		}
+
 
 	// REMOVE_ITEM(Object*, gameobjects, target)
 	#define REMOVE_ITEM(objType, vector, obj) \

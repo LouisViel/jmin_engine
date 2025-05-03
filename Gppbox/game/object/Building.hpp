@@ -20,6 +20,9 @@ public:
 	void addInput(InOutConvoy* const input);
 	void addOutput(InOutConvoy* const output);
 
+	InOutConvoy* getInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
+	InOutConvoy* getOutput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
+
 private:
 	virtual void configure() { }
 };

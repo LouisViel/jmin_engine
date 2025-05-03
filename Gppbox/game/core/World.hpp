@@ -3,7 +3,6 @@
 #include <vector>
 #include <set>
 #include <unordered_set>
-#include "engine/core/ParticleMan.hpp"
 #include "app/M.hpp"
 
 #include "game/object/Building.hpp"
@@ -15,18 +14,19 @@ namespace sf {
 	class RenderTarget;
 }
 
+
 class World
 {
 private:
 	// Loop Forward on gameobjects
-	#define LOOPF_E(action) \
-		LOOPF_PTR(gameobjects, Object* e) \
+	#define LOOPF_O(vector, type, action) \
+		LOOPF_PTR(vector, type o) \
 		action; \
 		LOOP_END
 
 	// Loop Backward on gameobjects
-	#define LOOPB_E(action) \
-		LOOPB_PTR(gameobjects, Object* e) \
+	#define LOOPB_O(vector, type, action) \
+		LOOPB_PTR(vector, type o) \
 		action; \
 		LOOP_END
 
@@ -34,6 +34,10 @@ private:
 	std::unordered_set<Object*> toDelete;
 
 public:
+	// Gameobjects container (all objects in the game)
+	std::vector<Object*>* previews = nullptr;
+	std::vector<Object*>* gameobjects = nullptr;
+
 	std::vector<Building*>* buildings = nullptr;
 	std::vector<Convoyer*>* convoyers = nullptr;
 	// Here insert Player draw
@@ -43,17 +47,13 @@ public:
 	// Render UI Gameplay
 	// Render UI Utils (ex : pause, quitter jeu, ect..)
 	// Render UI Help (tooltips)
-
-	std::vector<Object*>* gameobjects = nullptr;
 	
 
 	World(sf::RenderWindow* win);
 	~World();
 
 	void initMainChar();
-	void initPetDrone();
 	Object* initEnnemy(float x, float y);
-	Object* initEnnemyCore(float x, float y);
 
 	void preupdate(double dt);
 	void fixed(double fdt);
@@ -62,12 +62,17 @@ public:
 	void draw(sf::RenderTarget& win);
 	void imgui();
 
-	void removeEnnemy(Object* ennemy);
 	void removeObject(std::vector<Object*>* quick, Object* e);
+	void removePreview(Object* object);
 
 	Object* getPlayer();
-	Object* getEnnemy(int gridx, int gridy);
-	std::set<Object*> getEnnemies(int gridx, int gridy);
 	Object* getClosest(std::vector<Object*>* vector, sf::Vector2i posPix);
 	bool isValid(std::vector<Object*>* vector, Object* object);
+
+	Object* getPreview(int gridx, int gridy) const;
+	Building* getBuilding(int gridx, int gridy) const;
+	Convoyer* getConvoyer(int gridx, int gridy) const;
+
+	InOutConvoy* getBuildingInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
+	InOutConvoy* getBuildingOutput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
 };

@@ -107,7 +107,7 @@ void Rigidbody::processHorizontal(Game& g, float& _rx, const float& _ry)
 			// Check for right collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 			for (float xpos = _rx + cx, xtarget = xposMax + 1 + cx; xpos < xtarget && !isCollision; ++xpos) {
 				for (float ypos = ry + cy, ytarget = float(yposMax + cy); ypos > ytarget && !isCollision; --ypos)
-					isCollision = g.hasCollision(xpos, ypos);
+					isCollision = g.isOccupied((int)xpos, (int)ypos);
 			}
 		}
 		
@@ -138,7 +138,7 @@ void Rigidbody::processHorizontal(Game& g, float& _rx, const float& _ry)
 			// Check for left collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 			for (float xpos = _rx + cx, xtarget = xposMin - 1 + cx; xpos > xtarget && !isCollision; --xpos) {
 				for (float ypos = ry + cy, ytarget = float(yposMax + cy); ypos > ytarget && !isCollision; --ypos) {
-					isCollision = g.hasCollision(xpos, ypos);
+					isCollision = g.isOccupied((int)xpos, (int)ypos);
 				}
 			}
 		//}
@@ -180,12 +180,13 @@ void Rigidbody::processVertical(Game& g, const float& _rx, float& _ry)
 		// Check for down collisions // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 		for (float xpos = xposMin + cx, target = float(xposMax + cx);
 			xpos < target && !isCollision; ++xpos
-		) isCollision = g.hasCollision(xpos, cry, false);
+		) isCollision = g.isOccupied((int)xpos, (int)cry);
 
 		// Process Is Grounded
 		if (isCollision) {
 			dy = 0.0f; // Cancel Movement y
 			_ry = 0.99f; // Attach ry to ground
+			vcollision = 1;
 
 		// Process Gravity/Falling
 		} else {
@@ -209,7 +210,7 @@ void Rigidbody::processVertical(Game& g, const float& _rx, float& _ry)
 			// Check for up collisions (+ Allow single platform bypass) // TODO : Ajouter une verif "anti-teleportation" (Normalisée grace au fixed-update)
 			for (float xpos = xposMin + cx, xtarget = float(xposMax + cx), collisionCount = 0; xpos < xtarget && !isCollision; ++xpos) {
 				for (float ypos = cry, ytarget = cry - height - 1; ypos > ytarget && !isCollision; --ypos) {
-					if (g.hasCollision(xpos, ypos, false)) {
+					if (g.isOccupied((int)xpos, (int)ypos)) {
 						if (++collisionCount > 1) isCollision = true;
 					} else collisionCount = 0;
 				}
@@ -220,6 +221,7 @@ void Rigidbody::processVertical(Game& g, const float& _rx, float& _ry)
 		if (isCollision) {
 			dy = 0.0f; // Cancel Movement y
 			_ry = ry; // Reset ry at frame start state
+			vcollision = -1;
 
 		// Process Jumping/Flying
 		} else if (_ry < 0.0f) {

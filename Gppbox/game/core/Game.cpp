@@ -12,6 +12,8 @@
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 
+#include "game/core/utils/NodeType.hpp"
+
 Game* Game::singleton = nullptr;
 double Game::g_tickTimer = 0.0;
 double Game::g_time = 0.0;
@@ -150,7 +152,7 @@ void Game::processEvents(sf::Event ev)
 	if (ev.type == sf::Event::KeyReleased) {
 
 		// Key [K] for walls reset debug
-		if (ev.key.code == Keyboard::K) {
+		if (ev.key.code == sf::Keyboard::K) {
 			//environment->debug();
 			return;
 		}
@@ -166,27 +168,19 @@ void Game::processEvents(sf::Event ev)
 // Full check for Occupied Space
 bool Game::isOccupied(Object* object) const
 {
-	FULL_CHECK(object, this->isOccupied(xpos, (int)ypos));
+	std::vector<sf::Vector2i> collisions = std::move(object->getCollisions());
+	for (sf::Vector2i& collision : collisions) {
+		if (this->isOccupied(collision.x, collision.y)) return true;
+	}
+	return false;
 }
 
 // Full check for Occupied Space
 bool Game::isOccupied(int gridx, int gridy) const
 {
-	return this->isPlayer(gridx, gridy) ||
-		this->isEnnemy(gridx, gridy) ||
-		this->isWall(gridx, gridy);
-}
-
-// Check is player is at coordinates
-bool Game::isPlayer(int gridx, int gridy) const
-{
-	return Utils::isFullBody(this->world->getPlayer(), gridx, gridy);
-}
-
-// Check if there is an ennemy at coordinates
-bool Game::isEnnemy(int gridx, int gridy) const
-{
-	return this->world->getEnnemy(gridx, gridy) != nullptr;
+	return world->getPreview(gridx, gridy) != nullptr ||
+		world->getBuilding(gridx, gridy) != nullptr ||
+		world->getConvoyer(gridx, gridy) != nullptr;
 }
 
 
@@ -195,35 +189,34 @@ bool Game::isEnnemy(int gridx, int gridy) const
 //////////////////////////////////////////////////////////////////
 
 
-// Full check for Collisions at given position
-bool Game::hasCollision(float gridx, float gridy, bool checkBorder) const
+bool Game::isBuildable(Object* object) const
 {
-	if (checkBorder && isBorderX(gridx)) return true;
-	return isWall(int(gridx), int(gridy));
+	std::vector<sf::Vector2i> collisions = std::move(object->getCollisions());
+	for (sf::Vector2i& collision : collisions) {
+		if (!this->isBuildable(NodeType::None, collision.x, collision.y)) return false;
+	}
+	return true;
 }
 
-// Check if outside Border (Collision) on X axis
-bool Game::isBorderX(float gridx) const
+bool Game::isBuildable(int gridx, int gridy) const
 {
-	int wallRightX = (C::RES_X / C::GRID_SIZE) - 1;
-	return gridx < 1.0f || gridx >= wallRightX;
+	return this->isBuildable(NodeType::None, gridx, gridy);
 }
 
-// Check if outside Border (Collision) on Y axis
-bool Game::isBorderY(float gridy) const
+bool Game::isBuildable(NodeType nodeType, Object* object) const
 {
-	int wallRightY = (C::RES_Y / C::GRID_SIZE) - 1;
-	return gridy < 1.0f || gridy >= wallRightY;
+	std::vector<sf::Vector2i> collisions = std::move(object->getCollisions());
+	for (sf::Vector2i& collision : collisions) {
+		if (!this->isBuildable(nodeType, collision.x, collision.y)) return false;
+	}
+	return true;
 }
 
-// Check if there is a Wall (Collision) at this position
-bool Game::isWall(int cx, int cy) const
+bool Game::isBuildable(NodeType nodeType, int gridx, int gridy) const
 {
-	/*for (Vector2i& w : this->environment->collisions) {
-		if (w.x == cx && w.y == cy)
-			return true;
-	}*/
-	return false;
+	NodeType type = NodeTypeHelper::All - nodeType + NodeTypeHelper::NonBuildable;
+	if (environment->isNode(type, gridx, gridy)) return false;
+	return !this->isOccupied(gridx, gridy);
 }
 
 

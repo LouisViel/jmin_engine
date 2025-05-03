@@ -16,28 +16,23 @@
 
 World::World(sf::RenderWindow* win)
 {
+	previews = new std::vector<Object*>();
 	gameobjects = new std::vector<Object*>();
 
 	buildings = new std::vector<Building*>();
 	convoyers = new std::vector<Convoyer*>();
 	details = new std::vector<Object*>();
 
-	// Insert Player Creation
-	// Insert "Bonus" Creation
-
-	initMainChar();
-	initPetDrone();
+	// TODO : Insert Player Creation
+	// Insert "Bonus" Creations
 }
 
 World::~World()
 {
-	for (Object* e : *gameobjects) delete e;
+	for (Object* o : *previews) delete o;
+	delete previews;
+	for (Object* o : *gameobjects) delete o;
 	delete gameobjects;
-
-	// Voir si on delete pas en plus le contenu de ces vectors
-	for (Building* b : *buildings) delete b;
-	for (Convoyer* c : *convoyers) delete c;
-	for (Object* d : *details) delete d;
 	delete buildings;
 	delete convoyers;
 	delete details;
@@ -51,18 +46,29 @@ World::~World()
 
 void World::preupdate(double dt)
 {
-	LOOPF_E(e->preupdate(dt));
+	LOOPB_O(previews, Object*, o->preupdate(dt));
+	LOOPF_O(gameobjects, Object*, o->preupdate(dt));
+	/*LOOPF_O(buildings, Building*, o->preupdate(dt));
+	LOOPF_O(convoyers, Convoyer*, o->preupdate(dt));
+	LOOPF_O(details, Object*, o->preupdate(dt));*/
 }
 
 void World::fixed(double fdt)
 {
-	LOOPF_E(e->fixed(fdt));
+	LOOPB_O(previews, Object*, o->fixed(fdt));
+	LOOPF_O(gameobjects, Object*, o->fixed(fdt));
+	/*LOOPF_O(buildings, Building*, o->fixed(fdt));
+	LOOPF_O(convoyers, Convoyer*, o->fixed(fdt));
+	LOOPF_O(details, Object*, o->fixed(fdt));*/
 }
-
 
 void World::update(double dt)
 {
-	LOOPF_E(e->update(dt));
+	LOOPB_O(previews, Object*, o->update(dt));
+	LOOPF_O(gameobjects, Object*, o->update(dt));
+	/*LOOPF_O(buildings, Building*, o->update(dt));
+	LOOPF_O(convoyers, Convoyer*, o->update(dt));
+	LOOPF_O(details, Object*, o->update(dt));*/
 }
 
 void World::processDelete()
@@ -86,7 +92,11 @@ void World::draw(sf::RenderTarget& win)
 {
 	sf::RenderStates states = sf::RenderStates::Default;
 	states.transform *= ScaleHelper::apply();
-	LOOPF_E(win.draw(*e, states));
+	//LOOPF_O(gameobjects, Object*, win.draw(*o, states));
+	LOOPF_O(buildings, Building*, win.draw(*o, states));
+	LOOPF_O(convoyers, Convoyer*, win.draw(*o, states));
+	LOOPF_O(previews, Object*, win.draw(*o, states));
+	LOOPF_O(details, Object*, win.draw(*o, states));
 }
 
 void World::imgui()
@@ -102,34 +112,6 @@ void World::imgui()
 			TreePop();
 		}
 		LOOP_END;
-		TreePop();
-	}
-
-	if (TreeNodeEx("Buildings", 0)) {
-		Indent(5.0f);
-
-		// TODO : Mettre les bouttons pour les différents Buildings
-
-		if (TreeNodeEx("Wood", 0)) {
-
-			TreePop();
-		}
-
-		if (TreeNodeEx("Stone", 0)) {
-
-			TreePop();
-		}
-
-		/*if (TreeNodeEx("Coal", 0)) {
-
-			TreePop();
-		}*/
-
-		if (TreeNodeEx("Iron", 0)) {
-
-			TreePop();
-		}
-
 		TreePop();
 	}
 }
@@ -170,39 +152,6 @@ void World::initMainChar() {
 	//printf("player added\n");
 }
 
-void World::initPetDrone()
-{
-	//constexpr float sizeX = 0.5f;
-	//constexpr float sizeY = 0.5f;
-
-	//// Create Drone Sprite
-	//sf::RectangleShape* spr = new sf::RectangleShape({ C::GRID_SIZE * sizeX * 1.75f, C::GRID_SIZE * sizeY * 1.75f });
-	//spr->setFillColor(sf::Color::Green);
-	//spr->setOutlineColor(sf::Color::Yellow);
-	//spr->setOutlineThickness(1);
-
-	//// Create Drone with "default" settings
-	//Object* e = new Object(spr);
-	//e->setCooGrid(3, int(C::RES_Y / C::GRID_SIZE) - 4 + 0.99f);
-	//e->syncPos();
-
-	//// Inject Drone Settings
-	//e->sheight = sizeX;
-	//e->swidth = sizeY;
-	////e->speed = C::P_DRONE;
-	////e->jumpforce = C::P_DRONE;
-	//e->fry = e->frx;
-	//e->gravy = 0.0f;
-
-	//// Add components
-	//e->addComponent(new SpriteOverride(e, "res/drone.png"));
-	//e->spr->setFillColor(sf::Color::Cyan);
-
-	//// Register Drone
-	//gameobjects->push_back(e);
-	//printf("drone added\n");
-}
-
 Object* World::initEnnemy(float x, float y)
 {
 	return nullptr;
@@ -213,49 +162,26 @@ Object* World::initEnnemy(float x, float y)
 //	return e;
 }
 
-Object* World::initEnnemyCore(float x, float y)
-{
-	return nullptr;
-//	// Create Ennemy Sprite
-//	sf::RectangleShape* spr = new sf::RectangleShape({ C::GRID_SIZE * C::S_SCALER_X, C::GRID_SIZE * 2 * C::S_SCALER_Y });
-//	spr->setFillColor(sf::Color::Yellow);
-//	spr->setOutlineColor(sf::Color::Red);
-//	spr->setOutlineThickness(2);
-//	spr->setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
-//
-//	// Create Ennemy with "default" settings
-//	Object* e = new Object(spr);
-//	e->setCooGrid(x, y);
-//	e->syncPos();
-//
-//	// Inject Custom Ennemy Settings
-//	e->sheight = C::P_HEIGHT;
-//	e->swidth = C::P_WIDTH;
-//	e->lifepoints = C::E_LIFEPOINTS;
-//	e->speed = C::P_SPEED;
-//	//e->jumpforce = C::P_JUMP;
-//
-//	// Add Override Sprite
-//	e->addComponent(new SpriteOverride(e, "res/ennemy.png"));
-//
-//	return e;
-}
-
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
 
-void World::removeEnnemy(Object* ennemy)
-{
-	//this->removeObject(this->ennemies, ennemy);
-}
+//void World::removeEnnemy(Object* ennemy)
+//{
+//	//this->removeObject(this->ennemies, ennemy);
+//}
 
 void World::removeObject(std::vector<Object*>* quick, Object* object)
 {
 	if (quick != nullptr) { REMOVE_ITEM(Object*, quick, object); }
 	toDelete.emplace(object);
+}
+
+void World::removePreview(Object* object)
+{
+	REMOVE_ITEM(Object*, previews, object);
 }
 
 
@@ -270,36 +196,29 @@ Object* World::getPlayer()
 	return nullptr;
 }
 
-Object* World::getEnnemy(int gridx, int gridy)
-{
-	/*for (Object* e : *ennemies) {
-		if (Utils::isFullBody(e, gridx, gridy)) return e;
-	}*/
-	return nullptr;
-}
+//std::set<Object*> World::getEnnemies(int gridx, int gridy)
+//{
+//	std::set<Object*> results = std::set<Object*>();
+//	/*for (Object* e : *ennemies) {
+//		if (Utils::isFullBody(e, gridx, gridy)) {
+//			results.emplace(e);
+//		}
+//	}*/
+//	return results;
+//}
 
-std::set<Object*> World::getEnnemies(int gridx, int gridy)
-{
-	std::set<Object*> results = std::set<Object*>();
-	/*for (Object* e : *ennemies) {
-		if (Utils::isFullBody(e, gridx, gridy)) {
-			results.emplace(e);
-		}
-	}*/
-	return results;
-}
-
-Object* World::getClosest(std::vector<Object*>* vector, sf::Vector2i posPix)
+Object* World::getClosest(std::vector<Object*>* vector, sf::Vector2i gridPos)
 {
 	Object* target = nullptr;
 	float distance = INFINITY;
 
-	for (Object* e : *vector) {
-		sf::Vector2i eposPix = sf::Vector2i(0, 0); //e->getPosition();// e->getPosPixel();
-		float dist = Utils::toLength(eposPix - posPix);
+	for (Object* o : *vector) {
+		sf::Vector2f opos = o->getPosition();
+		sf::Vector2i oposi = sf::Vector2i((int)opos.x, (int)opos.y);
+		float dist = Utils::toLength(oposi - gridPos);
 		if (dist < distance) {
 			distance = dist;
-			target = e;
+			target = o;
 		}
 	}
 
@@ -314,4 +233,75 @@ bool World::isValid(std::vector<Object*>* vector, Object* object)
 			return true;
 	}
 	return false;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+Object* World::getPreview(int gridx, int gridy) const
+{
+	for (Object* preview : *previews) {
+		if (preview->isCollision(gridx, gridy))
+			return preview;
+	}
+	return nullptr;
+}
+
+Building* World::getBuilding(int gridx, int gridy) const
+{
+	for (Building* building : *buildings) {
+		if (building->isCollision(gridx, gridy))
+			return building;
+	}
+	return nullptr;
+}
+
+Convoyer* World::getConvoyer(int gridx, int gridy) const
+{
+	for (Convoyer* convoyer : *convoyers) {
+		if (convoyer->isCollision(gridx, gridy))
+			return convoyer;
+	}
+	return nullptr;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+InOutConvoy* World::getBuildingInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const
+{
+	// Check settings are valids
+	if (inOutConvoy->mode != InOutConvoy::Mode::In) return nullptr;
+
+	// Check all building for an input corresponding
+	InOutConvoy* convoy;
+	for (Building* building : *buildings) {
+		convoy = building->getInput(gridPos, inOutConvoy);
+		if (convoy != nullptr) return convoy;
+	}
+
+	// No input founded
+	return nullptr;
+}
+
+InOutConvoy* World::getBuildingOutput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const
+{
+	// Check settings are valids
+	if (inOutConvoy->mode != InOutConvoy::Mode::Out) return nullptr;
+
+	// Check all building for an output corresponding
+	InOutConvoy* convoy;
+	for (Building* building : *buildings) {
+		convoy = building->getOutput(gridPos, inOutConvoy);
+		if (convoy != nullptr) return convoy;
+	}
+
+	// No output founded
+	return nullptr;
 }

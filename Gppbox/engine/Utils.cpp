@@ -4,9 +4,18 @@
 #include "game/core/object/Collider.hpp"
 #include "app/M.hpp"
 
-bool Utils::isFullBody(Object* object, int gridx, int gridy)
+bool Utils::isFullBody(const Object* object, int gridx, int gridy)
 {
     FULL_CHECK(object, (xpos == gridx && int(ypos) == gridy));
+}
+
+bool Utils::isAdjacent(const sf::Vector2i& a, const sf::Vector2i& b)
+{
+    return (
+        a == b ||
+        (a.x == b.x && (a.y - 1 == b.y || a.y + 1 == b.y)) ||
+        (b.y == b.y && (a.x - 1 == b.x || a.x + 1 == b.x))
+    );
 }
 
 

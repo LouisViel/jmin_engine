@@ -8,6 +8,12 @@
 std::vector<sf::Vector2i> bresenhamLine(int x1, int y1, int x2, int y2)
 {
     std::vector<sf::Vector2i> results = std::vector<sf::Vector2i>();
+    bresenhamLine(x1, y1, x2, y2, results);
+    return results;
+}
+
+void bresenhamLine(int x1, int y1, int x2, int y2, std::vector<sf::Vector2i>& results)
+{
     int dx = x2 - x1, dy = 0;
     
     if(dx != 0){
@@ -211,5 +217,4 @@ std::vector<sf::Vector2i> bresenhamLine(int x1, int y1, int x2, int y2)
     }
 
     results.push_back({ x2, y2 });
-    return results;
 }

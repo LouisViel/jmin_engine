@@ -1,6 +1,7 @@
 #include "imgui.h"
 #include "Builder.hpp"
 #include "engine/utils/InputHandler.hpp"
+#include "engine/utils/ScaleHelper.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 #include "game/core/Game.hpp"
@@ -8,10 +9,7 @@
 
 
 Builder::Builder(sf::RenderWindow* win, sf::RenderTarget* camTarget, Environment* environment, World* world)
-	: win(win), camTarget(camTarget), environment(environment), world(world)
-{
-	return;
-}
+	: win(win), camTarget(camTarget), environment(environment), world(world) { }
 
 Builder::~Builder()
 {
@@ -50,36 +48,53 @@ void Builder::update(double dt)
 	mousePos = sf::Vector2i(int(pos.x / C::GRID_SIZE), int(pos.y / C::GRID_SIZE));
 	leftButton = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 	rightButton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	constructor->handleInputs();
 
-	// register position to constructor for rendering & later
-	constructor->setPosition((float)mousePos.x, (float)mousePos.y);
-
-	// Check if target is occupied
+	// register position to constructor for rendering & later + Check if target is occupied
 	Game* g = Game::singleton;
-	isOccupied(g);
+	constructor->setTargetPosition(mousePos);
+	#pragma warning(suppress:6011)
+	occupied = constructor->canBuild(g);
 
 	// Destroy Object if asked to + occupied
 	if (occupied && rightButton) {
-		if (!g->isPlayer(mousePos.x, mousePos.y)) {
-			//removeAny();
-			isOccupied(g);
-		}
+		//removeAny();
+		occupied = constructor->canBuild(g);
 	}
 
 	// Spawn Object if asked to + not occupied 
 	if (!occupied && leftButton) {
-		Object* build = constructor->build();
-		if (constructor->isConvoyer()) g->world->convoyers->push_back(static_cast<Convoyer*>(build));
-		else if (constructor->isBuilding()) g->world->buildings->push_back(static_cast<Building*>(build));
-		else throw std::exception("Constructor has no identity. Please specify it !!");
-		occupied = true;
+		Object* build = constructor->tryBuild();
+		if (build != nullptr) {
+			g->world->gameobjects->push_back(build);
+			if (constructor->isConvoyer()) g->world->convoyers->push_back(static_cast<Convoyer*>(build));
+			else if (constructor->isBuilding()) g->world->buildings->push_back(static_cast<Building*>(build));
+			else throw std::exception("Constructor has no identity. Please specify it !!");
+			occupied = true;
+		}
 	}
 }
 
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 void Builder::draw(sf::RenderTarget& target)
 {
-
+	if (constructor == nullptr) return;
+	sf::RenderStates states = sf::RenderStates::Default;
+	states.transform *= ScaleHelper::apply();
+	constructor->isDrawValid = !occupied;
+	target.draw(*constructor, states);
 }
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
 
 void Builder::imgui()
 {
@@ -90,19 +105,30 @@ void Builder::imgui()
 	// "BuildingBuilder" (plusieurs catégories (drill, four, constructor, ect..), avec plusieurs pour les types dedans)
 
 	using namespace ImGui;
+	if (CollapsingHeader("Build", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (TreeNodeEx("Convoyers", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
 
+			TreePop();
+		}
 
-}
+		if (TreeNodeEx("Drills", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
 
+			TreePop();
+		}
 
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
+		// SameLine();
+		// BulletText("Left click to place");
 
+		// Editor Toggle Button
+		/*Dummy(ImVec2(0.0f, 6.0f));
+		ImGui::Text("Edit Mode Settings");
+		if (active && Button("Go back Playing")) active = false;
+		if (!active && Button("Enter Edit Mode")) active = true;*/
 
-void Builder::isOccupied(Game* g)
-{
-
+		TreePop();
+	}
 }
 
 
