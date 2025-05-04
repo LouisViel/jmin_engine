@@ -97,7 +97,11 @@ void Object::imgui()
 
 bool Object::isCollision(Object* other) const
 {
-	FULL_CHECK(other, this->isCollision(xpos, (int)ypos));
+	std::vector<sf::Vector2i> collisions = std::move(other->getCollisions());
+	for (sf::Vector2i& col : collisions) {
+		if (this->isCollision(col.x, col.y)) return true;
+	}
+	return false;
 }
 
 bool Object::isCollision(int gridx, int gridy) const

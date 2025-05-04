@@ -3,6 +3,7 @@
 #include "game/core/payload/InOutConvoy.hpp"
 #include "game/core/payload/PayloadPool.hpp"
 #include "game/core/payload/Payload.hpp"
+#include "app/C.hpp"
 
 class Building : public Object
 {

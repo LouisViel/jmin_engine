@@ -1,17 +1,25 @@
 #pragma once
+#include <SFML/System/Vector2.hpp>
 
 namespace C
 {
 	// InOutPayload settings
 	static constexpr size_t DRILL_PAYLOAD = 256;
+	static constexpr size_t BUILDER_PAYLOAD = 128;
 
-	// Payload Settings
+	// Pools Settings
 	static constexpr unsigned int PAYLOAD_POOL_SIZE = 4096;
 	static constexpr unsigned int CONVOYER_ITEM_POOL_SIZE = 4096;
 
 	// Convoyer Graphics
 	static constexpr const char* CONVOYER_TILESET = "assets/convoyer.png";
 	//static constexpr unsigned int CONVOYER_TILE_SIZE = 10 * 9;
+
+	// Building physics
+	#define COLLIDER_SIZE_DRILL sf::Vector2f(3.0f, 3.0f)
+	#define COLLIDER_SIZE_DRILL_INT sf::Vector2i(3, 3)
+	#define COLLIDER_SIZE_CRAFTER sf::Vector2f(3.0f, 3.0f)
+	#define COLLIDER_SIZE_CRAFTER_INT sf::Vector2i(3, 3)
 
 	// ----------------------------
 

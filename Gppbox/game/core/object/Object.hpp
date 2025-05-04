@@ -42,7 +42,7 @@ public:
 	virtual void update(double dt); // Update Object
 	virtual void imgui(); // Imgui Drawing
 
-	virtual bool isCollision(Object* other) const;
+	bool isCollision(Object* other) const;
 	virtual bool isCollision(int gridx, int gridy) const;
 	virtual std::vector<sf::Vector2i> getCollisions() const;
 

@@ -49,6 +49,12 @@ public:
 		return (a & b) != Direction::Unknown;
 	}
 
+	static Direction connect(Direction dir)
+	{
+		if (dir == All) return dir;
+		return DirectionHelper::inverse(dir);
+	}
+
 	static Direction inverse(Direction dir)
 	{
 		// Special Cases

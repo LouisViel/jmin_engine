@@ -395,6 +395,36 @@ void Convoyer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
+bool Convoyer::isCollision(int gridx, int gridy) const
+{
+    sf::Vector2f position = getPosition();
+    sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
+    sf::Vector2i gridPos = sf::Vector2i(gridx, gridy);
+    
+    for (sf::Vector2i& part : *parts) {
+        if (pos + part == gridPos) return true;
+    }
+    return false;
+}
+
+std::vector<sf::Vector2i> Convoyer::getCollisions() const
+{
+    sf::Vector2f position = getPosition();
+    sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
+
+    std::vector<sf::Vector2i> collisions = std::vector<sf::Vector2i>();
+    collisions.reserve(parts->size());
+
+    for (sf::Vector2i& part : *parts)
+        collisions.emplace_back(pos + part);
+    return collisions;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
 
 inline ConvoyerTile Convoyer::getTile(const sf::Vector2i& origin, const sf::Vector2i& pos, const sf::Vector2i& end)
 {

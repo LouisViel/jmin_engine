@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "game/core/object/CollisionTester.hpp"
 
 class Object;
 class Game;
@@ -19,13 +20,13 @@ protected:
 
 public:
 	bool isDrawValid = true;
-
-public:
 	bool isConvoyer() const { return buildType == BuildType::Convoyer; }
 	bool isBuilding() const { return buildType == BuildType::Building; }
 
 
 public:
+	virtual ~BuildConstructor() { }
+
 	// Try destroy what is preventing from building at this position
 	virtual void destroyAt(Game* game);
 
@@ -41,6 +42,7 @@ public:
 	// Handle Inputs for custom constructors
 	virtual void handleInputs() { };
 
+	BuildConstructor* constructor() { return static_cast<BuildConstructor*>(this); }
 
 protected:
 	void applyTransform(sf::RenderStates& states) const;

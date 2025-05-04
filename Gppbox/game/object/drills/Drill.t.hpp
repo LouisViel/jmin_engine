@@ -19,4 +19,5 @@ public:
 
 protected:
 	virtual void performDrill();
+	virtual t* getPayload();
 };

@@ -15,6 +15,7 @@ public:
 	void update(double dt);
 	void imgui();
 
+	sf::View* getView() const;
 	void setActive(sf::RenderTarget& win) const;
 	void addShake(float duration, float intensity);
 

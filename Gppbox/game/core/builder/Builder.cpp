@@ -1,15 +1,21 @@
 #include "imgui.h"
 #include "Builder.hpp"
+
 #include "engine/utils/InputHandler.hpp"
 #include "engine/utils/ScaleHelper.hpp"
+#include "app/C.hpp"
+
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 #include "game/core/Game.hpp"
-#include "app/C.hpp"
+
+#include "game/builder/convoyers/ConvoyerSlowConstructor.hpp"
+#include "game/builder/drills/DrillWoodConstructor.hpp"
+#include "game/builder/crafters/CrafterPlanksConstructor.hpp"
 
 
-Builder::Builder(sf::RenderWindow* win, sf::RenderTarget* camTarget, Environment* environment, World* world)
-	: win(win), camTarget(camTarget), environment(environment), world(world) { }
+Builder::Builder(sf::RenderWindow* win, Environment* environment, World* world)
+	: win(win), environment(environment), world(world) { }
 
 Builder::~Builder()
 {
@@ -28,17 +34,14 @@ Builder::~Builder()
 void Builder::update(double dt)
 {
 	// Check is active and if game focused
+	active = constructor != nullptr;
 	if (!active) return;
 	valid = InputHandler::hasFocus();
 	valid &= InputHandler::canUseMouse();
-	valid &= constructor != nullptr;
 	if (!valid) return;
 
-	// TODO : le système de coordinates (2 blocs de code suivants) est maybe cassé
-	// Il était prévu pour un edit full screen et non vue caméra
-
 	// Get & Check if Mouse pos is in window 
-	sf::Vector2f pos = camTarget->mapPixelToCoords(sf::Mouse::getPosition(*win));
+	sf::Vector2f pos = win->mapPixelToCoords(sf::Mouse::getPosition(*win));
 	if (pos.x < 0.0f || pos.x > C::RES_X || pos.y < 0.0f || pos.y > C::RES_Y) {
 		valid = false;
 		return;
@@ -59,6 +62,9 @@ void Builder::update(double dt)
 	// Destroy Object if asked to + occupied
 	if (occupied && rightButton) {
 		//removeAny();
+
+		// TODO : Dev le système de remove de building/convoyer
+
 		occupied = constructor->canBuild(g);
 	}
 
@@ -106,8 +112,18 @@ void Builder::imgui()
 
 	using namespace ImGui;
 	if (CollapsingHeader("Build", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (TreeNodeEx("Utils", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
+
+			if (Button("Nothing")) switchConstructor(nullptr);
+
+			TreePop();
+		}
+
 		if (TreeNodeEx("Convoyers", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+
+			if (Button("Slow Convoy")) switchConstructor((new ConvoyerSlowConstructor())->constructor());
 
 			TreePop();
 		}
@@ -115,19 +131,39 @@ void Builder::imgui()
 		if (TreeNodeEx("Drills", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
 
+			if (Button("Wood Drill")) switchConstructor((new DrillWoodConstructor())->constructor());
+
+			TreePop();
+		}
+
+		if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
+
+			
+
+			TreePop();
+		}
+
+		if (TreeNodeEx("Crafters", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
+
+			if (Button("Planks Crafter")) switchConstructor((new CrafterPlanksConstructor())->constructor());
+
+			TreePop();
+		}
+
+		if (TreeNodeEx("Containers", ImGuiTreeNodeFlags_DefaultOpen)) {
+			Indent(1.0f);
+
+
+
 			TreePop();
 		}
 
 		// SameLine();
+		// Dummy(ImVec2(0.0f, 6.0f));
+		// ImGui::Text("Edit Mode Settings");
 		// BulletText("Left click to place");
-
-		// Editor Toggle Button
-		/*Dummy(ImVec2(0.0f, 6.0f));
-		ImGui::Text("Edit Mode Settings");
-		if (active && Button("Go back Playing")) active = false;
-		if (!active && Button("Enter Edit Mode")) active = true;*/
-
-		TreePop();
 	}
 }
 

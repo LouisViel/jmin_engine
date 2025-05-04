@@ -11,6 +11,7 @@
 #include "game/core/utils/Camera.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
+#include "game/core/builder/Builder.hpp"
 
 #include "game/core/utils/NodeType.hpp"
 
@@ -29,11 +30,15 @@ Game::Game(sf::RenderWindow* win)
 
 	// Create Camera
 	camera = new Camera(world, { C::C_CENTER_X, C::C_CENTER_Y }, { C::C_SIZE_X, C::C_SIZE_Y });
+
+	// Create builder
+	builder = new Builder(win, environment, world);
 }
 
 Game::~Game()
 {
 	singleton = nullptr;
+	delete builder;
 	delete environment;
 	delete world;
 	delete camera;
@@ -50,9 +55,6 @@ void Game::preupdate(double dt)
 	g_time += dt;
 	g_tickTimer = dt;
 
-	//mapEditor->update(dt);
-	//double adt = mapEditor->active ? 0.0 : dt;
-
 	world->preupdate(dt);
 	if (InputHandler::getDebug()) {
 		camera->addShake(0.5f, 1.0f);
@@ -66,6 +68,7 @@ void Game::fixed(double fdt)
 
 void Game::update(double dt)
 {
+	builder->update(dt);
 	environment->update(dt);
 	world->update(dt);
 	camera->update(dt);
@@ -88,13 +91,12 @@ void Game::draw(sf::RenderWindow& win)
 	environment->drawWorld(*target);
 
 	// Enable Camera Drawing
-	//if (!mapEditor->active) {
-		//camera->setActive(*target);
-	//}
+	//camera->setActive(*target);
 
 	// Draw Camera Renderings
 	environment->drawCamera(*target);
 	world->draw(*target);
+	builder->draw(*target);
 
 	// Set Back target view
 	target->setView(defaultView);
@@ -131,6 +133,7 @@ void Game::imgui()
 	// Propagate Imgui
 	environment->imgui();
 	world->imgui();
+	builder->imgui();
 }
 
 

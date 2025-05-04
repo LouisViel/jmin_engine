@@ -56,7 +56,7 @@ public:
 	{
 		if (connected || other.connected) return false;
 		if (!ModeHelper::connect(this->mode, other.mode)) return false;
-		Direction _dir = DirectionHelper::inverse(other.dir);
+		Direction _dir = DirectionHelper::connect(other.dir);
 		return this->match(other.type, _dir);
 	}
 
@@ -64,7 +64,7 @@ public:
 	{
 		if (connected) return false;
 		if (!ModeHelper::connect(this->mode, mode)) return false;
-		Direction _dir = DirectionHelper::inverse(dir);
+		Direction _dir = DirectionHelper::connect(dir);
 		return this->match(type, _dir);
 	}
 

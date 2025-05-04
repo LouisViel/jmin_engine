@@ -45,6 +45,9 @@ public:
 	void removeInput();
 	void removeOutput();
 
+	bool isCollision(int gridx, int gridy) const override;
+	std::vector<sf::Vector2i> getCollisions() const override;
+
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

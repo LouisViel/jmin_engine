@@ -14,7 +14,7 @@ ConvoyerConstructor::ConvoyerConstructor()
 {
 	this->buildType = BuildType::Convoyer;
 	inputConvoy = new InOutConvoy(InOutConvoy::Mode::In, ResourceTypeHelper::All, DirectionHelper::All);
-	outputConvoy = new InOutConvoy(InOutConvoy::Mode::Out, ResourceType::Unknown, Direction::Unknown);
+	outputConvoy = new InOutConvoy(InOutConvoy::Mode::Out, ResourceType::Unknown, DirectionHelper::All);
 }
 
 ConvoyerConstructor::~ConvoyerConstructor()
@@ -47,22 +47,20 @@ bool ConvoyerConstructor::canBuild(Game* game)
 
 	// Second Phase : Try to bresenham convoyer path to extend it
 	if (state == State::Extend || state == State::Finish) {
-
 		// Check if tiles are buildables
 		if (bresenTiles.size() <= 0) return false;
 		for (sf::Vector2i& tile : bresenTiles) {
 			if (!game->isBuildable(NodeType::None, tile.x, tile.y)) {
+				currentConvoy = nullptr;
 				return false;
 			}
 		}
 
 		// Manage special case 'finish state'
 		if (state == State::Finish) {
-
-			// TODO : Ici un morceau du rework pour arreter sans output
-
+			// Get current output convoy & confirm can build this final extension
 			currentConvoy = game->world->getBuildingInput(currentAnchor, outputConvoy);
-			return currentConvoy != nullptr;
+			return true;
 		}
 
 		// Can build this extension
@@ -122,12 +120,17 @@ Object* ConvoyerConstructor::tryBuild()
 
 		// Manage special case 'finish state'
 		if (state == State::Finish) {
-
-			// TODO : Ici un morceau du rework pour s'arreter/reprendre sans output
-
-			convoyer->connectOutput(currentConvoy);
+			// finish construction of convoyer & setup it
+			if (currentConvoy != nullptr) convoyer->connectOutput(currentConvoy);
 			Game::singleton->world->removePreview(convoyer);
-			return convoyer;
+
+			// Reset settings & return convoyer
+			Object* result = static_cast<Object*>(convoyer);
+			outputConvoy->type = ResourceType::Unknown;
+			convoyer = nullptr;
+			bresenTiles.clear();
+			state = State::Create;
+			return result;
 		}
 
 		// Construction not finished, waiting for validation (state finish)
@@ -181,15 +184,15 @@ void ConvoyerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states
 {
 	if (state == State::Create) {
 		
-		sf::RectangleShape spr = sf::RectangleShape({ 0.95, 0.95 });
+		sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 		spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
 		spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
-		spr.setOutlineThickness(0.05);
+		spr.setOutlineThickness(0.05f);
 		//spr.setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
 
 		// Draw create convoyer preview
 		BuildConstructor::applyTransform(states);
-		spr.setPosition((float)cursorPos.x, (float)cursorPos.y);
+		//spr.setPosition((float)cursorPos.x, (float)cursorPos.y);
 		target.draw(spr, states);
 		return;
 	}
@@ -208,10 +211,10 @@ void ConvoyerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states
 	// Draw convoyer extand preview
 	if (state == State::Extend || state == State::Finish) {
 
-		sf::RectangleShape spr = sf::RectangleShape({ 0.95, 0.95 });
+		sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 		spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
 		spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
-		spr.setOutlineThickness(0.05);
+		spr.setOutlineThickness(0.05f);
 		//spr.setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
 
 		// Draw bresenham convoyer tiles previews
@@ -219,7 +222,7 @@ void ConvoyerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states
 		sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
 		for (sf::Vector2i tile : bresenTiles) {
 			sf::Vector2i localPos = tile - pos;
-			spr.setPosition((int)localPos.x, (int)localPos.y);
+			spr.setPosition((float)localPos.x, (float)localPos.y);
 			target.draw(spr, states);
 		}
 	}

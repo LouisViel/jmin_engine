@@ -78,3 +78,8 @@ void Camera::setActive(sf::RenderTarget& win) const
 {
 	win.setView(m_view);
 }
+
+sf::View* Camera::getView() const
+{
+	return const_cast<sf::View*>(&m_view);
+}

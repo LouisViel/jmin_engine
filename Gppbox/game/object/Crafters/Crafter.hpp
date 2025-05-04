@@ -1,20 +1,19 @@
 #pragma once
-#include "Drill.t.hpp"
+#include "Crafter.t.hpp"
 #include "game/core/object/Collider.hpp"
-#include "app/C.hpp"
 
 
 template <typename t>
-Drill<t>::Drill() : Drill(-1) {}
+Crafter<t>::Crafter(sf::Vector2f colliderSize) : Crafter(colliderSize , -1) { }
 
 template <typename t>
-Drill<t>::Drill(size_t maxPayload)
+Crafter<t>::Crafter(sf::Vector2f colliderSize, size_t maxPayload)
 {
-	outputHandle = new InOutConvoyHandle<t>(InOutConvoy::Mode::Out, ResourceType::Unknown, Direction::South);
+	outputHandle = new InOutConvoyHandle<t>(InOutConvoy::Mode::Out, ResourceType::Unknown, Direction::North);
 	outputHandle->payload = new InOutPayload<t>(maxPayload);
 	outputHandle->managePayload = true;
 	this->addOutput(outputHandle->boxed());
-	this->collider = new Collider(COLLIDER_SIZE_DRILL);
+	this->collider = new Collider(colliderSize);
 }
 
 
@@ -24,25 +23,26 @@ Drill<t>::Drill(size_t maxPayload)
 
 
 template <typename t>
-void Drill<t>::preupdate(double dt)
+void Crafter<t>::update(double dt)
 {
-	currentDrill += (float)dt;
-	while (currentDrill >= drillDelay) {
-		currentDrill -= drillDelay;
-		performDrill();
+	currentCraft += (float)dt;
+	while (currentCraft >= craftDelay) {
+		currentCraft -= craftDelay;
+		performCraft();
 	}
 }
 
 template <typename t>
-void Drill<t>::performDrill()
+void Crafter<t>::performCraft()
 {
 	if (!outputHandle->payload->canPush()) return;
 	Payload* payload = getPayload();
 	outputHandle->payload->push(payload);
+	this->craftPerformed();
 }
 
 template <typename t>
-t* Drill<t>::getPayload()
+t* Crafter<t>::getPayload()
 {
 	return PayloadPool::get(1);
 }

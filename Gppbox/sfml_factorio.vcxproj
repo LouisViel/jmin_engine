@@ -167,7 +167,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\builder\CrafterConstructor.cpp" />
+    <ClCompile Include="game\builder\crafters\CrafterPlanksConstructor.cpp" />
+    <ClCompile Include="game\object\Crafters\CrafterPlanks.cpp" />
+    <ClCompile Include="game\object\Crafters\Crafter.hpp" />
+    <ClCompile Include="game\builder\drills\DrillWoodConstructor.cpp" />
+    <ClCompile Include="engine\utils\Bresenham.cpp" />
+    <ClCompile Include="game\core\object\CollisionTester.cpp" />
+    <ClCompile Include="game\builder\DrillConstructor.cpp" />
     <ClCompile Include="game\builder\ConvoyerConstructor.cpp" />
+    <ClCompile Include="game\builder\convoyers\ConvoyerSlowConstructor.hpp" />
     <ClCompile Include="game\core\builder\BuildConstructor.cpp" />
     <ClCompile Include="engine\utils\Bresenham.hpp" />
     <ClCompile Include="game\core\builder\Builder.cpp" />
@@ -188,7 +197,6 @@
     <ClCompile Include="engine\Utils.cpp" />
     <ClCompile Include="engine\utils\InputHandler.cpp" />
     <ClCompile Include="engine\utils\TileMap.cpp" />
-    <ClCompile Include="game\components\Bullet.cpp" />
     <ClCompile Include="game\components\Lifetime.cpp" />
     <ClCompile Include="game\components\PlayerController.cpp" />
     <ClCompile Include="game\components\SpawnOnDestroy.cpp" />
@@ -204,6 +212,7 @@
     <ClCompile Include="game\core\object\Object.cpp" />
     <ClCompile Include="game\components\Renderer.cpp" />
     <ClCompile Include="game\core\object\Rigidbody.cpp" />
+    <ClCompile Include="game\core\utils\RessourceSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app.h" />
@@ -212,6 +221,13 @@
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
     <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="game\builder\crafters\CrafterPlanksConstructor.hpp" />
+    <ClInclude Include="game\builder\CrafterConstructor.hpp" />
+    <ClInclude Include="game\object\Crafters\CrafterPlanks.hpp" />
+    <ClInclude Include="game\object\Crafters\Crafter.t.hpp" />
+    <ClInclude Include="game\builder\drills\DrillWoodConstructor.hpp" />
+    <ClInclude Include="game\core\object\CollisionTester.hpp" />
+    <ClInclude Include="game\builder\DrillConstructor.hpp" />
     <ClInclude Include="game\builder\ConvoyerConstructor.hpp" />
     <ClInclude Include="game\core\builder\BuildConstructor.hpp" />
     <ClInclude Include="game\core\builder\Builder.hpp" />
@@ -234,7 +250,6 @@
     <ClInclude Include="engine\utils\Throttle.hpp" />
     <ClInclude Include="engine\utils\TileMap.hpp" />
     <ClInclude Include="engine\utils\Tween.hpp" />
-    <ClInclude Include="game\components\Bullet.hpp" />
     <ClInclude Include="game\components\Component.hpp" />
     <ClInclude Include="game\components\Lifetime.hpp" />
     <ClInclude Include="game\components\PlayerController.hpp" />
@@ -255,6 +270,7 @@
     <ClInclude Include="game\core\object\Rigidbody.hpp" />
     <ClInclude Include="game\core\utils\NodeType.hpp" />
     <ClInclude Include="engine\utils\ScaleHelper.hpp" />
+    <ClInclude Include="game\core\utils\RessourceSprite.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

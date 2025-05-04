@@ -54,7 +54,10 @@ InOutConvoy* Building::getInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) 
 
 			// if connects, check if are adjacents/fully valids
 			sf::Vector2i inPos = position + inConvoy->anchor;
-			if (Utils::isAdjacent(anchorPos, inPos)) return inConvoy;
+			if (Utils::isAdjacent(anchorPos, inPos)) {
+				inConvoy->worldPos = position;
+				return inConvoy;
+			}
 		}
 	}
 

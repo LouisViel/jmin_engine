@@ -12,7 +12,6 @@ class Builder
 {
 protected:
 	sf::RenderWindow* win;
-	sf::RenderTarget* camTarget;
 	Environment* environment;
 	World* world;
 
@@ -31,7 +30,7 @@ public:
 	bool valid = false;
 
 public:
-	Builder(sf::RenderWindow* win, sf::RenderTarget* camTarget, Environment* environment, World* world);
+	Builder(sf::RenderWindow* win, Environment* environment, World* world);
 	~Builder();
 
 	void update(double dt);

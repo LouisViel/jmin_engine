@@ -6,6 +6,7 @@
 #include "SFML/Window.hpp"
 
 class Object;
+class Builder;
 class Environment;
 class World;
 class MapEditor;
@@ -21,6 +22,7 @@ public:
 	sf::RenderWindow* win = nullptr;
 	bool closing = false;
 	
+	Builder* builder = nullptr;
 	Environment* environment = nullptr;
 	World* world = nullptr;
 	Camera* camera = nullptr;
