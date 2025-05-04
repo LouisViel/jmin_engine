@@ -217,7 +217,7 @@ bool Game::isBuildable(NodeType nodeType, Object* object) const
 
 bool Game::isBuildable(NodeType nodeType, int gridx, int gridy) const
 {
-	NodeType type = NodeTypeHelper::All - nodeType + NodeTypeHelper::NonBuildable;
+	NodeType type = (NodeTypeHelper::All - nodeType) + NodeTypeHelper::NonBuildable;
 	if (environment->isNode(type, gridx, gridy)) return false;
 	return !this->isOccupied(gridx, gridy);
 }

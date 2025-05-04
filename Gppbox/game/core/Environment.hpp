@@ -47,7 +47,8 @@ public:
 	void imgui();
 
 private:
-	NodeType getNodeType(int x, int y);
+	void initTmxEnvironmentInternal(MapLayer* layer);
+	NodeType getNodeType(MapLayer* layer, int x, int y);
 	NodeType getNodeType(std::string tileType);
 	bool isNode(std::vector<sf::Vector2i>& nodes, int x, int y);
 };

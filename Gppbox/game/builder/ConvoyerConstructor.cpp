@@ -64,7 +64,7 @@ bool ConvoyerConstructor::canBuild(Game* game)
 		// Manage special case 'finish state'
 		if (state == State::Finish) {
 			// Get current output convoy & confirm can build this final extension
-			currentConvoy = game->world->getBuildingInput(currentAnchor, outputConvoy);
+			currentConvoy = game->world->getBuildingInput(cursorPos, outputConvoy);
 			return currentConvoy != nullptr;
 			//return true;
 		}

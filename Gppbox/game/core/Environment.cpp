@@ -52,12 +52,17 @@ void Environment::initTmxEnvironment()
 	tmxMap->load(C::TMX_FILE);
 	tmxZero = new MapLayer(*tmxMap, 0);
 	tmxOne = new MapLayer(*tmxMap, 1);
-	
+	initTmxEnvironmentInternal(tmxOne);
+	initTmxEnvironmentInternal(tmxZero);
+}
+
+void Environment::initTmxEnvironmentInternal(MapLayer* layer)
+{
 	// Register Node Locations
 	tmx::Vector2u tileCount = tmxMap->getTileCount();
 	for (int x = 0; x < (int)tileCount.x; ++x) {
 		for (int y = 0; y < (int)tileCount.y; ++y) {
-			NodeType nodeType = getNodeType(x, y);
+			NodeType nodeType = getNodeType(layer, x, y);
 #pragma warning( push )
 #pragma warning( disable : 26813)
 			if (nodeType == NodeType::Wall) walls.push_back(sf::Vector2i(x, y));
@@ -76,10 +81,10 @@ void Environment::initTmxEnvironment()
 //////////////////////////////////////////////////////////////////
 
 
-NodeType Environment::getNodeType(int x, int y)
+NodeType Environment::getNodeType(MapLayer* layer, int x, int y)
 {
 	// Fetch cache for better performances
-	uint32_t id = tmxOne->getTile(x, y).ID;
+	uint32_t id = layer->getTile(x, y).ID;
 	if (nodeCache.find(id) != nodeCache.end()) {
 		return nodeCache.at(id);
 	}

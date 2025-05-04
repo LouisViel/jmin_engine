@@ -47,13 +47,12 @@
     "map.tileWidth": 16,
     "map.width": 100,
     "openFiles": [
-        "map.tmx",
-        "environment.tsx"
+        "map.tmx"
     ],
     "project": "jminEngine.tiled-project",
     "recentFiles": [
-        "environment.tsx",
-        "map.tmx"
+        "map.tmx",
+        "environment.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

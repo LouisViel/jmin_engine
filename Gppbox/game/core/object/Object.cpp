@@ -50,7 +50,10 @@ void Object::preupdate(double dt)
 
 void Object::fixed(double fdt)
 {
-	if (rigidbody != nullptr) rigidbody->processMovement(fdt);
+	if (rigidbody != nullptr) {
+		rigidbody->sync(getPosition());
+		rigidbody->processMovement(fdt);
+	} else if (collider != nullptr) collider->sync(getPosition());
 	LOOPF_C(c->fixed(fdt));
 }
 
