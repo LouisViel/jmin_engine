@@ -154,12 +154,12 @@ void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf:
     if (tiles.size() <= 0) throw std::exception("Cannot build a convoyer without tiles");
 
     // Initialize tilemap with specified settings
-    const unsigned int gridSize = (unsigned int)C::GRID_SIZE;
-    sf::Vector2u tileSize = sf::Vector2u(gridSize, gridSize);
-    tilemap->init(tileSize, (unsigned int)tiles.size());
+    const unsigned int spriteSize = (unsigned int)C::CONVOYER_TILE_SIZE;
+    tilemap->init({ 1u, 1u }, { spriteSize, spriteSize }, (unsigned int)tiles.size());
     
     // Register part settings
     this->multiPart = tiles.size() > 2;
+    this->endPos = endPos;
 
     // Set Start part (special treatment)
     sf::Vector2i startTile = tiles[0]; // Should always be sf::Vectori(0, 0)
@@ -168,7 +168,7 @@ void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf:
     tilemap->setTile(0, &getTile(startPos, startTile, targetTile, 1));
 
     // Set intermediate parts (basic treatments)
-    for (int i = 1; i < (int)tiles.size() - 2; ++i) {
+    for (int i = 1; i < (int)tiles.size() - 1; ++i) {
         size_t id = static_cast<size_t>(i);
         sf::Vector2i& previousTile = tiles[id - 1];
         sf::Vector2i& tile = tiles[id];
@@ -220,14 +220,15 @@ void Convoyer::expand(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles)
 
     // Register part settings
     this->multiPart = resultSize > 2;
+    this->endPos = endPos;
 
     // Set intermediate parts (basic treatments)
-    for (int i = (int)expandIndex; i < (int)resultSize - 2; ++i) {
+    for (int i = (int)expandIndex; i < (int)resultSize - 1; ++i) {
         size_t id = static_cast<size_t>(i);
         sf::Vector2i& previousTile = parts->operator[](id - 1);
         sf::Vector2i& tile = parts->operator[](id);
         sf::Vector2i& nextTile = parts->operator[](id + 1);
-        tilemap->setPos(id, tile.x, tile.x);
+        tilemap->setPos(id, tile.x, tile.y);
         tilemap->setTile(id, &getTile(previousTile, tile, nextTile));
     }
 
@@ -236,6 +237,7 @@ void Convoyer::expand(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles)
         size_t idEnd = resultSize - 1;
         sf::Vector2i prevTile = parts->operator[](idEnd - 1);
         sf::Vector2i endTile = parts->operator[](idEnd);
+        tilemap->setPos(idEnd, endTile.x, endTile.y);
         tilemap->setTile(idEnd, &getTile(prevTile, endTile, endPos, 2));
         outputHandle->anchor = endTile;
     } else outputHandle->anchor = sf::Vector2i(0, 0);
@@ -261,6 +263,7 @@ void Convoyer::remove(size_t partsCount)
 
     // Register part settings
     this->multiPart = newSize > 2;
+    this->endPos = endPos;
 
     // Update cut part as an end part
     if (multiPart) {
@@ -359,13 +362,15 @@ bool Convoyer::processItem(ConvoyerItem* previous, ConvoyerItem* item, float par
 
 void Convoyer::update(double dt)
 {
-    // Cannot render without convoyer parts
-    if (parts->size() <= 0) return;
+    // Cannot update without convoyer parts
+    int partsSize = parts->size();
+    if (partsSize <= 0) return;
 
     // Update items render positions
     LOOPF_PTR(items, ConvoyerItem* item);
-    int partId = static_cast<int>(item->progression);
-    sf::Vector2i& start = parts->operator[](partId), end = parts->operator[](partId + 1);
+    int partId = static_cast<int>(item->progression), endId = partId + 1;
+    sf::Vector2i& start = parts->operator[](partId);
+    sf::Vector2i& end = endId >= partsSize ? endPos : parts->operator[](endId);
     item->pos = Utils::lerp(start, end, item->progression - partId);
     LOOP_END;
 }

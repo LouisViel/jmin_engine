@@ -276,8 +276,8 @@ Convoyer* World::getConvoyer(int gridx, int gridy) const
 
 InOutConvoy* World::getBuildingInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const
 {
-	// Check settings are valids
-	if (inOutConvoy->mode != InOutConvoy::Mode::In) return nullptr;
+	// Check settings are valids (inverse mode than wanted one)
+	if (inOutConvoy->mode != InOutConvoy::Mode::Out) return nullptr;
 
 	// Check all building for an input corresponding
 	InOutConvoy* convoy;
@@ -292,8 +292,8 @@ InOutConvoy* World::getBuildingInput(sf::Vector2i gridPos, InOutConvoy* inOutCon
 
 InOutConvoy* World::getBuildingOutput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const
 {
-	// Check settings are valids
-	if (inOutConvoy->mode != InOutConvoy::Mode::Out) return nullptr;
+	// Check settings are valids (inverse mode than wanted one)
+	if (inOutConvoy->mode != InOutConvoy::Mode::In) return nullptr;
 
 	// Check all building for an output corresponding
 	InOutConvoy* convoy;

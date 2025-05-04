@@ -13,5 +13,6 @@ Object* CrafterPlanksConstructor::tryBuild()
 {
 	CrafterPlanks* crafter = new CrafterPlanks();
 	BuildConstructor::copyTransformTo(crafter);
+	crafter->move((float)anchor.x, (float)anchor.y);
 	return static_cast<Object*>(crafter);
 }

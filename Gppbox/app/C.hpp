@@ -13,7 +13,7 @@ namespace C
 
 	// Convoyer Graphics
 	static constexpr const char* CONVOYER_TILESET = "assets/convoyer.png";
-	//static constexpr unsigned int CONVOYER_TILE_SIZE = 10 * 9;
+	static constexpr unsigned int CONVOYER_TILE_SIZE = 32u;
 
 	// Building physics
 	#define COLLIDER_SIZE_DRILL sf::Vector2f(3.0f, 3.0f)

@@ -58,7 +58,7 @@ void CrafterConstructor::draw(sf::RenderTarget& target, sf::RenderStates states)
 	spr.setOutlineThickness(0.05f);
 
 	sf::Vector2f position = getPosition();
-	sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y) + anchor;
+	sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
 	std::vector<sf::Vector2i> collisions = std::move(coltest->getCollisions());
 
 	BuildConstructor::applyTransform(states);

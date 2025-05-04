@@ -37,11 +37,11 @@ Game::Game(sf::RenderWindow* win)
 
 Game::~Game()
 {
-	singleton = nullptr;
 	delete builder;
 	delete environment;
 	delete world;
 	delete camera;
+	singleton = nullptr;
 }
 
 

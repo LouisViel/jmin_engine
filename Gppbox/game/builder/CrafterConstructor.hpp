@@ -3,6 +3,7 @@
 
 class CrafterConstructor : public BuildConstructor
 {
+protected:
 	CollisionTester* coltest = nullptr;
 	sf::Vector2i anchor = sf::Vector2i(0, 0);
 

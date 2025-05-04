@@ -11,8 +11,7 @@ DrillConstructor::DrillConstructor(sf::Vector2i anchor, sf::Vector2i size, NodeT
 	: anchor(anchor), type(type)
 {
 	this->buildType = BuildType::Building;
-	//coltest = new CollisionTester(size.x, size.y);
-	coltest = new CollisionTester(1, 1);
+	coltest = new CollisionTester(size.x, size.y);
 }
 
 DrillConstructor::~DrillConstructor()
@@ -64,10 +63,8 @@ void DrillConstructor::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	spr.setOutlineThickness(0.05f);
 
 	sf::Vector2f position = getPosition();
-	sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y) + anchor;
+	sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
 	std::vector<sf::Vector2i> collisions = std::move(coltest->getCollisions());
-
-	printf("%d", (int)collisions.size());
 
 	BuildConstructor::applyTransform(states);
 	for (sf::Vector2i& col : collisions) {

@@ -12,6 +12,7 @@ private:
 	unsigned int height = 0;
 
 	sf::Vector2u tileSize;
+	sf::Vector2u spriteSize;
 	sf::VertexArray m_vertices;
 	sf::Texture m_tileset;
 	
@@ -20,10 +21,10 @@ private:
 
 public:
 	bool load(const std::string& tileset);
-	void init(sf::Vector2u tileSize, unsigned int width, unsigned int height);
-	void init(sf::Vector2u tileSize, unsigned int width, unsigned int height, const int* tiles);
-	void init(sf::Vector2u tileSize, unsigned int linearSize);
-	void init(sf::Vector2u tileSize, unsigned int linearSize, const int* tiles);
+	void init(sf::Vector2u tileSize, sf::Vector2u spriteSize, unsigned int width, unsigned int height);
+	void init(sf::Vector2u tileSize, sf::Vector2u spriteSize, unsigned int width, unsigned int height, const int* tiles);
+	void init(sf::Vector2u tileSize, sf::Vector2u spriteSize, unsigned int linearSize);
+	void init(sf::Vector2u tileSize, sf::Vector2u spriteSize, unsigned int linearSize, const int* tiles);
 
 	void resize(unsigned int resizeWidth, unsigned int resizeHeight, bool keepLayout);
 	void resize(unsigned int resizeWidth, unsigned int resizeHeight);
@@ -37,4 +38,7 @@ public:
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+	void setPosInternal(size_t index, int x, int y);
+	void setTileInternal(size_t index, int tileNumber);
 };

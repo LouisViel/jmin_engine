@@ -19,7 +19,11 @@ ConvoyerConstructor::ConvoyerConstructor()
 
 ConvoyerConstructor::~ConvoyerConstructor()
 {
-	if (convoyer != nullptr) delete convoyer;
+	if (convoyer != nullptr) {
+		Object* convoyerObj = static_cast<Object*>(convoyer);
+		Game::singleton->world->removePreview(convoyerObj);
+		delete convoyer;
+	}
 	delete inputConvoy;
 	delete outputConvoy;
 }
@@ -39,6 +43,7 @@ bool ConvoyerConstructor::canBuild(Game* game)
 			currentConvoy = nullptr;
 			return false;
 		}
+
 		// Get building output convoy to link as input to this convoyer
 		currentConvoy = game->world->getBuildingOutput(cursorPos, inputConvoy);
 		return currentConvoy != nullptr;
@@ -60,7 +65,8 @@ bool ConvoyerConstructor::canBuild(Game* game)
 		if (state == State::Finish) {
 			// Get current output convoy & confirm can build this final extension
 			currentConvoy = game->world->getBuildingInput(currentAnchor, outputConvoy);
-			return true;
+			return currentConvoy != nullptr;
+			//return true;
 		}
 
 		// Can build this extension
@@ -183,41 +189,27 @@ void ConvoyerConstructor::handleInputs()
 void ConvoyerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (state == State::Create) {
-		
 		sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 		spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
 		spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
 		spr.setOutlineThickness(0.05f);
-		//spr.setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
 
 		// Draw create convoyer preview
 		BuildConstructor::applyTransform(states);
-		//spr.setPosition((float)cursorPos.x, (float)cursorPos.y);
 		target.draw(spr, states);
 		return;
 	}
 
-
-	// Ensure convoyer exist
-	if (convoyer == nullptr) return;
-
-
-	// Draw convoyer preview
-	// No need to 'apply transform', will be handled by convoyer itself
-	target.draw(*convoyer, states);
-	BuildConstructor::applyTransform(states);
-
-
 	// Draw convoyer extand preview
+	// No need to draw convoyer, will be handled as a preview
 	if (state == State::Extend || state == State::Finish) {
-
 		sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 		spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
 		spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
 		spr.setOutlineThickness(0.05f);
-		//spr.setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
 
 		// Draw bresenham convoyer tiles previews
+		BuildConstructor::applyTransform(states);
 		sf::Vector2f position = convoyer->getPosition();
 		sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
 		for (sf::Vector2i tile : bresenTiles) {
