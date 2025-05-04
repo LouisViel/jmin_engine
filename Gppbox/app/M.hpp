@@ -14,13 +14,14 @@ namespace M
 		\
 		/* Prepare full check Variables */ \
 		Collider* collider = object->collider; \
-		int xposMin(int(collider->rx - collider->width - C::E_ADJUSTMENT_X + collider->cx)); \
-		int xposMax(int(collider->rx + collider->width + collider->cx)); \
-		float cry(collider->cy + collider->ry); \
+		int xposMin(int(collider->rx + collider->cx)); \
+		int xposMax(int(xposMin + collider->width)); \
+		float yposMin(collider->cy + collider->ry); \
+		float yposMax(yposMin + collider->height); \
 		\
 		/* Process full body check */ \
-		for (float ypos = cry, ytarget = cry - collider->height; ypos > ytarget; --ypos) { \
-			for (int xpos = xposMin; xpos <= xposMax; ++xpos) { \
+		for (float ypos = yposMin; ypos < yposMax; ++ypos) { \
+			for (int xpos = xposMin; xpos < xposMax; ++xpos) { \
 				if (condition) return true;\
 			} \
 		} \
@@ -35,16 +36,18 @@ namespace M
 		\
 		/* Prepare full check Variables */ \
 		Collider* collider = object->collider; \
-		int xposMin(int(collider->rx - collider->width - C::E_ADJUSTMENT_X + collider->cx)); \
-		int xposMax(int(collider->rx + collider->width + collider->cx)); \
-		float cry(collider->cy + collider->ry); \
+		int xposMin(int(collider->rx + collider->cx)); \
+		int xposMax(int(xposMin + collider->width)); \
+		float yposMin(collider->cy + collider->ry); \
+		float yposMax(yposMin + collider->height); \
 		\
 		/* Process full body check */ \
-		for (float ypos = cry, ytarget = cry - collider->height; ypos > ytarget; --ypos) { \
-			for (int xpos = xposMin; xpos <= xposMax; ++xpos) { \
+		for (float ypos = yposMin; ypos < yposMax; ++ypos) { \
+			for (int xpos = xposMin; xpos < xposMax; ++xpos) { \
 				action; \
 			} \
 		}
+
 
 
 	// REMOVE_ITEM(Object*, gameobjects, target)
