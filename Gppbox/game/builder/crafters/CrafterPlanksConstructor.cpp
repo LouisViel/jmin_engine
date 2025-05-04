@@ -12,5 +12,6 @@ CrafterPlanksConstructor::CrafterPlanksConstructor() :
 Object* CrafterPlanksConstructor::tryBuild()
 {
 	CrafterPlanks* crafter = new CrafterPlanks();
+	BuildConstructor::copyTransformTo(crafter);
 	return static_cast<Object*>(crafter);
 }

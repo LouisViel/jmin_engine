@@ -16,6 +16,7 @@ Environment::~Environment()
 {
 	delete bgShader;
 	if (useTmx) {
+		delete tmxOne;
 		delete tmxZero;
 		delete tmxMap;
 	} else delete environment;
@@ -50,6 +51,7 @@ void Environment::initTmxEnvironment()
 	tmxMap = new tmx::Map();
 	tmxMap->load(C::TMX_FILE);
 	tmxZero = new MapLayer(*tmxMap, 0);
+	tmxOne = new MapLayer(*tmxMap, 1);
 	
 	// Register Node Locations
 	tmx::Vector2u tileCount = tmxMap->getTileCount();
@@ -77,7 +79,7 @@ void Environment::initTmxEnvironment()
 NodeType Environment::getNodeType(int x, int y)
 {
 	// Fetch cache for better performances
-	uint32_t id = tmxZero->getTile(x, y).ID;
+	uint32_t id = tmxOne->getTile(x, y).ID;
 	if (nodeCache.find(id) != nodeCache.end()) {
 		return nodeCache.at(id);
 	}
@@ -102,6 +104,7 @@ NodeType Environment::getNodeType(int x, int y)
 NodeType Environment::getNodeType(std::string tileType)
 {
 	if (tileType == "Node-Wall") return NodeType::Wall;
+	if (tileType == "Node-Water") return NodeType::Wall;
 	if (tileType == "Node-Wood") return NodeType::Wood;
 	if (tileType == "Node-Stone") return NodeType::Stone;
 	if (tileType == "Node-Coal") return NodeType::Coal;
@@ -142,6 +145,7 @@ void Environment::update(double dt)
 {
 	if (bgShader) bgShader->update(dt);
 	tmxZero->update(sf::seconds((float)dt));
+	tmxOne->update(sf::seconds((float)dt));
 }
 
 
@@ -169,8 +173,10 @@ void Environment::drawCamera(sf::RenderTarget& win)
 	win.draw(bgHandle, states);
 
 	// Draw Environment, using Tmx or Custom Tilemap
-	if (useTmx) win.draw(*tmxZero, sf::RenderStates::Default);
-	else win.draw(*environment, sf::RenderStates::Default);
+	if (useTmx) {
+		win.draw(*tmxZero, sf::RenderStates::Default);
+		win.draw(*tmxOne, sf::RenderStates::Default);
+	} else win.draw(*environment, sf::RenderStates::Default);
 }
 
 void Environment::imgui()

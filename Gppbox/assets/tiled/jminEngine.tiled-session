@@ -26,15 +26,15 @@
             }
         },
         "environment.tsx": {
-            "scaleInDock": 5.5,
-            "scaleInEditor": 1
+            "scaleInDock": 3,
+            "scaleInEditor": 3
         },
         "map.tmx": {
-            "scale": 4,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 209.75,
-                "y": 402
+                "x": 772.6666666666667,
+                "y": 420.66666666666663
             }
         }
     },
@@ -48,13 +48,12 @@
     "map.width": 100,
     "openFiles": [
         "map.tmx",
-        "environment.tsx",
-        "map.tmx"
+        "environment.tsx"
     ],
     "project": "jminEngine.tiled-project",
     "recentFiles": [
-        "map.tmx",
-        "environment.tsx"
+        "environment.tsx",
+        "map.tmx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

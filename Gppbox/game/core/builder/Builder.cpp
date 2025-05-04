@@ -57,7 +57,7 @@ void Builder::update(double dt)
 	Game* g = Game::singleton;
 	constructor->setTargetPosition(mousePos);
 	#pragma warning(suppress:6011)
-	occupied = constructor->canBuild(g);
+	occupied = !constructor->canBuild(g);
 
 	// Destroy Object if asked to + occupied
 	if (occupied && rightButton) {
@@ -65,7 +65,7 @@ void Builder::update(double dt)
 
 		// TODO : Dev le système de remove de building/convoyer
 
-		occupied = constructor->canBuild(g);
+		occupied = !constructor->canBuild(g);
 	}
 
 	// Spawn Object if asked to + not occupied 

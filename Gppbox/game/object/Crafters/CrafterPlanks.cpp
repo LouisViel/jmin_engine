@@ -14,6 +14,11 @@ CrafterPlanks::CrafterPlanks() : Crafter(COLLIDER_SIZE_CRAFTER)
 	inputHandle->managePayload = true;
 	inputHandle->anchor = sf::Vector2i(1, 2);
 	this->addInput(inputHandle->boxed());
+
+	// Add Renderer
+	Renderer* renderer = new Renderer(this, "assets/bdg/crafter_planks.png");
+	renderer->setScale(COLLIDER_SIZE_CRAFTER);
+	this->addComponent(renderer);
 }
 
 CrafterPlanks::~CrafterPlanks()

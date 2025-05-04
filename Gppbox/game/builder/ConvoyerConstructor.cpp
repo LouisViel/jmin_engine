@@ -7,7 +7,7 @@
 #include "engine/utils/InputHandler.hpp"
 
 // TODO : IMPORTANT !!!!!
-// TODO : reword plus tard pour pouvoir reprendre un convoyer partiellement construit (là obligé d'aller jusqu'au bout)
+// TODO : create new convoyer 'extender' plus tard pour pouvoir expand un convoyer partiellement construit
 
 
 ConvoyerConstructor::ConvoyerConstructor()

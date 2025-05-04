@@ -13,5 +13,7 @@ DrillWoodConstructor::DrillWoodConstructor() :
 Object* DrillWoodConstructor::tryBuild()
 {
 	DrillWood* drill = new DrillWood();
+	BuildConstructor::copyTransformTo(drill);
+	drill->move((float)anchor.x, (float)anchor.y);
 	return static_cast<Object*>(drill);
 }

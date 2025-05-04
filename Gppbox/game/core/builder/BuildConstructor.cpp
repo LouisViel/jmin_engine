@@ -15,7 +15,7 @@ void BuildConstructor::setTargetPosition(sf::Vector2i pos)
 void BuildConstructor::applyTransform(sf::RenderStates& states) const
 {
 	states.transform *= getTransform();
-	states.transform *= ScaleHelper::invert();
+	//states.transform *= ScaleHelper::invert();
 }
 
 void BuildConstructor::copyTransformTo(sf::Transformable* other) const

@@ -22,6 +22,7 @@ private:
 	TileMap* environment = nullptr;
 	tmx::Map* tmxMap = nullptr;
 	MapLayer* tmxZero = nullptr;
+	MapLayer* tmxOne = nullptr;
 
 	std::map<uint32_t, NodeType> nodeCache;
 

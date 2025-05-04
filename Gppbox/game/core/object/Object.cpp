@@ -67,7 +67,7 @@ void Object::update(double dt)
 void Object::applyTransform(sf::RenderStates& states) const
 {
 	states.transform *= getTransform();
-	states.transform *= ScaleHelper::invert();
+	//states.transform *= ScaleHelper::invert();
 }
 
 void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -84,6 +84,9 @@ void Object::drawInternal(sf::RenderTarget& target, sf::RenderStates states) con
 void Object::imgui()
 {
 	using namespace ImGui;
+
+	sf::Vector2f pos = getPosition();
+	Text("pos = %f, %f", pos.x, pos.y);
 
 	// Draw components imgui
 	LOOPF_C(c->imgui());

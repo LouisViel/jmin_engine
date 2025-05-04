@@ -55,12 +55,12 @@ void Renderer::init(std::string vert, std::string frag)
 {
 	if (!isValid) return;
 	shape->setTexture(texture);
-	shader = new HotReloadShader(vert, frag);
+	//shader = new HotReloadShader(vert, frag);
 }
 
 Renderer::~Renderer()
 {
-	if (isValid) delete shader;
+	//if (isValid) delete shader;
 	if (manageTexture) delete texture;
 	if (manageShape) delete shape;
 }
@@ -75,7 +75,7 @@ void Renderer::update(double dt)
 {
 	// Update Shader
 	if (!isValid) return;
-	shader->update(dt);
+	//shader->update(dt);
 }
 
 void Renderer::imgui()
