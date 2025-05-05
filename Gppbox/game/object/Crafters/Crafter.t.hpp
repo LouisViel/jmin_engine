@@ -10,6 +10,9 @@ protected:
 	float currentCraft = 0.0f;
 
 public:
+	float speed = 1.0f;
+
+public:
 	Crafter(sf::Vector2f colliderSize);
 	Crafter(sf::Vector2f colliderSize, size_t maxPayload);
 	virtual ~Crafter() { return; }

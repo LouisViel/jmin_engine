@@ -20,6 +20,8 @@ namespace C
 	#define COLLIDER_SIZE_DRILL_INT sf::Vector2i(3, 3)
 	#define COLLIDER_SIZE_CRAFTER sf::Vector2f(3.0f, 3.0f)
 	#define COLLIDER_SIZE_CRAFTER_INT sf::Vector2i(3, 3)
+	#define COLLIDER_SIZE_CONTAINER sf::Vector2f(3.0f, 3.0f)
+	#define COLLIDER_SIZE_CONTAINER_INT sf::Vector2i(3, 3)
 
 	// ----------------------------
 

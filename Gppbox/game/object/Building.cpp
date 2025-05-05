@@ -52,6 +52,7 @@ void Building::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::Drawable* drawable;
 
 	for (InOutConvoy* convoy : *inConvoys) {
+		if (convoy->connected) continue;
 		sf::Vector2i anchorPos = convoy->anchor;
 		if (anchorPos.y <= 0) {
 			drawable = SpriteHelper::get(SpriteStatic::ConvoyInput_Down);
@@ -66,6 +67,7 @@ void Building::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 
 	for (InOutConvoy* convoy : *outConvoys) {
+		if (convoy->connected) continue;
 		sf::Vector2i anchorPos = convoy->anchor;
 		if (anchorPos.y <= 0) {
 			drawable = SpriteHelper::get(SpriteStatic::ConvoyOutput_Up);

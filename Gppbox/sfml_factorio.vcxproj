@@ -167,14 +167,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="engine\utils\Bresenham.cpp" />
+    <ClCompile Include="game\builder\ContainerConstructor.cpp" />
+    <ClCompile Include="game\builder\containers\ContainerPlanksConstructor.cpp" />
+    <ClCompile Include="game\builder\containers\ContainerWoodConstructor.cpp" />
+    <ClCompile Include="game\core\ContainerManager.cpp" />
+    <ClCompile Include="game\object\containers\Container.hpp" />
     <ClCompile Include="game\builder\convoyers\ConvoyerFastConstructor.hpp" />
     <ClCompile Include="game\builder\convoyers\ConvoyerMeanConstructor.hpp" />
     <ClCompile Include="game\builder\CrafterConstructor.cpp" />
     <ClCompile Include="game\builder\crafters\CrafterPlanksConstructor.cpp" />
+    <ClCompile Include="game\object\containers\ContainerBase.cpp" />
+    <ClCompile Include="game\object\containers\ContainerBase.hpp" />
+    <ClCompile Include="game\object\containers\ContainerPlanks.cpp" />
+    <ClCompile Include="game\object\containers\ContainerPlanks.hpp" />
+    <ClCompile Include="game\object\containers\ContainerWood.cpp" />
     <ClCompile Include="game\object\Crafters\CrafterPlanks.cpp" />
     <ClCompile Include="game\object\Crafters\Crafter.hpp" />
     <ClCompile Include="game\builder\drills\DrillWoodConstructor.cpp" />
-    <ClCompile Include="engine\utils\Bresenham.cpp" />
     <ClCompile Include="game\core\object\CollisionTester.cpp" />
     <ClCompile Include="game\builder\DrillConstructor.cpp" />
     <ClCompile Include="game\builder\ConvoyerConstructor.cpp" />
@@ -224,6 +234,12 @@
     <ClInclude Include="app\M.hpp" />
     <ClInclude Include="app\sys.hpp" />
     <ClInclude Include="app\tmx-OrthogonalLayer.hpp" />
+    <ClInclude Include="game\builder\ContainerConstructor.hpp" />
+    <ClInclude Include="game\builder\containers\ContainerPlanksConstructor.hpp" />
+    <ClInclude Include="game\builder\containers\ContainerWoodConstructor.hpp" />
+    <ClInclude Include="game\object\containers\ContainerWood.hpp" />
+    <ClInclude Include="game\core\ContainerManager.hpp" />
+    <ClInclude Include="game\object\containers\Container.t.hpp" />
     <ClInclude Include="game\builder\crafters\CrafterPlanksConstructor.hpp" />
     <ClInclude Include="game\builder\CrafterConstructor.hpp" />
     <ClInclude Include="game\object\Crafters\CrafterPlanks.hpp" />

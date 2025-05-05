@@ -12,13 +12,16 @@ private:
 	#define RadToDeg (180.0f / M_PI)
 	#define DegToRad (M_PI / 180.0f)
 
+	static inline int maxInt = std::numeric_limits<int>().max();
+	static inline int minInt = std::numeric_limits<int>().min();
+
 public:
 	static bool isFullBody(const Object* object, int gridx, int gridy);
 	static bool isAdjacent(const sf::Vector2i& a, const sf::Vector2i& b);
 
 	template <typename T> static int sign(T value);
-	static int noCrashAdd(int val, int add);
-	static int noCrashMinus(int val, int min);
+	static int safeAdd(int val, int add);
+	static int safeMinus(int val, int min);
 
 	static float toLength(const sf::Vector2i& source);
 	static float toLength(const sf::Vector2f& source);

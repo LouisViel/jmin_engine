@@ -1,18 +1,15 @@
 #pragma once
 #include "game/core/builder/BuildConstructor.hpp"
 
-class CrafterConstructor : public BuildConstructor
+class ContainerConstructor : public BuildConstructor
 {
 protected:
 	CollisionTester* coltest = nullptr;
 	sf::Vector2i anchor = sf::Vector2i(0, 0);
 
 public:
-	float speed = 1.0f;
-
-public:
-	CrafterConstructor(sf::Vector2i anchor, sf::Vector2i size);
-	virtual ~CrafterConstructor();
+	ContainerConstructor(sf::Vector2i anchor, sf::Vector2i size);
+	virtual ~ContainerConstructor();
 
 	bool canBuild(Game* game) override;
 	Object* tryBuild() override;

@@ -28,7 +28,7 @@
 #include "game/object/convoyer/ConvoyerItem.hpp"
 #include "game/core/utils/RessourceSprite.hpp"
 #include "game/core/utils/SpriteHelper.hpp"
-
+#include "game/core/ContainerManager.hpp"
 
 
 #define WIN32_LEAN_AND_MEAN
@@ -217,6 +217,7 @@ int main()
 	ConvoyerItemPool::release();
 	RessourceSprite::clear();
 	SpriteHelper::clear();
+	ContainerManager::clear();
 	InputHandler::setWindow(nullptr);
 	ImGui::SFML::Shutdown();
 

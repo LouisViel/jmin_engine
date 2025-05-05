@@ -11,6 +11,7 @@
 #include "game/core/utils/Camera.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
+#include "game/core/ContainerManager.hpp"
 #include "game/core/builder/Builder.hpp"
 #include "game/core/utils/NodeType.hpp"
 
@@ -126,6 +127,9 @@ void Game::imgui()
 			TreePop();
 		}*/
 	}
+
+	// Render resources imgui
+	ContainerManager::imgui();
 
 	// Propagate Imgui
 	environment->imgui();

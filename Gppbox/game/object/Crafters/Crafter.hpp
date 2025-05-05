@@ -25,7 +25,7 @@ Crafter<t>::Crafter(sf::Vector2f colliderSize, size_t maxPayload)
 template <typename t>
 void Crafter<t>::update(double dt)
 {
-	currentCraft += (float)dt;
+	currentCraft += (float)dt * speed;
 	while (currentCraft >= craftDelay) {
 		currentCraft -= craftDelay;
 		performCraft();

@@ -16,6 +16,8 @@
 
 #include "game/builder/drills/DrillWoodConstructor.hpp"
 #include "game/builder/crafters/CrafterPlanksConstructor.hpp"
+#include "game/builder/containers/ContainerWoodConstructor.hpp"
+#include "game/builder/containers/ContainerPlanksConstructor.hpp"
 
 
 
@@ -143,7 +145,11 @@ void Builder::imgui()
 			Indent(1.0f);
 			Text("Build you drills on Ressources Nodes");
 
-			if (Button("Wood Drill")) switchConstructor((new DrillWoodConstructor())->constructor());
+			if (Button("Wood Drill")) switchConstructor((new DrillWoodConstructor(1.0f))->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Forest Cutter")) switchConstructor((new DrillWoodConstructor(2.0f))->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Planet Killer")) switchConstructor((new DrillWoodConstructor(5.0f))->constructor());
 
 			TreePop();
 		}
@@ -159,7 +165,11 @@ void Builder::imgui()
 			Indent(1.0f);
 			Text("Advanced Ressources Crafters");
 
-			if (Button("Planks Crafter")) switchConstructor((new CrafterPlanksConstructor())->constructor());
+			if (Button("Planks")) switchConstructor((new CrafterPlanksConstructor(1.0f))->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Planks Ultra")) switchConstructor((new CrafterPlanksConstructor(2.0f))->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("GTA VI Maker")) switchConstructor((new CrafterPlanksConstructor(5.0f))->constructor());
 
 			TreePop();
 		}
@@ -167,10 +177,12 @@ void Builder::imgui()
 		Spacing();
 		if (TreeNodeEx("Containers", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
-			Text("Score containers (scores in Imgui)");
+			Text("Resources containers (scores visible in Imgui)");
 
-
-
+			if (Button("Wood Container")) switchConstructor((new ContainerWoodConstructor())->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Planks Container")) switchConstructor((new ContainerPlanksConstructor())->constructor());
+			
 			TreePop();
 		}
 	}

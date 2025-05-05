@@ -26,7 +26,7 @@ Drill<t>::Drill(size_t maxPayload)
 template <typename t>
 void Drill<t>::preupdate(double dt)
 {
-	currentDrill += (float)dt;
+	currentDrill += (float)dt * speed;
 	while (currentDrill >= drillDelay) {
 		currentDrill -= drillDelay;
 		performDrill();

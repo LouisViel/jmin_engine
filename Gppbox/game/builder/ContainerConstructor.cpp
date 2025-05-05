@@ -1,26 +1,16 @@
-#include "DrillConstructor.hpp"
+#include "ContainerConstructor.hpp"
 #include "game/core/Game.hpp"
 #include "game/core/Environment.hpp"
 #include "game/core/object/Collider.hpp"
 
 
-DrillConstructor::DrillConstructor(sf::Vector2i anchor, sf::Vector2i size)
-	: DrillConstructor(anchor, size, NodeType::None, speed) { }
-
-DrillConstructor::DrillConstructor(sf::Vector2i anchor, sf::Vector2i size, float speed)
-	: DrillConstructor(anchor, size, NodeType::None, speed) { }
-
-DrillConstructor::DrillConstructor(sf::Vector2i anchor, sf::Vector2i size, NodeType type)
-	: DrillConstructor(anchor, size, type, speed) { }
-
-DrillConstructor::DrillConstructor(sf::Vector2i anchor, sf::Vector2i size, NodeType type, float speed)
-	: anchor(anchor), type(type), speed(speed)
+ContainerConstructor::ContainerConstructor(sf::Vector2i anchor, sf::Vector2i size) : anchor(anchor)
 {
 	this->buildType = BuildType::Building;
 	coltest = new CollisionTester(size.x, size.y);
 }
 
-DrillConstructor::~DrillConstructor()
+ContainerConstructor::~ContainerConstructor()
 {
 	delete coltest;
 }
@@ -31,16 +21,15 @@ DrillConstructor::~DrillConstructor()
 //////////////////////////////////////////////////////////////////
 
 
-bool DrillConstructor::canBuild(Game* game)
+bool ContainerConstructor::canBuild(Game* game)
 {
 	// Process utils variables
 	sf::Vector2f position = getPosition();
 	sf::Vector2i pos = sf::Vector2i((int)position.x, (int)position.y);
 
-	// Check if wanted NodeType is valid & if is buildable
+	// Check if is buildable
 	coltest->collider->sync(pos + anchor);
-	if (!game->environment->isNode(type, pos.x, pos.y)) return false;
-	return game->isBuildable(type, coltest);
+	return game->isBuildable(NodeTypeHelper::Buildable, coltest);
 }
 
 
@@ -49,9 +38,9 @@ bool DrillConstructor::canBuild(Game* game)
 //////////////////////////////////////////////////////////////////
 
 
-Object* DrillConstructor::tryBuild()
+Object* ContainerConstructor::tryBuild()
 {
-	throw std::exception("trybuild not implemented by default drill constructor");
+	throw std::exception("trybuild not implemented by default container constructor");
 	return nullptr;
 }
 
@@ -61,7 +50,7 @@ Object* DrillConstructor::tryBuild()
 //////////////////////////////////////////////////////////////////
 
 
-void DrillConstructor::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void ContainerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 	spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
@@ -75,10 +64,6 @@ void DrillConstructor::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	BuildConstructor::applyTransform(states);
 	for (sf::Vector2i& col : collisions) {
 		spr.setPosition((float)(pos.x - col.x), (float)(pos.y - col.y));
-		if (col == pos) {
-			spr.setFillColor(sf::Color::Cyan);
-			target.draw(spr, states);
-			spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
-		} else target.draw(spr, states);
+		target.draw(spr, states);
 	}
 }

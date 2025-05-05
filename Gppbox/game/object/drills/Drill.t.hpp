@@ -11,6 +11,9 @@ protected:
 	float currentDrill = 0.0f;
 
 public:
+	float speed = 1.0f;
+
+public:
 	Drill();
 	Drill(size_t maxPayload);
 	virtual ~Drill() { return; }
