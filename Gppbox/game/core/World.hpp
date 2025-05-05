@@ -52,8 +52,7 @@ public:
 	World(sf::RenderWindow* win);
 	~World();
 
-	void initMainChar();
-	Object* initEnnemy(float x, float y);
+	void initPlayer();
 
 	void preupdate(double dt);
 	void fixed(double fdt);

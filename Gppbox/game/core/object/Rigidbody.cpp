@@ -3,10 +3,14 @@
 #include "game/core/Game.hpp"
 #include "app/C.hpp"
 
-Rigidbody::Rigidbody(Object* _object) : gameobject(_object)
-{
+Rigidbody::Rigidbody(Object* object)
+	: Collider(), gameobject(object) { }
 
-}
+Rigidbody::Rigidbody(Object* object, float width, float height)
+	: Collider(width, height), gameobject(object) { }
+
+Rigidbody::Rigidbody(Object* object, sf::Vector2f size)
+	: Collider(size), gameobject(object) { }
 
 
 //////////////////////////////////////////////////////////////////

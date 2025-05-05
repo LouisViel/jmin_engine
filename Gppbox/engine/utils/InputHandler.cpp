@@ -61,31 +61,38 @@ sf::Vector2f InputHandler::getHorizontal()
 	return result;
 }
 
-bool InputHandler::getJump()
+sf::Vector2f InputHandler::getVertical()
 {
-	bool spaceKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+	bool downKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
+	bool downPad = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
 	bool upKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z);
 	bool upPad = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
-	bool jumpJoy = isJoystickPressed(JoystickButton::Down);
-	return spaceKey || upKey || upPad || jumpJoy;
+	float axisJoy = getJoystickAxis(JoystickAxis::LeftVertical);
+	float padJoy = getJoystickAxis(JoystickAxis::PadVertical);
+
+	sf::Vector2f result;
+	if (downKey || downPad) result.x = 1.0f;
+	else { GET_AXIS_MULTIPLE(result.x, < 0.0f, ({ axisJoy, padJoy })); }
+	if (upKey || upPad) result.y = 1.0f;
+	else { GET_AXIS_MULTIPLE(result.y, > 0.0f, ({ axisJoy, padJoy })); }
+	return result;
 }
 
 bool InputHandler::getFire()
 {
 	bool fireKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F);
-	bool fireMouse = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 	bool triggerJoy = isJoystickPressed(JoystickButton::TriggerRight);
 	bool buttonJoy = isJoystickPressed(JoystickButton::Right);
-	return fireKey || fireMouse || triggerJoy || buttonJoy;
+	return fireKey || triggerJoy || buttonJoy;
 }
 
 bool InputHandler::getSwitch()
 {
 	bool switchKey = sf::Keyboard::isKeyPressed(sf::Keyboard::E);
-	bool switchMouse = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	bool spaceKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 	bool triggerJoy = isJoystickPressed(JoystickButton::TriggerLeft);
 	bool buttonJoy = isJoystickPressed(JoystickButton::Left);
-	return switchKey || switchMouse || triggerJoy || buttonJoy;
+	return switchKey || spaceKey || triggerJoy || buttonJoy;
 }
 
 bool InputHandler::getDebug()
@@ -102,12 +109,42 @@ bool InputHandler::getDebug()
 //////////////////////////////////////////////////////////////////
 
 
-bool InputHandler::getFrameJump()
+bool InputHandler::getFrameFire()
 {
-	bool jump = InputHandler::getJump();
-	if (wasJumpPressed != jump) {
-		wasJumpPressed = jump;
-		return jump;
+	bool fire = InputHandler::getFire();
+	if (wasFirePressed != fire) {
+		wasFirePressed = fire;
+		return fire;
+	}
+	return false;
+}
+
+bool InputHandler::getFrameSwitch()
+{
+	bool _switch = InputHandler::getSwitch();
+	if (wasSwitchPressed != _switch) {
+		wasSwitchPressed = _switch;
+		return _switch;
+	}
+	return false;
+}
+
+bool InputHandler::getFrameMouseLeft()
+{
+	bool click = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+	if (wasLeftClick != click) {
+		wasLeftClick = click;
+		return click;
+	}
+	return false;
+}
+
+bool InputHandler::getFrameMouseRight()
+{
+	bool click = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	if (wasRightClick != click) {
+		wasRightClick = click;
+		return click;
 	}
 	return false;
 }

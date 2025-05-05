@@ -167,6 +167,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app\app.cpp" />
+    <ClCompile Include="game\builder\convoyers\ConvoyerFastConstructor.hpp" />
+    <ClCompile Include="game\builder\convoyers\ConvoyerMeanConstructor.hpp" />
     <ClCompile Include="game\builder\CrafterConstructor.cpp" />
     <ClCompile Include="game\builder\crafters\CrafterPlanksConstructor.cpp" />
     <ClCompile Include="game\object\Crafters\CrafterPlanks.cpp" />

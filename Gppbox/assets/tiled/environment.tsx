@@ -29,6 +29,8 @@
  <tile id="77" type="Node-Iron"/>
  <tile id="78" type="Node-Iron"/>
  <tile id="79" type="Node-Water"/>
+ <tile id="80" type="Node-Wood"/>
+ <tile id="81" type="Node-Wood"/>
  <tile id="84" type="Node-Stone"/>
  <tile id="85" type="Node-Stone"/>
  <tile id="86" type="Node-Coal"/>

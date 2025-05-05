@@ -12,8 +12,8 @@
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 #include "game/core/builder/Builder.hpp"
-
 #include "game/core/utils/NodeType.hpp"
+
 
 Game* Game::singleton = nullptr;
 double Game::g_tickTimer = 0.0;
@@ -91,7 +91,7 @@ void Game::draw(sf::RenderWindow& win)
 	environment->drawWorld(*target);
 
 	// Enable Camera Drawing
-	//camera->setActive(*target);
+	camera->setActive(*target);
 
 	// Draw Camera Renderings
 	environment->drawCamera(*target);
@@ -220,6 +220,17 @@ bool Game::isBuildable(NodeType nodeType, int gridx, int gridy) const
 	NodeType type = (NodeTypeHelper::All - nodeType) + NodeTypeHelper::NonBuildable;
 	if (environment->isNode(type, gridx, gridy)) return false;
 	return !this->isOccupied(gridx, gridy);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+sf::View* Game::getView() const
+{
+	return camera->getView();
 }
 
 

@@ -59,14 +59,21 @@ private:
 	#define getJoystickAxis(axis) sf::Joystick::getAxisPosition(0, (sf::Joystick::Axis)axis) / 100.0f;
 	#define isJoystickPressed(button) sf::Joystick::isButtonPressed(0, (unsigned int)button);
 
-	static inline bool wasJumpPressed = false;
+	static inline bool wasFirePressed = false;
+	static inline bool wasSwitchPressed = false;
+	static inline bool wasLeftClick = false;
+	static inline bool wasRightClick = false;
 
 public:
 	static sf::Vector2f getHorizontal();
-	static bool getJump();
+	static sf::Vector2f getVertical();
+
 	static bool getFire();
 	static bool getSwitch();
 	static bool getDebug();
 
-	static bool getFrameJump();
+	static bool getFrameFire();
+	static bool getFrameSwitch();
+	static bool getFrameMouseLeft();
+	static bool getFrameMouseRight();
 };

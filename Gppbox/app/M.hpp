@@ -11,9 +11,10 @@ namespace M
 	#define FULL_CHECK(object, condition) \
 		/* Verify object */ \
 		if (!object || !object->collider) return false; \
+		Collider* collider = object->collider; \
+		if (collider->width * collider->height <= 0.0f) return false; \
 		\
 		/* Prepare full check Variables */ \
-		Collider* collider = object->collider; \
 		int xposMin(int(collider->rx + collider->cx)); \
 		int xposMax(int(xposMin + collider->width)); \
 		float yposMin(collider->cy + collider->ry); \
@@ -33,9 +34,10 @@ namespace M
 	#define FULL_COLLISION(object, output, action) \
 		/* Verify object */ \
 		if (!object || !object->collider) output; \
+		Collider* collider = object->collider; \
+		if (collider->width * collider->height <= 0.0f) output; \
 		\
 		/* Prepare full check Variables */ \
-		Collider* collider = object->collider; \
 		int xposMin(int(collider->rx + collider->cx)); \
 		int xposMax(int(xposMin + collider->width)); \
 		float yposMin(collider->cy + collider->ry); \

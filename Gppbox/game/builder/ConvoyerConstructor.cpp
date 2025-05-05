@@ -111,17 +111,23 @@ Object* ConvoyerConstructor::tryBuild()
 		return nullptr;
 	}
 
+
 	// Process at convoyer extention
 	if (state == State::Extend || state == State::Finish) {
 
-		// Expand convoyer internal
+		// Pre-Process internal expand values
 		size_t tilesSize = bresenTiles.size();
 		sf::Vector2i previousPos = tilesSize >= 2 ? bresenTiles[tilesSize - 2] : currentAnchor;
 		sf::Vector2i tilePos = bresenTiles[tilesSize - 1];
-		sf::Vector2i endPos = tilePos + (tilePos - previousPos);
-		convoyer->expandWorld(endPos, bresenTiles);
+		 
+		// Special Pre-Process expand end pos value
+		sf::Vector2i endPos;
+		if (state == State::Finish && currentConvoy != nullptr)
+			endPos = currentConvoy->worldPos + currentConvoy->anchor;
+		else endPos = tilePos + (tilePos - previousPos);
 
-		// Save settings
+		// Expand convoyer internal + Save settings
+		convoyer->expandWorld(endPos, bresenTiles);
 		currentAnchor = cursorPos;
 
 		// Manage special case 'finish state'
@@ -174,7 +180,7 @@ void ConvoyerConstructor::setTargetPosition(sf::Vector2i pos)
 
 void ConvoyerConstructor::handleInputs()
 {
-	bool tryChange = InputHandler::getFrameJump();
+	bool tryChange = InputHandler::getFrameSwitch();
 	if (!tryChange) return;
 	if (state == State::Extend) state = State::Finish;
 	else if (state == State::Finish) state = State::Extend;
@@ -205,7 +211,8 @@ void ConvoyerConstructor::draw(sf::RenderTarget& target, sf::RenderStates states
 	if (state == State::Extend || state == State::Finish) {
 		sf::RectangleShape spr = sf::RectangleShape({ 0.95f, 0.95f });
 		spr.setFillColor(isDrawValid ? sf::Color::Green : sf::Color::Red);
-		spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
+		if (state == State::Finish) spr.setOutlineColor(isDrawValid ? sf::Color::White : sf::Color::Magenta);
+		else spr.setOutlineColor(isDrawValid ? sf::Color::Blue : sf::Color::Yellow);
 		spr.setOutlineThickness(0.05f);
 
 		// Draw bresenham convoyer tiles previews

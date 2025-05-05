@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
 #include <cstdlib>
+#include <cmath>
 #include "SFML/System/Vector2.hpp"
+#include "engine/Utils.hpp"
 
 //https://fr.wikipedia.org/wiki/Algorithme_de_trac%C3%A9_de_segment_de_Bresenham 
 

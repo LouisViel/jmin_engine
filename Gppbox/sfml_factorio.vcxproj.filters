@@ -159,6 +159,12 @@
     <ClCompile Include="game\core\utils\RessourceSprite.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="game\builder\convoyers\ConvoyerMeanConstructor.hpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="game\builder\convoyers\ConvoyerFastConstructor.hpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\imgui\imgui.h">

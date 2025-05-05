@@ -23,9 +23,9 @@ void Camera::update(double dt)
 
 	sf::Vector2f shake = processShake(dt);
 	sf::Vector2f pos = player->getPosition();
-	//float x = (player->cx + player->rx) * C::GRID_SIZE + shake.x;
-	//float y = (player->cy + player->ry - 2.5f) * C::GRID_SIZE + shake.y;
-	m_view.setCenter(pos.x + shake.x, pos.y + shake.y);
+	float x = pos.x * C::GRID_SIZE + shake.x;
+	float y = pos.y * C::GRID_SIZE + shake.y;
+	m_view.setCenter(x, y);
 }
 
 void Camera::imgui()

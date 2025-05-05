@@ -3,6 +3,7 @@
 
 #include "game/core/object/Object.hpp"
 #include "game/components/PlayerController.hpp"
+#include "game/core/object/Rigidbody.hpp"
 
 #include "engine/utils/ScaleHelper.hpp"
 #include "engine/Utils.hpp"
@@ -23,7 +24,7 @@ World::World(sf::RenderWindow* win)
 	convoyers = new std::vector<Convoyer*>();
 	details = new std::vector<Object*>();
 
-	// TODO : Insert Player Creation
+	initPlayer();
 	// Insert "Bonus" Creations
 }
 
@@ -122,44 +123,28 @@ void World::imgui()
 //////////////////////////////////////////////////////////////////
 
 
-void World::initMainChar() {
-	//// Create Player Sprite
-	//sf::RectangleShape* spr = new sf::RectangleShape({ C::GRID_SIZE * C::S_SCALER_X, C::GRID_SIZE * 2 * C::S_SCALER_Y });
-	//spr->setFillColor(sf::Color::Magenta);
-	//spr->setOutlineColor(sf::Color::Red);
-	//spr->setOutlineThickness(2);
-	//spr->setOrigin({ C::GRID_SIZE * 0.5f, C::GRID_SIZE * 2 });
-
-	//// Create Player with "default" settings
-	//Object* e = new Object(spr);
-	//e->setCooGrid(3, int(C::RES_Y / C::GRID_SIZE) - 4 + 0.99f);
-	//e->syncPos();
-
-	//// Inject Custom Player Settings
-	//e->sheight = C::P_HEIGHT;
-	//e->swidth = C::P_WIDTH;
-	//e->lifepoints = C::P_LIFEPOINTS;
-	//e->speed = C::P_SPEED;
-	////e->jumpforce = C::P_JUMP;
-	//e->dirx = 1;
-
-	//// Add components
-	//e->addComponent(new PlayerController(e));
-	//e->addComponent(new SpriteOverride(e, "res/player.png"));
-
-	//// Register Player
-	//gameobjects->push_back(e);
-	//printf("player added\n");
-}
-
-Object* World::initEnnemy(float x, float y)
+void World::initPlayer()
 {
-	return nullptr;
-//	Object* e = initEnnemyCore(x, y);
-//	//e->addComponent(new EnnemyController(e));
-//	gameobjects->push_back(e);
-//	//ennemies->push_back(e);
-//	return e;
+	// Create player with a rigidbody for movement
+	Object* player = new Object();
+	player->rigidbody = new Rigidbody(player, { 0.0f, 0.0f });
+	player->rigidbody->usePhysics = false;
+	player->rigidbody->speed = C::P_SPEED;
+	player->rigidbody->frx = 0.75f;
+	player->rigidbody->fry = 0.75f;
+	
+	// Set Player position
+	player->setPosition({
+		C::C_CENTER_X / C::GRID_SIZE,
+		C::C_CENTER_Y / C::GRID_SIZE
+	});
+
+	// Register Player Controller
+	PlayerController* pc = new PlayerController(player);
+	player->addComponent(pc);
+
+	// Register player to gameobjects
+	gameobjects->push_back(player);
 }
 
 
@@ -167,11 +152,6 @@ Object* World::initEnnemy(float x, float y)
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
-
-//void World::removeEnnemy(Object* ennemy)
-//{
-//	//this->removeObject(this->ennemies, ennemy);
-//}
 
 void World::removeObject(std::vector<Object*>* quick, Object* object)
 {
@@ -195,17 +175,6 @@ Object* World::getPlayer()
 	if (gameobjects->size()) return gameobjects->operator[](0);
 	return nullptr;
 }
-
-//std::set<Object*> World::getEnnemies(int gridx, int gridy)
-//{
-//	std::set<Object*> results = std::set<Object*>();
-//	/*for (Object* e : *ennemies) {
-//		if (Utils::isFullBody(e, gridx, gridy)) {
-//			results.emplace(e);
-//		}
-//	}*/
-//	return results;
-//}
 
 Object* World::getClosest(std::vector<Object*>* vector, sf::Vector2i gridPos)
 {

@@ -1,6 +1,4 @@
 #include "Bresenham.hpp"
-#include "engine/Utils.hpp"
-#include <cmath>
 
 std::vector<sf::Vector2i> bresenhamLine(int x1, int y1, int x2, int y2)
 {
@@ -38,7 +36,7 @@ void bresenhamLine(int x1, int y1, int x2, int y2, std::vector<sf::Vector2i>& re
 
         // Manage diagonal cases (prio vertical)
         if (x != prevX && y != prevY) {
-            results.emplace_back(prevX, y); 
+            results.emplace_back(prevX, y);
         }
 
         // Add without start position

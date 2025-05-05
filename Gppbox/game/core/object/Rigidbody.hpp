@@ -29,7 +29,9 @@ public:
 
 public:
 	Rigidbody() = delete;
-	Rigidbody(Object* _object);
+	Rigidbody(Object* object);
+	Rigidbody(Object* object, float width, float height);
+	Rigidbody(Object* object, sf::Vector2f size);
 
 	void processMovement(double fdt); // Process Object Full Movement
 	void publishTransform(); // Publish Transform to Object

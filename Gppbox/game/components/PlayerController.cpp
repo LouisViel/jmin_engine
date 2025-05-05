@@ -17,18 +17,23 @@ void PlayerController::preupdate(double dt)
 	// No logistic Update
 	NO_UPDATE(dt);
 	processInputs(dt);
-
-	// Update Jump Delay Timer
-	if (jumpDelay > 0.0f) {
-		jumpDelay -= (float)dt;
-	}
 }
 
-void PlayerController::fixed(double fdt) { }
+void PlayerController::update(double dt)
+{
+	NO_UPDATE(dt);
 
-void PlayerController::update(double dt) { }
+	const float sizeX = C::RES_X / (float)C::GRID_SIZE;
+	const float sizeY = C::RES_Y / (float)C::GRID_SIZE;
+	const float margeX = sizeX * 0.0f, margeY = sizeY * 0.0f;
+	const float maxX = sizeX + margeX, maxY = sizeY + margeY;
+	const float minX = -margeX, minY = -margeY;
 
-void PlayerController::imgui() { }
+	sf::Vector2f pos = gameobject->getPosition();
+	pos.x = std::clamp(pos.x, minX, maxX);
+	pos.y = std::clamp(pos.y, minY, maxY);
+	gameobject->setPosition(pos);
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -40,16 +45,16 @@ void PlayerController::processInputs(double dt)
 {
 	// Check for game window Focus + Imgui not overriding it
 	if (!InputHandler::hasFocus()) return;
-	if (!InputHandler::canUse()) return;
+	//if (!InputHandler::canUse()) return;
+	Rigidbody* const rb = gameobject->rigidbody;
 
 	// Get & Apply Horizontal Movement
 	sf::Vector2f hor = InputHandler::getHorizontal();
-	Rigidbody* const rb = gameobject->rigidbody;
 	if (hor.x > 0.5f) rb->setDx(rb->dx - rb->speed * dt * hor.x);
 	else if (hor.y > 0.5f) rb->setDx(rb->dx + rb->speed * dt * hor.y);
 
-	// Get & Apply Jump
-	/*if (InputHandler::getJump()) {
-		object->setJumping(true);
-	}*/
+	// Get & Apply Vertical Movement
+	sf::Vector2f vert = InputHandler::getVertical();
+	if (vert.x > 0.5f) rb->setDy(rb->dy + rb->speed * dt * vert.x);
+	else if (vert.y > 0.5f) rb->setDy(rb->dy - rb->speed * dt * vert.y);
 }

@@ -8,10 +8,15 @@
 #include "game/core/Environment.hpp"
 #include "game/core/World.hpp"
 #include "game/core/Game.hpp"
+#include "game/core/utils/Camera.hpp"
 
 #include "game/builder/convoyers/ConvoyerSlowConstructor.hpp"
+#include "game/builder/convoyers/ConvoyerMeanConstructor.hpp"
+#include "game/builder/convoyers/ConvoyerFastConstructor.hpp"
+
 #include "game/builder/drills/DrillWoodConstructor.hpp"
 #include "game/builder/crafters/CrafterPlanksConstructor.hpp"
+
 
 
 Builder::Builder(sf::RenderWindow* win, Environment* environment, World* world)
@@ -39,9 +44,10 @@ void Builder::update(double dt)
 	valid = InputHandler::hasFocus();
 	valid &= InputHandler::canUseMouse();
 	if (!valid) return;
+	Game* g = Game::singleton;
 
 	// Get & Check if Mouse pos is in window 
-	sf::Vector2f pos = win->mapPixelToCoords(sf::Mouse::getPosition(*win));
+	sf::Vector2f pos = win->mapPixelToCoords(sf::Mouse::getPosition(*win), *g->getView());
 	if (pos.x < 0.0f || pos.x > C::RES_X || pos.y < 0.0f || pos.y > C::RES_Y) {
 		valid = false;
 		return;
@@ -49,12 +55,11 @@ void Builder::update(double dt)
 
 	// Get, Process, & Normalize Inputs
 	mousePos = sf::Vector2i(int(pos.x / C::GRID_SIZE), int(pos.y / C::GRID_SIZE));
-	leftButton = sf::Mouse::isButtonPressed(sf::Mouse::Left);
-	rightButton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	leftButton = InputHandler::getFrameMouseLeft();
+	rightButton = InputHandler::getFrameMouseRight();
 	constructor->handleInputs();
 
 	// register position to constructor for rendering & later + Check if target is occupied
-	Game* g = Game::singleton;
 	constructor->setTargetPosition(mousePos);
 	#pragma warning(suppress:6011)
 	occupied = !constructor->canBuild(g);
@@ -124,6 +129,10 @@ void Builder::imgui()
 			Indent(1.0f);
 
 			if (Button("Slow Convoy")) switchConstructor((new ConvoyerSlowConstructor())->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Mean Convoy")) switchConstructor((new ConvoyerMeanConstructor())->constructor());
+			SameLine(0.0f, 10.0f);
+			if (Button("Fast Convoy")) switchConstructor((new ConvoyerFastConstructor())->constructor());
 
 			TreePop();
 		}
@@ -136,13 +145,13 @@ void Builder::imgui()
 			TreePop();
 		}
 
-		if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
+		/*if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
 
 			
 
 			TreePop();
-		}
+		}*/
 
 		if (TreeNodeEx("Crafters", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);

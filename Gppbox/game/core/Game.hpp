@@ -46,4 +46,6 @@ public:
 	bool isBuildable(int gridx, int gridy) const;
 	bool isBuildable(NodeType nodeType, Object* object) const;
 	bool isBuildable(NodeType nodeType, int gridx, int gridy) const;
+
+	sf::View* getView() const;
 };
