@@ -110,8 +110,11 @@ void Game::imgui()
 			BulletText("Right : [D] OU [Right arrow]");
 			BulletText("Up : [Z] OU [Up arrow]");
 			BulletText("Down : [S] OU [Down arrow]");
-
+			
+			Spacing();
 			BulletText("Switch Build Mode : [E] OU [Space]");
+			BulletText("Build : Mouse Left Click");
+			BulletText("Destroy : Mouse Right Click");
 			BulletText("Debug Key : [P] OU [Numpad *]");
 			TreePop();
 		}
