@@ -27,6 +27,7 @@
 #include "game/core/payload/PayloadPool.hpp"
 #include "game/object/convoyer/ConvoyerItem.hpp"
 #include "game/core/utils/RessourceSprite.hpp"
+#include "game/core/utils/SpriteHelper.hpp"
 
 
 
@@ -74,6 +75,7 @@ int main()
 	PayloadPool::init();
 	ConvoyerItemPool::init();
 	RessourceSprite::init();
+	SpriteHelper::init();
     Game g(&window);
 
 	Vector2i winPos;
@@ -214,6 +216,7 @@ int main()
 	PayloadPool::release();
 	ConvoyerItemPool::release();
 	RessourceSprite::clear();
+	SpriteHelper::clear();
 	InputHandler::setWindow(nullptr);
 	ImGui::SFML::Shutdown();
 

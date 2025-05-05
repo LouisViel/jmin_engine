@@ -215,6 +215,7 @@
     <ClCompile Include="game\components\Renderer.cpp" />
     <ClCompile Include="game\core\object\Rigidbody.cpp" />
     <ClCompile Include="game\core\utils\RessourceSprite.cpp" />
+    <ClCompile Include="game\core\utils\SpriteHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\app.h" />
@@ -273,6 +274,7 @@
     <ClInclude Include="game\core\utils\NodeType.hpp" />
     <ClInclude Include="engine\utils\ScaleHelper.hpp" />
     <ClInclude Include="game\core\utils\RessourceSprite.hpp" />
+    <ClInclude Include="game\core\utils\SpriteHelper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\cpp.hint" />

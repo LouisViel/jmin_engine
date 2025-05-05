@@ -1,5 +1,7 @@
 #include "Building.hpp"
 #include "engine/Utils.hpp"
+#include "engine/utils/TransformHelper.hpp"
+#include "game/core/utils/SpriteHelper.hpp"
 
 
 Building::Building()
@@ -32,6 +34,50 @@ void Building::addOutput(InOutConvoy* const output)
 {
 	output->mode = InOutConvoy::Mode::Out;
 	outConvoys->push_back(output);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+void Building::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	Object::drawInternal(target, states);
+	Object::applyTransform(states);
+
+	sf::Transform transform = states.transform;
+	TransformHelper helper = TransformHelper();
+	sf::Drawable* drawable;
+
+	for (InOutConvoy* convoy : *inConvoys) {
+		sf::Vector2i anchorPos = convoy->anchor;
+		if (anchorPos.y <= 0) {
+			drawable = SpriteHelper::get(SpriteStatic::ConvoyInput_Down);
+			anchorPos.y -= 1;
+		} else {
+			drawable = SpriteHelper::get(SpriteStatic::ConvoyInput_Up);
+			anchorPos.y += 1;
+		}
+		helper.setPosition((float)anchorPos.x, (float)anchorPos.y);
+		states.transform = transform * helper.getTransform();
+		target.draw(*drawable, states);
+	}
+
+	for (InOutConvoy* convoy : *outConvoys) {
+		sf::Vector2i anchorPos = convoy->anchor;
+		if (anchorPos.y <= 0) {
+			drawable = SpriteHelper::get(SpriteStatic::ConvoyOutput_Up);
+			anchorPos.y -= 1;
+		} else {
+			drawable = SpriteHelper::get(SpriteStatic::ConvoyOutput_Down);
+			anchorPos.y += 1;
+		}
+		helper.setPosition((float)anchorPos.x, (float)anchorPos.y);
+		states.transform = transform * helper.getTransform();
+		target.draw(*drawable, states);
+	}
 }
 
 
