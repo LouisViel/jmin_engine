@@ -11,6 +11,7 @@ class Convoyer : public Object
 private:
 	TileMap* tilemap = nullptr;
 	std::vector<sf::Vector2i>* parts = nullptr;
+	sf::Vector2i startPos = sf::Vector2i(0, 0);
 	sf::Vector2i endPos = sf::Vector2i(0, 0);
 	bool multiPart = false;
 

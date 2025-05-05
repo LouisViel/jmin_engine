@@ -174,7 +174,7 @@ void ConvoyerConstructor::setTargetPosition(sf::Vector2i pos)
 
 void ConvoyerConstructor::handleInputs()
 {
-	bool tryChange = InputHandler::getJump();
+	bool tryChange = InputHandler::getFrameJump();
 	if (!tryChange) return;
 	if (state == State::Extend) state = State::Finish;
 	else if (state == State::Finish) state = State::Extend;

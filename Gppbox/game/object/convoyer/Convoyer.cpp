@@ -159,6 +159,7 @@ void Convoyer::build(sf::Vector2i startPos, sf::Vector2i endPos, std::vector<sf:
     
     // Register part settings
     this->multiPart = tiles.size() > 2;
+    this->startPos = startPos;
     this->endPos = endPos;
 
     // Set Start part (special treatment)
@@ -209,18 +210,18 @@ void Convoyer::expand(sf::Vector2i endPos, std::vector<sf::Vector2i>& tiles)
     parts->insert(parts->end(), tiles.begin(), tiles.end());
     tilemap->resize((unsigned int)resultSize);
 
+    // Register part settings
+    this->multiPart = resultSize > 2;
+    this->endPos = endPos;
+
     // Update previous end part
     if (multiPart) {
         size_t prevEndId = expandIndex - 1;
-        sf::Vector2i prevTile = prevEndId > 0 ? parts->operator[](prevEndId - 1) : sf::Vector2i(0, 0);
+        sf::Vector2i prevTile = prevEndId > 0 ? parts->operator[](prevEndId - 1) : startPos;
         sf::Vector2i prevEndTile = parts->operator[](prevEndId);
         sf::Vector2i targetTile = parts->operator[](expandIndex);
         tilemap->setTile(prevEndId, &getTile(prevTile, prevEndTile, targetTile));
     }
-
-    // Register part settings
-    this->multiPart = resultSize > 2;
-    this->endPos = endPos;
 
     // Set intermediate parts (basic treatments)
     for (int i = (int)expandIndex; i < (int)resultSize - 1; ++i) {

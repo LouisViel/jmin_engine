@@ -43,6 +43,7 @@ bool InputHandler::canUse()
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
+
 sf::Vector2f InputHandler::getHorizontal()
 {
 	bool leftKey = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
@@ -93,4 +94,20 @@ bool InputHandler::getDebug()
 	bool debugPad = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Multiply);
 	bool debugJoy = isJoystickPressed(JoystickButton::MenuLeft);
 	return debugKey || debugPad || debugJoy;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
+bool InputHandler::getFrameJump()
+{
+	bool jump = InputHandler::getJump();
+	if (wasJumpPressed != jump) {
+		wasJumpPressed = jump;
+		return jump;
+	}
+	return false;
 }
