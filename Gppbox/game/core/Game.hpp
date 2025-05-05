@@ -16,8 +16,6 @@ enum class NodeType;
 class Game {
 public:
 	static Game* singleton;
-	static double g_tickTimer;
-	static double g_time;
 
 	sf::RenderWindow* win = nullptr;
 	bool closing = false;

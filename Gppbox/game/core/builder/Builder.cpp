@@ -147,9 +147,6 @@ void Builder::imgui()
 
 		/*if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
-
-			
-
 			TreePop();
 		}*/
 

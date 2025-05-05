@@ -37,7 +37,7 @@ void CrafterPlanks::update(double dt)
 	// Read/Update input buffer & input counts
 	while (inputHandle->payload->valid()) {
 		CrafterPlanksPayload* payload = inputHandle->payload->pop();
-		inputWoodCount += payload->quantity;
+		inputWoodCount = Utils::noCrashAdd(inputWoodCount, payload->quantity);
 		PayloadPool::free(payload);
 	}
 
@@ -50,7 +50,7 @@ void CrafterPlanks::update(double dt)
 void CrafterPlanks::craftPerformed()
 {
 	// Update wood amount available
-	inputWoodCount -= craftNeededWoodCount;
+	inputWoodCount = Utils::noCrashMinus(inputWoodCount, craftNeededWoodCount);
 }
 
 CrafterPlanksPayloadOutput* CrafterPlanks::getPayload()

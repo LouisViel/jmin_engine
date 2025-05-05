@@ -1,6 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <algorithm>
 #include "SFML/System/Vector2.hpp"
 
 class Object;
@@ -14,7 +15,10 @@ private:
 public:
 	static bool isFullBody(const Object* object, int gridx, int gridy);
 	static bool isAdjacent(const sf::Vector2i& a, const sf::Vector2i& b);
+
 	template <typename T> static int sign(T value);
+	static int noCrashAdd(int val, int add);
+	static int noCrashMinus(int val, int min);
 
 	static float toLength(const sf::Vector2i& source);
 	static float toLength(const sf::Vector2f& source);
@@ -36,4 +40,12 @@ public:
 template <typename T>
 int Utils::sign(T val) {
 	return (T(0) < val) - (val < T(0));
+}
+
+int Utils::noCrashAdd(int val, int add) {
+	return std::min(val, std::numeric_limits<int>().max() - add) + add;
+}
+
+int Utils::noCrashMinus(int val, int min) {
+	return std::max(val, std::numeric_limits<int>().min() + min) - min;
 }

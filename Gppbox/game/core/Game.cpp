@@ -16,8 +16,6 @@
 
 
 Game* Game::singleton = nullptr;
-double Game::g_tickTimer = 0.0;
-double Game::g_time = 0.0;
 
 Game::Game(sf::RenderWindow* win)
 {
@@ -52,12 +50,9 @@ Game::~Game()
 
 void Game::preupdate(double dt)
 {
-	g_time += dt;
-	g_tickTimer = dt;
-
 	world->preupdate(dt);
 	if (InputHandler::getDebug()) {
-		camera->addShake(0.5f, 1.0f);
+		//camera->addShake(0.5f, 1.0f);
 	}
 }
 

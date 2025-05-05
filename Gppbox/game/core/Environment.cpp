@@ -188,7 +188,6 @@ void Environment::imgui()
 {
 	using namespace ImGui;
 	//if (CollapsingHeader("World", ImGuiTreeNodeFlags_DefaultOpen)) {
-
 	//	// Draw Debug Walls
 	//	/*if (TreeNodeEx("Collisions")) {
 	//		for (sf::Vector2i& w : collisions) {
@@ -199,22 +198,3 @@ void Environment::imgui()
 	//	}*/
 	//}
 }
-
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-
-
-// Cache Walls to Graphics
-//void Environment::cacheWalls()
-//{
-//	wallSprites.clear();
-//	for (sf::Vector2i& w : walls) {
-//		sf::RectangleShape rect(sf::Vector2f(C::GRID_SIZE, C::GRID_SIZE));
-//		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
-//		//rect.setFillColor(sf::Color(0x07ff07ff));
-//		rect.setTexture(&wallTexture);
-//		wallSprites.push_back(rect);
-//	}
-//}

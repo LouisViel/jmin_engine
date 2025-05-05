@@ -4,6 +4,7 @@
 #include "game/core/payload/PayloadPool.hpp"
 #include "game/core/payload/Payload.hpp"
 #include "game/components/Renderer.hpp"
+#include "engine/Utils.hpp"
 #include "app/C.hpp"
 
 class Building : public Object
