@@ -117,10 +117,11 @@ private:
 template <typename t>
 class InOutConvoyHandle : public InOutConvoy
 {
-public:
-	bool managePayload = false;
+private:
 	InOutPayload<t>* payload = nullptr;
+	bool managePayload = false;
 
+public:
 
 	InOutConvoyHandle() = delete;
 
@@ -130,12 +131,54 @@ public:
 	InOutConvoyHandle(InOutConvoy::Mode mode, ResourceType type, Direction dir, sf::Vector2i anchor)
 		: InOutConvoy(mode, type, dir, anchor) { }
 
-	virtual ~InOutConvoyHandle()
+	
+
+	InOutPayload<t>* const getPayload() const
 	{
-		if (managePayload) {
-			delete payload;
+		return payload;
+	}
+
+	void removePayload()
+	{
+		if (payload == nullptr) return;
+		payload->unlink();
+		payload = nullptr;
+		managePayload = false;
+		//this->connected = false;
+	}
+
+	void setPayload(InOutPayload<t>* payload, bool manage = false)
+	{
+		removePayload();
+		if (payload != nullptr) {
+			this->managePayload = manage;
+			this->payload = payload;
+			this->payload->link();
+			//this->connected = true;
 		}
 	}
+
+	bool ensurePayload()
+	{
+		if (payload == nullptr) return false;
+		if (payload->closing) {
+			removePayload();
+			return false;
+		}
+		return true;
+	}
+
+
+
+	virtual ~InOutConvoyHandle()
+	{
+		if (managePayload && ensurePayload()) {
+			payload->closing = true;
+			removePayload();
+			//delete payload;
+		}
+	}
+
 
 
 	InOutConvoy* boxed()

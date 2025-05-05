@@ -3,6 +3,9 @@
 #include "engine/utils/TransformHelper.hpp"
 
 
+// TODO : Doit verifier ses buffer avant d'y écrire (pour éviter d'être link avec qqchose de delete)
+
+
 Convoyer::Convoyer() : Convoyer(speed) {}
 
 Convoyer::Convoyer(float speed) : speed(speed)
@@ -10,12 +13,12 @@ Convoyer::Convoyer(float speed) : speed(speed)
     // Setup Input Handle (with default settings) (Need to be updated later)
     inputHandle = new InOutConvoyDefault(InOutConvoy::Mode::In, ResourceTypeHelper::All, DirectionHelper::All);
     inputHandle->anchor = sf::Vector2i(0, 0);
-    inputHandle->managePayload = false;
+    inputHandle->setPayload(nullptr, false);
 
     // Setup Output Handle (with default settings) (Need to be updated later)
     outputHandle = new InOutConvoyDefault(InOutConvoy::Mode::Out, ResourceTypeHelper::All, DirectionHelper::All);
     outputHandle->anchor = sf::Vector2i(0, 0);
-    outputHandle->managePayload = false;
+    outputHandle->setPayload(nullptr, false);
 
     // Setup convoyer parts & items containers
     parts = new std::vector<sf::Vector2i>();
@@ -56,38 +59,34 @@ size_t Convoyer::size()
 
 bool Convoyer::connectInput(InOutConvoy* const input)
 {
-    if (inputHandle->payload != nullptr) return false;
+    if (inputHandle->ensurePayload()) return false;
     if (!inputHandle->connect(*input)) return false;
     InOutConvoyDefault* inputBase = input->handle<PayloadBase>();
-    if (inputBase->payload == nullptr) return false;
-    inputHandle->payload = inputBase->payload;
-    inputHandle->connected = true;
+    if (!inputBase->ensurePayload()) return false;
+    inputHandle->setPayload(inputBase->getPayload(), false);
     return true;
 }
 
 bool Convoyer::connectOutput(InOutConvoy* const output)
 {
-    if (outputHandle->payload != nullptr) return false;
+    if (outputHandle->ensurePayload()) return false;
     if (!outputHandle->connect(*output)) return false;
     InOutConvoyDefault* outputBase = output->handle<PayloadBase>();
-    if (outputBase->payload == nullptr) return false;
-    outputHandle->payload = outputBase->payload;
-    outputHandle->connected = true;
+    if (!outputBase->ensurePayload()) return false;
+    outputHandle->setPayload(outputBase->getPayload(), false);
     return true;
 }
 
 void Convoyer::removeInput()
 {
-    if (inputHandle->payload == nullptr) return;
-    inputHandle->payload = nullptr;
-    inputHandle->connected = false;
+    //if (inputHandle->payload == nullptr) return;
+    inputHandle->removePayload();
 }
 
 void Convoyer::removeOutput()
 {
-    if (outputHandle->payload == nullptr) return;
-    outputHandle->payload = nullptr;
-    outputHandle->connected = false;
+    //if (outputHandle->payload == nullptr) return;
+    outputHandle->removePayload();
 }
 
 
@@ -330,10 +329,10 @@ void Convoyer::preupdate(double dt)
     LOOP_END;
 
     // Add & Update convoyer items from input buffer
-    if (inputHandle->payload != nullptr) {
-        #pragma warning(suppress:6011)
-        while (inputHandle->payload->valid() && (previous == nullptr || previous->progression - 1.0f >= 0.0f)) {
-            ConvoyerItem* item = ConvoyerItemPool::get(inputHandle->payload->pop());
+    if (inputHandle->ensurePayload()) {
+        InOutPayloadDefault* const payload = inputHandle->getPayload();
+        while (payload->valid() && (previous == nullptr || previous->progression - 1.0f >= 0.0f)) {
+            ConvoyerItem* item = ConvoyerItemPool::get(payload->pop());
             if (!processItem(previous, item, partSize, fdt)) {
                 items->emplace_back(item);
                 previous = item;
@@ -349,8 +348,8 @@ bool Convoyer::processItem(ConvoyerItem* previous, ConvoyerItem* item, float par
     if (previous != nullptr) item->progression = std::min(item->progression, previous->progression - 1.0f);
     if (item->progression >= partSize) {
         item->progression = partSize;
-        if (outputHandle->payload == nullptr) return false;
-        return outputHandle->payload->push(item->payload);
+        if (!outputHandle->ensurePayload()) return false;
+        return outputHandle->getPayload()->push(item->payload);
     }
     return false;
 }

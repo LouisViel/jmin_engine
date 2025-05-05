@@ -20,6 +20,8 @@ public:
 	Building();
 	virtual ~Building();
 
+	void preupdate(double dt) override;
+
 	void addInput(InOutConvoy* const input);
 	void addOutput(InOutConvoy* const output);
 

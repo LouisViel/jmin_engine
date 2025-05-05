@@ -61,7 +61,9 @@ public:
 	void draw(sf::RenderTarget& win);
 	void imgui();
 
-	void removeObject(std::vector<Object*>* quick, Object* e);
+	template<typename t>
+	void removeObject(std::vector<t*>* quick, t* object);
+	void removeObject(std::vector<Object*>* quick, Object* object);
 	void removePreview(Object* object);
 
 	Object* getPlayer();
@@ -75,3 +77,10 @@ public:
 	InOutConvoy* getBuildingInput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
 	InOutConvoy* getBuildingOutput(sf::Vector2i gridPos, InOutConvoy* inOutConvoy) const;
 };
+
+template<typename t>
+void World::removeObject(std::vector<t*>* quick, t* object)
+{
+	if (quick != nullptr) { REMOVE_ITEM(t*, quick, object); }
+	toDelete.emplace(static_cast<Object*>(object));
+}

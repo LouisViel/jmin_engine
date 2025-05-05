@@ -10,8 +10,7 @@ CrafterPlanks::CrafterPlanks() : Crafter(COLLIDER_SIZE_CRAFTER)
 
 	// Create & set input settings
 	inputHandle = new InOutConvoyHandle<CrafterPlanksPayload>(InOutConvoy::Mode::In, ResourceType::Wood, Direction::South);
-	inputHandle->payload = new InOutPayload<CrafterPlanksPayload>(C::BUILDER_PAYLOAD);
-	inputHandle->managePayload = true;
+	inputHandle->setPayload(new InOutPayload<CrafterPlanksPayload>(C::BUILDER_PAYLOAD), true);
 	inputHandle->anchor = sf::Vector2i(1, 2);
 	this->addInput(inputHandle->boxed());
 
@@ -34,9 +33,11 @@ CrafterPlanks::~CrafterPlanks()
 
 void CrafterPlanks::update(double dt)
 {
+
 	// Read/Update input buffer & input counts
-	while (inputHandle->payload->valid()) {
-		CrafterPlanksPayload* payload = inputHandle->payload->pop();
+	InOutPayloadDefault* payloadhandle = inputHandle->getPayload();
+	while (payloadhandle->valid()) {
+		CrafterPlanksPayload* payload = payloadhandle->pop();
 		inputWoodCount = Utils::safeAdd(inputWoodCount, payload->quantity);
 		PayloadPool::free(payload);
 	}

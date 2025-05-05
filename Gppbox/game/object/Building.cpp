@@ -24,6 +24,21 @@ Building::~Building()
 //////////////////////////////////////////////////////////////////
 
 
+void Building::preupdate(double dt)
+{
+	Object::preupdate(dt);
+	for (InOutConvoy* const io : *inConvoys)
+		io->handle<InOutConvoyDefault>()->ensurePayload();
+	for (InOutConvoy* const io : *outConvoys)
+		io->handle<InOutConvoyDefault>()->ensurePayload();
+}
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+
 void Building::addInput(InOutConvoy* const input)
 {
 	input->mode = InOutConvoy::Mode::In;

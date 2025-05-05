@@ -10,8 +10,7 @@ template <typename t>
 Crafter<t>::Crafter(sf::Vector2f colliderSize, size_t maxPayload)
 {
 	outputHandle = new InOutConvoyHandle<t>(InOutConvoy::Mode::Out, ResourceType::Unknown, Direction::North);
-	outputHandle->payload = new InOutPayload<t>(maxPayload);
-	outputHandle->managePayload = true;
+	outputHandle->setPayload(new InOutPayload<t>(maxPayload), true);
 	this->addOutput(outputHandle->boxed());
 	this->collider = new Collider(colliderSize);
 }
@@ -35,9 +34,13 @@ void Crafter<t>::update(double dt)
 template <typename t>
 void Crafter<t>::performCraft()
 {
-	if (!outputHandle->payload->canPush()) return;
+	// Ensure correct & valid payload handle
+	if (!outputHandle->ensurePayload()) return;
+
+	InOutPayload<t>* payloadHandle = outputHandle->getPayload();
+	if (!payloadHandle->canPush()) return;
 	Payload* payload = getPayload();
-	outputHandle->payload->push(payload);
+	payloadHandle->push(payload);
 	this->craftPerformed();
 }
 

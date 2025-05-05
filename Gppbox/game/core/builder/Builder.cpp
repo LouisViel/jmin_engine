@@ -68,11 +68,14 @@ void Builder::update(double dt)
 
 	// Destroy Object if asked to + occupied
 	if (occupied && rightButton) {
-		//removeAny();
 
-		// TODO : Dev le système de remove de building/convoyer
-
-		occupied = !constructor->canBuild(g);
+		// Remove buildings & Convoyers at this position
+		World* world = g->world;
+		Building* building = world->getBuilding(mousePos.x, mousePos.y);
+		Convoyer* convoyer = world->getConvoyer(mousePos.x, mousePos.y);
+		if (building != nullptr) world->removeObject(world->buildings, building);
+		if (convoyer != nullptr) world->removeObject(world->convoyers, convoyer);
+		//occupied = !constructor->canBuild(g);
 	}
 
 	// Spawn Object if asked to + not occupied 

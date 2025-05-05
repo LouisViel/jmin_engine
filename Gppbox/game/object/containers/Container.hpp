@@ -5,8 +5,7 @@ template <typename t>
 Container<t>::Container(ResourceType type, sf::Vector2f colliderSize) : ContainerBase(type)
 {
 	inputHandle = new InOutConvoyHandle<t>(InOutConvoy::Mode::In, type, Direction::South);
-	inputHandle->payload = new InOutPayload<t>();
-	inputHandle->managePayload = true;
+	inputHandle->setPayload(new InOutPayload<t>(), true);
 	this->addInput(inputHandle->boxed());
 	this->collider = new Collider(colliderSize);
 }
@@ -14,9 +13,13 @@ Container<t>::Container(ResourceType type, sf::Vector2f colliderSize) : Containe
 template <typename t>
 void Container<t>::update(double dt)
 {
+	// Ensure correct & valid payload handle
+	if (!inputHandle->ensurePayload()) return;
+
 	// Read/Update input buffer & input counts
-	while (inputHandle->payload->valid()) {
-		PayloadBase* payload = static_cast<PayloadBase*>(inputHandle->payload->pop());
+	InOutPayload<t>* payloadhandle = inputHandle->getPayload();
+	while (payloadhandle->valid()) {
+		PayloadBase* payload = static_cast<PayloadBase*>(payloadhandle->pop());
 		ressourceCount = Utils::safeAdd(ressourceCount, payload->quantity);
 		PayloadPool::free(payload);
 	}
