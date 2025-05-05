@@ -14,9 +14,9 @@ class Environment
 private:
 	sf::RenderWindow* win;
 
-	HotReloadShader* bgShader = nullptr;
+	/*HotReloadShader* bgShader = nullptr;
 	sf::Texture	bgTexture;
-	sf::RectangleShape bgHandle;
+	sf::RectangleShape bgHandle;*/
 
 	const bool useTmx = true;
 	TileMap* environment = nullptr;

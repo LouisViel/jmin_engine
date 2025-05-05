@@ -14,7 +14,7 @@ Environment::Environment(sf::RenderWindow* win)
 
 Environment::~Environment()
 {
-	delete bgShader;
+	//delete bgShader;
 	if (useTmx) {
 		delete tmxOne;
 		delete tmxZero;
@@ -30,12 +30,12 @@ Environment::~Environment()
 
 void Environment::initBackground()
 {
-	bool isOk = bgTexture.loadFromFile("res/bg_city.jpg");
+	/*bool isOk = bgTexture.loadFromFile("res/bg_city.jpg");
 	if (!isOk) printf("ERR : LOAD FAILED\n");
 	bgHandle = sf::RectangleShape(sf::Vector2f((float)win->getSize().x, (float)win->getSize().y));
 	bgHandle.setTexture(&bgTexture);
 	bgHandle.setSize(sf::Vector2f(C::RES_X, C::RES_Y));
-	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
+	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");*/
 }
 
 void Environment::initEnvironment()
@@ -148,7 +148,7 @@ bool Environment::isNode(std::vector<sf::Vector2i>& nodes, int x, int y)
 
 void Environment::update(double dt)
 {
-	if (bgShader) bgShader->update(dt);
+	//if (bgShader) bgShader->update(dt);
 	tmxZero->update(sf::seconds((float)dt));
 	tmxOne->update(sf::seconds((float)dt));
 }
@@ -169,13 +169,13 @@ void Environment::drawWorld(sf::RenderTarget& win)
 void Environment::drawCamera(sf::RenderTarget& win)
 {
 	// Draw Background
-	sf::RenderStates states = sf::RenderStates::Default;
+	/*sf::RenderStates states = sf::RenderStates::Default;
 	sf::Shader* sh = &bgShader->sh;
 	states.blendMode = sf::BlendAdd;
 	states.shader = sh;
 	states.texture = &bgTexture;
 	sh->setUniform("texture", bgTexture);
-	win.draw(bgHandle, states);
+	win.draw(bgHandle, states);*/
 
 	// Draw Environment, using Tmx or Custom Tilemap
 	if (useTmx) {
