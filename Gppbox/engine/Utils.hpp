@@ -41,11 +41,3 @@ template <typename T>
 int Utils::sign(T val) {
 	return (T(0) < val) - (val < T(0));
 }
-
-int Utils::noCrashAdd(int val, int add) {
-	return std::min(val, std::numeric_limits<int>().max() - add) + add;
-}
-
-int Utils::noCrashMinus(int val, int min) {
-	return std::max(val, std::numeric_limits<int>().min() + min) - min;
-}

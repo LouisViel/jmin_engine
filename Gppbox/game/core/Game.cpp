@@ -102,18 +102,20 @@ void Game::imgui()
 	// Show Game Controls
 	using namespace ImGui;
 	if (CollapsingHeader("Controls", ImGuiTreeNodeFlags_DefaultOpen)) {
-		if (TreeNodeEx("Clavier-Souris")) {
+		if (TreeNodeEx("Clavier-Souris", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+
 			BulletText("Left : [Q] OU [Left arrow]");
 			BulletText("Right : [D] OU [Right arrow]");
-			BulletText("Up : [Z] OU [Space] OU [Up arrow]");
-			BulletText("Fire Weapon : [F] OU [Left click]");
-			BulletText("Switch Weapon : [E] OU [Right click]");
+			BulletText("Up : [Z] OU [Up arrow]");
+			BulletText("Down : [S] OU [Down arrow]");
+
+			BulletText("Switch Build Mode : [E] OU [Space]");
 			BulletText("Debug Key : [P] OU [Numpad *]");
 			TreePop();
 		}
 
-		if (TreeNodeEx("Manette")) {
+		/*if (TreeNodeEx("Manette")) {
 			Indent(1.0f);
 			BulletText("Left : [Left joystick] OU [Left Pad]");
 			BulletText("Right : [Left joystick] OU [Left Pad]");
@@ -122,7 +124,7 @@ void Game::imgui()
 			BulletText("Switch Weapon : [Left Button] OU [Left Trigger]");
 			BulletText("Debug Key : [Menu Left]");
 			TreePop();
-		}
+		}*/
 	}
 
 	// Propagate Imgui

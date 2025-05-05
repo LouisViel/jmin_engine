@@ -104,7 +104,7 @@ void World::imgui()
 {
 	using namespace ImGui;
 	
-	if (TreeNodeEx("Gameobjects", 0)) {
+	/*if (TreeNodeEx("Gameobjects", 0)) {
 		Indent(5.0f);
 		LOOPF_PTR(gameobjects, Object* e);
 		std::string txt = ("Object " + std::to_string(i));
@@ -114,7 +114,7 @@ void World::imgui()
 		}
 		LOOP_END;
 		TreePop();
-	}
+	}*/
 }
 
 

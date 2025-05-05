@@ -109,24 +109,25 @@ void Builder::draw(sf::RenderTarget& target)
 
 void Builder::imgui()
 {
-	// BuildConstructor for handles
-	// TODO : Ici on draw les boutons de build des batiments (par categorie)
-	// Quand on click dessus, on toggle (enable/disable) des
-	// "ConvoyerBuilder" (plusieurs, même chose mais avec différentes speeds)
-	// "BuildingBuilder" (plusieurs catégories (drill, four, constructor, ect..), avec plusieurs pour les types dedans)
+	// Dummy(ImVec2(0.0f, 6.0f));
+	// ImGui::Text("Edit Mode Settings");
+	// BulletText("Left click to place");
 
 	using namespace ImGui;
 	if (CollapsingHeader("Build", ImGuiTreeNodeFlags_DefaultOpen)) {
 		if (TreeNodeEx("Utils", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+			Text("Stop Build mode + Erase preview");
 
 			if (Button("Nothing")) switchConstructor(nullptr);
 
 			TreePop();
 		}
 
+		Spacing();
 		if (TreeNodeEx("Convoyers", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+			Text("Switch Build Mode to end/connect your convoyer");
 
 			if (Button("Slow Convoy")) switchConstructor((new ConvoyerSlowConstructor())->constructor());
 			SameLine(0.0f, 10.0f);
@@ -137,39 +138,41 @@ void Builder::imgui()
 			TreePop();
 		}
 
+		Spacing();
 		if (TreeNodeEx("Drills", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+			Text("Build you drills on Ressources Nodes");
 
 			if (Button("Wood Drill")) switchConstructor((new DrillWoodConstructor())->constructor());
 
 			TreePop();
 		}
 
-		/*if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
+		/*Spacing();
+		if (TreeNodeEx("Melters", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
 			TreePop();
 		}*/
 
+		Spacing();
 		if (TreeNodeEx("Crafters", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+			Text("Advanced Ressources Crafters");
 
 			if (Button("Planks Crafter")) switchConstructor((new CrafterPlanksConstructor())->constructor());
 
 			TreePop();
 		}
 
+		Spacing();
 		if (TreeNodeEx("Containers", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Indent(1.0f);
+			Text("Score containers (scores in Imgui)");
 
 
 
 			TreePop();
 		}
-
-		// SameLine();
-		// Dummy(ImVec2(0.0f, 6.0f));
-		// ImGui::Text("Edit Mode Settings");
-		// BulletText("Left click to place");
 	}
 }
 

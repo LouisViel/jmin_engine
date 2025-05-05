@@ -19,6 +19,16 @@ bool Utils::isAdjacent(const sf::Vector2i& a, const sf::Vector2i& b)
 
 
 
+int Utils::noCrashAdd(int val, int add) {
+    return std::min(val, std::numeric_limits<int>().max() - add) + add;
+}
+
+int Utils::noCrashMinus(int val, int min) {
+    return std::max(val, std::numeric_limits<int>().min() + min) - min;
+}
+
+
+
 float Utils::toLength(const sf::Vector2i& source)
 {
     return (float)sqrt((source.x * source.x) + (source.y * source.y));
